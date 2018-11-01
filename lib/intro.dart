@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'choose_name.dart';
 
 class Intro extends StatefulWidget {
@@ -19,6 +20,14 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
     );
   }
 
+  void _signIn() async {
+    final account = await GoogleSignIn.standard(
+      scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
+    ).signIn();
+
+    print(account);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +35,10 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: Text('The Murderer Game', style: TextStyle(color: Colors.red)),
+        title: RaisedButton(
+          onPressed: _signIn,
+          child: Text('The Murderer Game', style: TextStyle(color: Colors.red)),
+        ),
       ),
       body: SafeArea(
         child: TabBarView(
