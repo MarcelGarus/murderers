@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'choose_game.dart';
 
-class ChooseName extends StatefulWidget {
+class ChooseNameScreen extends StatefulWidget {
   @override
-  _ChooseNameState createState() => _ChooseNameState();
+  _ChooseNameScreenState createState() => _ChooseNameScreenState();
 }
 
-class _ChooseNameState extends State<ChooseName> with TickerProviderStateMixin {
+class _ChooseNameScreenState extends State<ChooseNameScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +35,7 @@ class _ChooseNameState extends State<ChooseName> with TickerProviderStateMixin {
             RaisedButton(
               onPressed: () {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => ChooseGame(),
+                  builder: (context) => ChooseGameScreen(),
                 ));
               },
               color: Colors.red,

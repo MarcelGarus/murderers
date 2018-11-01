@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'choose_name.dart';
+import 'bottom_bar.dart';
+import 'log_in.dart';
 
-class Intro extends StatefulWidget {
+class IntroScreen extends StatefulWidget {
   @override
-  _IntroState createState() => _IntroState();
+  _IntroScreenState createState() => _IntroScreenState();
 }
 
-class _IntroState extends State<Intro> with TickerProviderStateMixin {
+class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin {
   TabController controller;
 
   @override
@@ -20,14 +21,6 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
     );
   }
 
-  void _signIn() async {
-    final account = await GoogleSignIn.standard(
-      scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
-    ).signIn();
-
-    print(account);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,10 +28,7 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: RaisedButton(
-          onPressed: _signIn,
-          child: Text('The Murderer Game', style: TextStyle(color: Colors.red)),
-        ),
+        title: Text('The Murderer Game', style: TextStyle(color: Colors.red)),
       ),
       body: SafeArea(
         child: TabBarView(
@@ -65,41 +55,15 @@ class _IntroState extends State<Intro> with TickerProviderStateMixin {
           ],
         )
       ),
-      bottomNavigationBar: Row(
-        children: <Widget>[
-          _buildBottomNavigationBarButton(
-            text: 'Skip',
-            onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => ChooseName(),
-              ));
-            }
-          ),
-          Spacer(),
-          _buildBottomNavigationBarButton(text: 'Next', icon: Icon(Icons.keyboard_arrow_right), onPressed: () {}),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNavigationBarButton({
-    @required String text,
-    Widget icon,
-    @required VoidCallback onPressed
-  }) {
-    return InkResponse(
-      highlightShape: BoxShape.rectangle,
-      containedInkWell: true,
-      onTap: onPressed,
-      child: Padding(
-        padding: EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(text.toUpperCase()),
-            icon ?? Container(height: 0.0)
-          ],
-        )
+      bottomNavigationBar: BottomBar(
+        primary: 'Next',
+        secondary: 'Skip',
+        onPrimary: () {},
+        onSecondary: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => LogInScreen(),
+          ));
+        }
       ),
     );
   }
@@ -121,9 +85,13 @@ class IntroStep extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.all(16.0),
       children: <Widget>[
-        image ?? Container(height: 200.0, color: Colors.black12),
+        image ?? Material(
+          color: Colors.black12,
+          borderRadius: BorderRadius.circular(8.0),
+          child: Container(height: 200.0),
+        ),
         SizedBox(height: 32.0),
-        Text(title, style: TextStyle(color: Colors.red, fontSize: 20.0)),
+        Text(title, style: TextStyle(fontFamily: 'Signature', color: Colors.red, fontSize: 20.0)),
         SizedBox(height: 16.0),
         Text(content, textAlign: TextAlign.justify, style: TextStyle(height: 1.1, fontSize: 16.0),),
       ],

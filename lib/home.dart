@@ -15,22 +15,25 @@ class _HomeState extends State<Home> {
         elevation: 0.0,
         title: Text('The Murderer Game', style: TextStyle(color: Colors.white)),
       ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Spacer(),
-            VictimName(),
-            _buildVictimKilledButton(),
-            Spacer(),
-            Divider(height: 1.0),
-            Statistics(
-              alive: 4,
-              dead: 4,
-              killedByUser: 2,
-            ),
-          ],
+      body: Theme(
+        data: ThemeData(fontFamily: 'Signature'),
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              VictimName(),
+              _buildVictimKilledButton(),
+              Spacer(),
+              Divider(height: 1.0),
+              Statistics(
+                alive: 4,
+                dead: 4,
+                killedByUser: 2,
+              ),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 

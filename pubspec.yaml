@@ -1,5 +1,5 @@
 name: murderers
-description: A new Flutter project.
+description: A murder game.
 
 version: 1.0.0+1
 
@@ -33,3 +33,6 @@ flutter:
     - family: Signature
       fonts:
         - asset: fonts/Raleway-ExtraBold.ttf
+    - family: Mono
+      fonts:
+        - asset: fonts/RobotoMono-Bold.ttf

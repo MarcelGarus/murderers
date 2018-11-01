@@ -13,9 +13,8 @@ class MyApp extends StatelessWidget {
       title: 'The Murderer Game',
       theme: ThemeData(
         primarySwatch: Colors.red,
-        fontFamily: 'Signature',
       ),
-      home: Intro(),
+      home: IntroScreen(),
     );
   }
 }
