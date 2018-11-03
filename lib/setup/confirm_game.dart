@@ -36,7 +36,10 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
         ))),
         onSkipped: (widget.role == UserRole.CREATOR)
           ? null
-          : () => navigator.push(SetupRoute(EnterNameScreen())),
+          : () => navigator.push(SetupRoute(EnterNameScreen(
+            role: widget.role,
+            code: widget.code,
+          ))),
       );
 
     navigator.push(SetupRoute(nextScreen));
