@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'bottom_bar.dart';
-import 'log_in.dart';
+import 'setup_utils.dart';
+import 'select_mode.dart';
 
 class IntroScreen extends StatefulWidget {
   @override
@@ -10,15 +9,31 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin {
   TabController controller;
+  bool isAtLastSlide = false;
 
   @override
   void initState() {
     super.initState();
 
-    controller = TabController(
-      length: 4,
-      vsync: this,
-    );
+    controller = TabController(length: 3, vsync: this)
+      ..addListener(() {
+        print(controller.index);
+        setState(() {
+          isAtLastSlide = controller.index == controller.length - 1;
+        });
+      });
+  }
+
+  void _goToNextSlide() {
+    if (isAtLastSlide) {
+      _goToNextScreen();
+    } else {
+      controller.animateTo(controller.index + 1);
+    }
+  }
+
+  void _goToNextScreen() {
+    Navigator.of(context).push(SetupRoute(SelectModeScreen()));
   }
 
   @override
@@ -37,33 +52,33 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
             IntroStep(
               image: null,
               title: "Who's this game for?",
-              content: "This game is intended to be played by large groups of "
-                "players over a duration of several hours, days or even weeks.",
+              content: 'This game is intended to be played by large groups of '
+                'players over a duration of several hours, days or even weeks.',
             ),
             IntroStep(
               image: null,
-              title: "How the game works",
-              content: "The objective is to \"kill\" as many other players as "
-                "possible in the set amount of time without getting killed by "
-                "others. "
-                "You can \"kill\" players if they take a physical object you "
-                "passed to them. "
-                "This app tells you which player to kill - only after you "
-                "succeeded, you can proceed to the next victim. And yes, it's "
-                "okay to feel like an assassin."
+              title: 'Your destiny: Being a great assassin.',
+              content: 'The objective is to "kill" as many players as '
+                'possible without getting killed by others. '
+                'This app tells you which player to kill - only after you '
+                'succeeded, you can proceed to your next victim.'
+            ),
+            IntroStep(
+              image: null,
+              title: 'How to kill players',
+              content: 'You can "kill" players if they take a physical object '
+                'you gave to them. '
+                "Right after they took it, tell them they've been killed and "
+                'mark your job done in this app.'
             ),
           ],
         )
       ),
-      bottomNavigationBar: BottomBar(
+      bottomNavigationBar: SetupBottomBar(
         primary: 'Next',
+        onPrimary: _goToNextSlide,
         secondary: 'Skip',
-        onPrimary: () {},
-        onSecondary: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => LogInScreen(),
-          ));
-        }
+        onSecondary: _goToNextScreen
       ),
     );
   }
