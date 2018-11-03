@@ -7,14 +7,17 @@ class Bloc {
   /// Using this method, any widget in the tree below a BlocHolder can get
   /// access to the bloc.
   static Bloc of(BuildContext context) {
-    final BlocHolder inherited = context.ancestorWidgetOfExactType(BlocHolder);
-    return inherited?.bloc;
+    final BlocHolder holder = context.ancestorWidgetOfExactType(BlocHolder);
+    return holder?.bloc;
   }
 
   /// Whether the user knows the game.
   bool _knowsGame = false;
 
   /// 
+  final _googleSignIn = GoogleSignIn.standard(
+    scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
+  );
   GoogleSignInAccount _account;
 
   /*final account = await GoogleSignIn.standard(
@@ -40,29 +43,28 @@ class Bloc {
   void _initialize() async {
     print('Initializing the BLoC.');
 
-    _account = await GoogleSignIn.standard(
-      scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
-    ).signInSilently();
+    _account = await _googleSignIn.signInSilently();
   }
 
   /// Disposes all the streams.
   void dispose() {
   }
 
+  /// Signs the user into Google.
   Future<bool> signIn() async {
-    _account = await GoogleSignIn.standard(
-      scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
-    ).signIn();
+    _account = await _googleSignIn.signIn();
     print('Signed in: $_account');
     return _account != null;
   }
 
+  /// Signs the user out of Google.
   Future<void> signOut() async {
-    _account = await GoogleSignIn.standard(
-      scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
-    ).signOut();
+    _account = await _googleSignIn.signOut();
     print('Signed out: $_account');
   }
+
+  /// Returns whether the user is signed into Google.
+  bool get isSignedIn => _account != null;
 }
 
 class BlocProvider extends StatefulWidget {

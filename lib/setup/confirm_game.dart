@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../bloc.dart';
 import '../game.dart';
 import '../home.dart';
 import 'enter_name.dart';
@@ -20,16 +21,19 @@ class ConfirmGameScreen extends StatefulWidget {
 
 class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProviderStateMixin {
   void _onJoin() {
-    Navigator.of(context).push(SetupRoute(SignInScreen(
-      onSignedIn: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => HomeScreen()
-        ));
-      },
-      onSkipped: () {
-        Navigator.of(context).push(SetupRoute(EnterNameScreen()));
-      },
-    )));
+    final navigator = Navigator.of(context);
+    Widget nextScreen = (Bloc.of(context).isSignedIn)
+      // If already signed in, we got a name and can directly continue to the
+      // game.
+      ? HomeScreen()
+      // Otherwise, we need a name. Offer the user to sign in, then continue to
+      // the game or let the user enter a name manually if sign in is skipped.
+      : SignInScreen(
+        onSignedIn: () => navigator.push(SetupRoute(HomeScreen())),
+        onSkipped: () => navigator.push(SetupRoute(EnterNameScreen())),
+      );
+
+    navigator.push(SetupRoute(nextScreen));
   }
 
   @override

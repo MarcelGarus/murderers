@@ -21,8 +21,12 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
   bool signingIn = false;
 
   void _signIn() async {
+    bool success;
+
     setState(() { signingIn = true; });
-    final bool success = await Bloc.of(context).signIn();
+    try {
+      success = await Bloc.of(context).signIn();
+    } catch (e) { /* User aborted sign in or timeout (no internet). */ }
     setState(() { signingIn = false; });
 
     if (success) {
@@ -39,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
         children: <Widget>[
           SetupAppBar(
             title: 'Sign in with Google',
-            subtitle: 'to make your life easier',
+            subtitle: widget.isSkippable ? 'to make your life easier' : null,
           ),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),

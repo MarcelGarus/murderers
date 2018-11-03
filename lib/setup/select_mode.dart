@@ -14,9 +14,27 @@ class SelectModeScreen extends StatefulWidget {
 class _SelectModeScreenState extends State<SelectModeScreen> with TickerProviderStateMixin {
   UserRole role = UserRole.PLAYER;
 
-  void _selectMode(UserRole role) => setState(() {
+  void _selectRole(UserRole role) => setState(() {
     this.role = role;
   });
+
+  void _next() {
+    print('You chose some $role.');
+    final navigator = Navigator.of(context);
+    Widget nextScreen = (role == UserRole.PLAYER || role == UserRole.WATCHER)
+      // If the user wants to join an existing game, let her enter the code.
+      ? JoinGameScreen(role: role)
+      // Otherwise (she wants to create a new game), she needs to be signed in.
+      : (Bloc.of(context).isSignedIn)
+      // If she is, everything's fine.
+      ? ConfigureGameScreen()
+      // Otherwise, display a sign in screen first.
+      : SignInScreen(
+        onSignedIn: () => navigator.push(SetupRoute(ConfigureGameScreen())),
+      );
+
+    navigator.push(SetupRoute(nextScreen));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,40 +49,29 @@ class _SelectModeScreenState extends State<SelectModeScreen> with TickerProvider
             leading: ModeIcon(selected: role == UserRole.PLAYER, iconData: Icons.person),
             title: Text("Join as assassin", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("Participate in a game and have fun killing players."),
-            onTap: () => _selectMode(UserRole.PLAYER),
+            onTap: () => _selectRole(UserRole.PLAYER),
           ),
           ListTile(
             contentPadding: EdgeInsets.all(16.0),
             leading: ModeIcon(selected: role == UserRole.WATCHER, iconData: Icons.remove_red_eye),
             title: Text("Join as watcher", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("Watch the rankings and get notified about what's happening without actually participating."),
-            onTap: () => _selectMode(UserRole.WATCHER),
+            onTap: () => _selectRole(UserRole.WATCHER),
           ),
           ListTile(
             contentPadding: EdgeInsets.all(16.0),
             leading: ModeIcon(selected: role == UserRole.ADMIN, iconData: Icons.add),
             title: Text("Create new game", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("Create a completely new game. Make sure you gathered other people around you who are willing to play."),
-            onTap: () => _selectMode(UserRole.ADMIN),
+            onTap: () => _selectRole(UserRole.ADMIN),
           ),
           SizedBox(height: 16.0),
         ],
       ),
       bottomNavigationBar: SetupBottomBar(
         primary: 'Next',
-        onPrimary: () {
-          print('You chose some $role.');
-          if (role == UserRole.PLAYER || role == UserRole.WATCHER) {
-            Navigator.of(context).push(SetupRoute(JoinGameScreen(role: role)));
-          } else {
-            Navigator.of(context).push(SetupRoute(SignInScreen(
-              onSignedIn: () {
-                Navigator.of(context).push(SetupRoute(ConfigureGameScreen()));
-              },
-            )));
-          }
-        },
-        secondary: 'Sign out of Google',
+        onPrimary: _next,
+        secondary: 'Sign out of Google', // TODO: remove
         onSecondary: () {
           Bloc.of(context).signOut();
         },
