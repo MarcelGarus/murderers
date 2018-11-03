@@ -1,5 +1,5 @@
 
-enum UserRole { PLAYER, WATCHER, ADMIN }
+enum UserRole { PLAYER, WATCHER, CREATOR }
 
 /// A user (can play multiple games, or only watch).
 class User {

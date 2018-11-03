@@ -60,10 +60,10 @@ class _SelectModeScreenState extends State<SelectModeScreen> with TickerProvider
           ),
           ListTile(
             contentPadding: EdgeInsets.all(16.0),
-            leading: ModeIcon(selected: role == UserRole.ADMIN, iconData: Icons.add),
+            leading: ModeIcon(selected: role == UserRole.CREATOR, iconData: Icons.add),
             title: Text("Create new game", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("Create a completely new game. Make sure you gathered other people around you who are willing to play."),
-            onTap: () => _selectRole(UserRole.ADMIN),
+            onTap: () => _selectRole(UserRole.CREATOR),
           ),
           SizedBox(height: 16.0),
         ],

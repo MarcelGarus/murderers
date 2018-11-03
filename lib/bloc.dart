@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+export 'game.dart';
+
 /// BLoC.
 class Bloc {
   /// Using this method, any widget in the tree below a BlocHolder can get
@@ -19,6 +21,8 @@ class Bloc {
     scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
   );
   GoogleSignInAccount _account;
+
+  String name;
 
   /*final account = await GoogleSignIn.standard(
       scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
@@ -53,6 +57,7 @@ class Bloc {
   /// Signs the user into Google.
   Future<bool> signIn() async {
     _account = await _googleSignIn.signIn();
+    name ??= _account?.displayName;
     print('Signed in: $_account');
     return _account != null;
   }

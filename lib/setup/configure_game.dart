@@ -105,8 +105,8 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
         primary: "Create game",
         onPrimary: () {
           Navigator.of(context).push(SetupRoute(ConfirmGameScreen(
-            role: UserRole.ADMIN,
-            code: '',
+            role: UserRole.CREATOR,
+            code: null,
           )));
         },
       ),

@@ -3,6 +3,7 @@ import '../bloc.dart';
 import '../game.dart';
 import '../home.dart';
 import 'enter_name.dart';
+import 'setup_finished.dart';
 import 'setup_utils.dart';
 import 'sign_in.dart';
 
@@ -20,17 +21,22 @@ class ConfirmGameScreen extends StatefulWidget {
 }
 
 class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProviderStateMixin {
-  void _onJoin() {
+  void _onConfirmed() {
     final navigator = Navigator.of(context);
     Widget nextScreen = (Bloc.of(context).isSignedIn)
       // If already signed in, we got a name and can directly continue to the
       // game.
-      ? HomeScreen()
+      ? SetupFinishedScreen(role: widget.role, code: widget.code)
       // Otherwise, we need a name. Offer the user to sign in, then continue to
       // the game or let the user enter a name manually if sign in is skipped.
       : SignInScreen(
-        onSignedIn: () => navigator.push(SetupRoute(HomeScreen())),
-        onSkipped: () => navigator.push(SetupRoute(EnterNameScreen())),
+        onSignedIn: () => navigator.push(SetupRoute(SetupFinishedScreen(
+          role: widget.role,
+          code: widget.code,
+        ))),
+        onSkipped: (widget.role == UserRole.CREATOR)
+          ? null
+          : () => navigator.push(SetupRoute(EnterNameScreen())),
       );
 
     navigator.push(SetupRoute(nextScreen));
@@ -44,7 +50,7 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
         padding: EdgeInsets.zero,
         children: <Widget>[
           SetupAppBar(
-            title: widget.role == UserRole.ADMIN ? 'Create a game' : 'Join a game'
+            title: widget.role == UserRole.CREATOR ? 'Create a game' : 'Join a game'
           ),
           SizedBox(height: 24.0),
           Column(
@@ -52,7 +58,7 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text("You'll be joining"),
-              Text('<this game>'),
+              Text('${widget.code}'),
               Text('as a'),
               Text(widget.role.toString())
             ],
@@ -62,7 +68,7 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
       ),
       bottomNavigationBar: SetupBottomBar(
         primary: "Join",
-        onPrimary: _onJoin,
+        onPrimary: _onConfirmed,
         secondary: 'Cancel',
         onSecondary: () {
           Navigator.of(context).pop();
