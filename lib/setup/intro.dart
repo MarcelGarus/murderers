@@ -16,12 +16,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
     super.initState();
 
     controller = TabController(length: 3, vsync: this)
-      ..addListener(() {
-        print(controller.index);
-        setState(() {
-          isAtLastSlide = controller.index == controller.length - 1;
-        });
-      });
+    ..addListener(() => setState(() {
+      isAtLastSlide = controller.index == controller.length - 1;
+    }));
   }
 
   void _goToNextSlide() {

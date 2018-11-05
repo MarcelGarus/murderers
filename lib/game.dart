@@ -30,7 +30,7 @@ class Game {
   DateTime start;
   DateTime end;
 
-  List<User> admins;
+  User creator;
   List<Player> players;
   List<User> watchers;
 
