@@ -1,5 +1,14 @@
 "use strict";
-/// Creation of new games.
+/// Creates a new game.
+///
+/// Needs:
+/// * Firebase auth in header
+/// * a name
+/// * ...
+///
+/// Returns:
+/// 200: { code: 'abcd', game: { /* game configuration */ } }
+/// 403: {}
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -10,41 +19,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const admin = require("firebase-admin");
+const util_1 = require("util");
+const utils_1 = require("./utils");
 const GAME_CODE_LENGTH = 4;
-admin.initializeApp();
-const db = admin.firestore();
-/// Returns a new random game code.
-function createRandomCode() {
+/// Creates a new game code.
+// TODO: make sure code doesn't already exist
+// TODO: use analytics to log how many tries were needed
+function createGameCode() {
     return __awaiter(this, void 0, void 0, function* () {
-        const chars = 'abcdefghiojklnopqrstuvwxyz0123456789';
-        let code = '';
-        while (code.length < GAME_CODE_LENGTH) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
+        const code = utils_1.generateRandomString('abcdefghiojklnopqrstuvwxyz0123456789', GAME_CODE_LENGTH);
         return code;
     });
 }
 /// Creates a new game.
-function createGame() {
+function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        util_1.log('App is ' + admin.app());
+        util_1.log('Creating a game.');
         const game = {
-            code: yield createRandomCode(),
+            name: 'A sample game',
             isRunning: false,
             start: 0,
             end: 100,
+            creatorId: 0,
         };
-        const snapshot = yield db
+        const code = yield createGameCode();
+        yield admin.app().firestore()
             .collection('games')
-            .doc(game.code)
+            .doc(code)
             .set(game);
-        return game;
-    });
-}
-function handleRequest(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        console.log('Creating a game inside its own file.');
-        const game = yield createGame();
-        res.set('text/json').send(game);
+        res.set('text/json').send({
+            code: code,
+            game: game,
+        });
     });
 }
 exports.handleRequest = handleRequest;

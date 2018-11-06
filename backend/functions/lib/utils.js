@@ -1,0 +1,43 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const models_1 = require("./models");
+/// Generates a random string from the given base chars with the given length.
+function generateRandomString(chars, length) {
+    let s = '';
+    while (s.length < length) {
+        s += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return s;
+}
+exports.generateRandomString = generateRandomString;
+/// Loads a game with the given code.
+function loadGame(firestore, code) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const snapshot = yield firestore
+            .collection('games')
+            .doc(code)
+            .get();
+        if (!snapshot.exists) {
+            console.log('Game ' + code + ' does not exist.');
+            return undefined;
+        }
+        const data = snapshot.data();
+        if (!models_1.isGame(data)) {
+            console.log('Snapshot data ' + JSON.stringify(data) + ' is not a game.');
+            return undefined;
+        }
+        // @ts-ignore
+        const game = data;
+        return game;
+    });
+}
+exports.loadGame = loadGame;
+//# sourceMappingURL=utils.js.map
