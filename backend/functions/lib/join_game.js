@@ -36,23 +36,22 @@ function createAuthToken() {
 /// Joins a player to a game.
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('App is ' + admin.app());
-        console.log('Request parameters are ' + JSON.stringify(req.params));
-        console.log('Joining the game.');
+        console.log('Request query is ' + JSON.stringify(req.query));
         const db = admin.app().firestore();
-        const code = 'abcd'; // TODO: get from params
+        const code = req.query.code + '';
         const game = yield utils_1.loadGame(db, code);
+        console.log('Joining the game ' + code + '.');
         if (util_1.isUndefined(game)) {
             console.log("Joining the game failed, because the game couldn't be loaded.");
-            res.status(500).set('text/json').send('Joining the game failed.');
+            res.status(500).set('application/json').send('Joining the game failed.');
             return;
         }
         console.log('Game to join is ' + game);
         const player = {
             authToken: createAuthToken(),
             name: 'Marcel',
-            isAlive: true,
-            victim: ''
+            victim: '',
+            death: null
         };
         const id = yield createPlayerId();
         yield db
@@ -61,7 +60,7 @@ function handleRequest(req, res) {
             .collection('players')
             .doc(id)
             .set(player);
-        res.set('text/json').send(player);
+        res.set('application/json').send(player);
     });
 }
 exports.handleRequest = handleRequest;

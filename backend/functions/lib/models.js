@@ -1,15 +1,32 @@
 "use strict";
-/// Models that are used throughout the backend.
 Object.defineProperty(exports, "__esModule", { value: true });
 function isPlayer(obj) {
-    return true; // TODO
+    return typeof obj.authToken === "string"
+        && typeof obj.name === "string"
+        && (obj.victim === null || typeof obj.victim === "string")
+        && (obj.death === null || isDeath(obj.death));
 }
 exports.isPlayer = isPlayer;
+function isAlive(obj) {
+    return isPlayer(obj) && obj.death === null;
+}
+exports.isAlive = isAlive;
+function isDeath(obj) {
+    return typeof obj.murderer === "string"
+        && typeof obj.lastWords === "string"
+        && typeof obj.weapon === "string";
+}
+exports.isDeath = isDeath;
+exports.GAME_NOT_STARTED_YET = 0;
+exports.GAME_RUNNING = 1;
+exports.GAME_PAUSED = 2;
+exports.GAME_ENDED = 3;
 function isGame(obj) {
-    // TODO
-    return typeof obj.isRunning === "boolean"
-        && typeof obj.start === "number"
-        && typeof obj.end === "number";
+    return typeof obj.creator === "number"
+        && typeof obj.name === "string"
+        && typeof obj.state === "number";
+    //&& typeof obj.start === "Date"
+    //&& typeof obj.end === "Date"; TODO: check if it's dates
 }
 exports.isGame = isGame;
 //# sourceMappingURL=models.js.map

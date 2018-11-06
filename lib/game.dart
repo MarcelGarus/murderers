@@ -1,23 +1,19 @@
-
+/// The roles the user can take in each game.
 enum UserRole { PLAYER, WATCHER, CREATOR }
 
-/// A user (can play multiple games, or only watch).
-class User {
+/// A player.
+///
+/// The term player refers to all users participating in a game. Players only
+/// exist in the context and scope of games - if a user plays in two games, he
+/// is represented by two distinct players.
+class Player {
   String id;
   String name;
-}
-
-/// A player in a game (someone who's playing).
-class Player {
-  User user;
-  
-  Player victim;
-  List<Player> pastVictims;
-
   Death death;
+  bool get isAlive => death != null;
 }
 
-/// A death of a player.
+/// A class that holds some information about how a player died.
 class Death {
   Player murderer;
   String weapon;
@@ -25,14 +21,20 @@ class Death {
 }
 
 /// A game.
+enum GameState { NOT_STARTED_YET, RUNNING, PAUSED, OVER }
 class Game {
-  bool isRunning;
+  UserRole myRole;
+
+  String code;
+  String name;
+  GameState state;
+
   DateTime start;
   DateTime end;
 
-  User creator;
   List<Player> players;
-  List<User> watchers;
-
   Player me;
+
+  /// This player's victim.
+  Player victim;
 }

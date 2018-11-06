@@ -12,7 +12,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { log } from 'util';
-import { Game, GameCode } from './models';
+import { Game, GameCode, GAME_NOT_STARTED_YET } from './models';
 import { generateRandomString } from './utils';
 
 const GAME_CODE_LENGTH = 4;
@@ -34,11 +34,11 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
   log('Creating a game.');
 
   const game: Game = {
+    creator: 0,
     name: 'A sample game',
-    isRunning: false,
-    start: 0,
-    end: 100,
-    creatorId: 0,
+    state: GAME_NOT_STARTED_YET,
+    start: Date.now(),
+    end: Date.now() + 100,
   };
 
   const code: GameCode = await createGameCode();

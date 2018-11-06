@@ -23,12 +23,16 @@ class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerPr
 
   void initState() {
     super.initState();
-    final name = Bloc.of(context).name;
+
+    final bloc = Bloc.of(context);
+    final name = bloc.name;
 
     if (widget.code == null) {
       print('Creating a game for user $name.');
+      bloc.createGame();
     } else {
       print('$name joins game ${widget.code}.');
+      bloc.joinGame(widget.code);
     }
   }
 
@@ -36,7 +40,7 @@ class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerPr
   Widget build(BuildContext context) {
     String text = (widget.code == null)
       ? "Wait while your game\nis being created."
-      : "Wait while you're being\njoined into the game.";
+      : "Wait while you're\njoining the game.";
 
     return Scaffold(
       backgroundColor: Colors.white,

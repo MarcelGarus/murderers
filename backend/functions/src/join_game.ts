@@ -36,12 +36,13 @@ function createAuthToken(): AuthToken {
 
 /// Joins a player to a game.
 export async function handleRequest(req: functions.Request, res: functions.Response) {
-  console.log('Request is ' + JSON.stringify(req));
-  console.log('Joining the game.');
+  console.log('Request query is ' + JSON.stringify(req.query));
 
   const db = admin.app().firestore();
-  const code: GameCode = 'abcd'; // TODO: get from params
+  const code: GameCode = req.query.code + '';
   const game: Game = await loadGame(db, code);
+
+  console.log('Joining the game ' + code + '.');
 
   if (isUndefined(game)) {
     console.log("Joining the game failed, because the game couldn't be loaded.");
@@ -54,8 +55,8 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
   const player: Player = {
     authToken: createAuthToken(),
     name: 'Marcel',
-    isAlive: true,
-    victim: ''
+    victim: '',
+    death: null
   };
 
   const id: PlayerId = await createPlayerId();

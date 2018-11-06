@@ -20,6 +20,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const admin = require("firebase-admin");
 const util_1 = require("util");
+const models_1 = require("./models");
 const utils_1 = require("./utils");
 const GAME_CODE_LENGTH = 4;
 /// Creates a new game code.
@@ -37,18 +38,18 @@ function handleRequest(req, res) {
         util_1.log('App is ' + admin.app());
         util_1.log('Creating a game.');
         const game = {
+            creator: 0,
             name: 'A sample game',
-            isRunning: false,
-            start: 0,
-            end: 100,
-            creatorId: 0,
+            state: models_1.GAME_NOT_STARTED_YET,
+            start: Date.now(),
+            end: Date.now() + 100,
         };
         const code = yield createGameCode();
         yield admin.app().firestore()
             .collection('games')
             .doc(code)
             .set(game);
-        res.set('text/json').send({
+        res.set('application/json').send({
             code: code,
             game: game,
         });

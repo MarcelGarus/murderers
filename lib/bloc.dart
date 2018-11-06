@@ -1,11 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
+
+import 'game.dart';
 
 export 'game.dart';
 
 /// BLoC.
 class Bloc {
+  static const String firebase_root = 'https://us-central1-murderers-e67bb.cloudfunctions.net';
+
   /// Using this method, any widget in the tree below a BlocHolder can get
   /// access to the bloc.
   static Bloc of(BuildContext context) {
@@ -16,32 +23,22 @@ class Bloc {
   /// Whether the user knows the game.
   bool _knowsGame = false;
 
-  /// 
+  /// The user's Google Sign In account handler and account.
   final _googleSignIn = GoogleSignIn.standard(
     scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
   );
   GoogleSignInAccount _account;
 
+  /// The user's name.
   String name;
 
-  /*final account = await GoogleSignIn.standard(
-      scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
-    ).signIn();
-
-    print(account);*/
+  /// All the games the user participated in.
+  final games = <Game>[];
 
   // The streams for communicating with the UI.
-  /*final _previousSubject = BehaviorSubject<Comic>();
-  final _currentSubject = BehaviorSubject<Comic>();
-  final _nextSubject = BehaviorSubject<Comic>();
-  final _zoomModeSubject = BehaviorSubject<ZoomStatus>(
-    seedValue: ZoomStatus.seed
-  );
-  Stream<Comic> get previous => _previousSubject.stream.distinct();
-  Stream<Comic> get current => _currentSubject.stream.distinct();
-  Stream<Comic> get next => _nextSubject.stream.distinct();
-  Stream<ZoomStatus> get zoomStatus => _zoomModeSubject.stream; // TODO make distinct*/
-
+  final _gameSubject = BehaviorSubject<Game>();
+  Stream<Game> get game => _gameSubject.stream; //.distinct(); TODO
+  
 
   /// Initializes the BLoC.
   void _initialize() async {
@@ -51,7 +48,8 @@ class Bloc {
   }
 
   /// Disposes all the streams.
-  void dispose() {
+  void _dispose() {
+    _gameSubject.close();
   }
 
   /// Signs the user into Google.
@@ -70,7 +68,39 @@ class Bloc {
 
   /// Returns whether the user is signed into Google.
   bool get isSignedIn => _account != null;
+
+  /// Creates a new game.
+  Future<Game> createGame() async {
+    final response = await http.get('$firebase_root/create_game');
+
+    if (response.statusCode != 200) {
+      print('Something went wrong while creating a game.');
+      return null;
+    }
+
+    final data = json.decode(response.body);
+    print('Game code is ${data['code']}.');
+    print('Game is ${data['game']}');
+    return null; // TODO: construct game
+  }
+
+  /// Joins a game.
+  Future<Game> joinGame(String code) async {
+    final response = await http.get('$firebase_root/join_game?code=$code');
+
+    if (response.statusCode != 200) {
+      print('Something went wrong while joining the game $code.');
+      return null;
+    }
+
+    final data = json.decode(response.body);
+    print('Data: $data.');
+    return null; // TODO: construct game
+  }
 }
+
+
+// The code below is just for properly managing the BLoC state.
 
 class BlocProvider extends StatefulWidget {
   BlocProvider({ @required this.child });
@@ -90,7 +120,7 @@ class _BlocProviderState extends State<BlocProvider> {
 
   @override
   void dispose() {
-    bloc.dispose();
+    bloc._dispose();
     super.dispose();
   }
 
