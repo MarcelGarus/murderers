@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'bloc.dart';
-import 'setup/intro.dart';
+import 'bloc_provider.dart';
+import 'intro.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,9 +11,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       child: MaterialApp(
         title: 'The Murderer Game',
-        theme: ThemeData(
-          primarySwatch: Colors.red,
-        ),
+        theme: ThemeData(primarySwatch: Colors.red),
         home: IntroScreen(),
       )
     );

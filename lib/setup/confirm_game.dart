@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+
 import '../bloc.dart';
 import '../game.dart';
-import '../home.dart';
 import 'enter_name.dart';
+import 'setup_bloc.dart';
 import 'setup_finished.dart';
 import 'setup_utils.dart';
 import 'sign_in.dart';
 
 class ConfirmGameScreen extends StatefulWidget {
-  ConfirmGameScreen({
-    @required this.role,
-    @required this.code,
-  });
-
-  final UserRole role;
-  final String code;
-
   @override
   _ConfirmGameScreenState createState() => _ConfirmGameScreenState();
 }
@@ -23,37 +16,34 @@ class ConfirmGameScreen extends StatefulWidget {
 class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProviderStateMixin {
   void _onConfirmed() {
     final navigator = Navigator.of(context);
-    Widget nextScreen = (Bloc.of(context).isSignedIn)
-      // If already signed in, we got a name and can directly continue to the
-      // game.
-      ? SetupFinishedScreen(role: widget.role, code: widget.code)
-      // Otherwise, we need a name. Offer the user to sign in, then continue to
-      // the game or let the user enter a name manually if sign in is skipped.
-      : SignInScreen(
-        onSignedIn: () => navigator.push(SetupRoute(SetupFinishedScreen(
-          role: widget.role,
-          code: widget.code,
-        ))),
-        onSkipped: (widget.role == UserRole.CREATOR)
-          ? null
-          : () => navigator.push(SetupRoute(EnterNameScreen(
-            role: widget.role,
-            code: widget.code,
-          ))),
+    Widget nextScreen;
+    
+    // If the user doesn't want to play, the setup is finished. Otherwise, we
+    // need a name. If already signed in, we use that, else we offer to sign in
+    // and then continue to the game or - if skipped - enter the name manually.
+    if (SetupBloc.of(context).role != UserRole.PLAYER || MainBloc.of(context).isSignedIn) {
+      nextScreen = SetupFinishedScreen();
+    } else {
+      nextScreen = SignInScreen(
+        onSignedIn: () => navigator.push(SetupRoute(SetupFinishedScreen())),
+        onSkipped: () => navigator.push(SetupRoute(EnterNameScreen())),
       );
+    }
 
     navigator.push(SetupRoute(nextScreen));
   }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = SetupBloc.of(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           SetupAppBar(
-            title: widget.role == UserRole.CREATOR ? 'Create a game' : 'Join a game'
+            title: bloc.role == UserRole.CREATOR ? 'Create a game' : 'Join a game'
           ),
           SizedBox(height: 24.0),
           Column(
@@ -61,9 +51,9 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text("You'll be joining"),
-              Text('${widget.code}'),
+              Text('${bloc.code}'),
               Text('as a'),
-              Text(widget.role.toString())
+              Text(bloc.role.toString())
             ],
           ),
           SizedBox(height: 16.0),

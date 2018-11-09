@@ -1,11 +1,13 @@
 "use strict";
-/// Joins a player to a game.
+/// Starts an existing game.
 ///
 /// Needs:
-/// * a player name
+/// * a Firebase auth in header
+/// * a game id
 ///
 /// Returns either:
-/// 200: { id: 'abcdefghiojklmonop', authToken: 'dfsiidfsd' }
+/// 200: Game started.
+/// 403: Access denied.
 /// 404: Game not found.
 /// 500: Game corrupt.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -18,25 +20,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const admin = require("firebase-admin");
+const models_1 = require("./models");
 const utils_1 = require("./utils");
-const PLAYER_ID_CHARS = 'abcdefghiojklnopqrstuvwxyz0123456789';
-const PLAYER_ID_LENGTH = 2;
-const AUTH_TOKEN_CHARS = 'abcdefghiojklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-const AUTH_TOKEN_LENGTH = 16;
-/// Creates a new player id.
-// TODO: make sure id doesn't already exist
-// TODO: use analytics to log how many tries were needed
-function createPlayerId() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const id = utils_1.generateRandomString(PLAYER_ID_CHARS, PLAYER_ID_LENGTH);
-        return id;
-    });
-}
-/// Creates a new auth token.
-function createAuthToken() {
-    return utils_1.generateRandomString(AUTH_TOKEN_CHARS, AUTH_TOKEN_LENGTH);
-}
-/// Joins a player to a game.
+/// Starts an existing game.
+// TODO: check access
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Request query is ' + JSON.stringify(req.query));
@@ -44,42 +31,39 @@ function handleRequest(req, res) {
         const db = admin.app().firestore();
         const code = req.query.code + '';
         let game;
-        console.log('Joining the game ' + code + '.');
         // Try to load the game.
         try {
             game = yield utils_1.loadGame(db, code);
         }
         catch (error) {
-            console.log("Joining the game failed, because the game couldn't be loaded. Error is:");
+            console.log("Starting the game failed, because the game couldn't be loaded. Error is:");
             console.log(error);
             if (true) { // TODO: check error message
-                res.status(404).send('Game not found.');
+                res.status(404).send(utils_1.GAME_NOT_FOUND);
             }
             else {
-                res.status(500).send('Game corrupt.');
+                res.status(500).send(utils_1.GAME_CORRUPT);
             }
         }
-        // Game loaded successfully. Now join it.
-        console.log('Game to join is ' + game);
-        const player = {
-            authToken: createAuthToken(),
-            name: 'Marcel',
-            victim: null,
-            death: null
-        };
-        const id = yield createPlayerId();
+        // Game loaded successfully. Now start it.
+        console.log('Game to start is ' + game);
         yield db
             .collection('games')
             .doc(code)
-            .collection('players')
-            .doc(id)
-            .set(player);
-        // Send back the player id and the authToken.
-        res.set('application/json').send({
-            id: id,
-            authToken: player.authToken,
+            .update({
+            state: models_1.GAME_RUNNING
         });
+        // TODO: set victims of players.
+        const snapshot = yield db
+            .collection('games')
+            .doc(code)
+            .collection('players')
+            .get();
+        console.log('Players to shuffle and connect are ' + JSON.stringify(snapshot));
+        res.send(snapshot);
+        // Send back the player id and the authToken.
+        //res.set('application/json').send(GAME_STARTED);
     });
 }
 exports.handleRequest = handleRequest;
-//# sourceMappingURL=join_game.js.map
+//# sourceMappingURL=start_game.js.map

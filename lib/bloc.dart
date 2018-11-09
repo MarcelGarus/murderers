@@ -1,24 +1,31 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
+import 'bloc_provider.dart';
 import 'game.dart';
+import 'game/game_bloc.dart';
+import 'setup/setup_bloc.dart';
 
 export 'game.dart';
 
 /// BLoC.
-class Bloc {
+class MainBloc {
   static const String firebase_root = 'https://us-central1-murderers-e67bb.cloudfunctions.net';
 
   /// Using this method, any widget in the tree below a BlocHolder can get
   /// access to the bloc.
-  static Bloc of(BuildContext context) {
-    final BlocHolder holder = context.ancestorWidgetOfExactType(BlocHolder);
+  static MainBloc of(BuildContext context) {
+    final BlocProvider holder = context.ancestorWidgetOfExactType(BlocProvider);
     return holder?.bloc;
   }
+
+  SetupBloc setupBloc = SetupBloc();
+  GameBloc gameBloc = GameBloc();
 
   /// Whether the user knows the game.
   bool _knowsGame = false;
@@ -29,11 +36,15 @@ class Bloc {
   );
   GoogleSignInAccount _account;
 
+  /// The firebase cloud messaging service provider.
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   /// The user's name.
   String name;
 
-  /// All the games the user participated in.
-  final games = <Game>[];
+  /// All the games the user participated in. TODO make a list
+  List<Game> _games;
+  Game _game;
 
   // The streams for communicating with the UI.
   final _gameSubject = BehaviorSubject<Game>();
@@ -41,14 +52,30 @@ class Bloc {
   
 
   /// Initializes the BLoC.
-  void _initialize() async {
+  void initialize() async {
     print('Initializing the BLoC.');
 
+    setupBloc.initialize(this);
+    gameBloc.initialize(this);
+
     _account = await _googleSignIn.signInSilently();
+
+    _firebaseMessaging.requestNotificationPermissions();
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) {
+        print('onMessage called: Message is $message.');
+      },
+      onResume: (msg) async => print('onResume called: Message is $msg.'),
+      onLaunch: (msg) async => print('onLaunch called: Message is $msg.'),
+    );
+    print('Firebase messaging configured.');
   }
 
   /// Disposes all the streams.
-  void _dispose() {
+  void dispose() {
+    setupBloc.dispose();
+    gameBloc.dispose();
     _gameSubject.close();
   }
 
@@ -69,70 +96,12 @@ class Bloc {
   /// Returns whether the user is signed into Google.
   bool get isSignedIn => _account != null;
 
-  /// Creates a new game.
-  Future<Game> createGame() async {
-    final response = await http.get('$firebase_root/create_game');
 
-    if (response.statusCode != 200) {
-      print('Something went wrong while creating a game.');
-      return null;
-    }
-
-    final data = json.decode(response.body);
-    print('Game code is ${data['code']}.');
-    print('Game is ${data['game']}');
-    return null; // TODO: construct game
+  /// Registers a game.
+  void registerGame(Game game) {
+    _game = game;
+    _games?.add(_game);
+    _gameSubject.add(_game);
+    gameBloc.setActiveGame(_game);
   }
-
-  /// Joins a game.
-  Future<Game> joinGame(String code) async {
-    final response = await http.get('$firebase_root/join_game?code=$code');
-
-    if (response.statusCode != 200) {
-      print('Something went wrong while joining the game $code.');
-      return null;
-    }
-
-    final data = json.decode(response.body);
-    print('Data: $data.');
-    return null; // TODO: construct game
-  }
-}
-
-
-// The code below is just for properly managing the BLoC state.
-
-class BlocProvider extends StatefulWidget {
-  BlocProvider({ @required this.child });
-  
-  final Widget child;
-
-  _BlocProviderState createState() => _BlocProviderState();
-}
-
-class _BlocProviderState extends State<BlocProvider> {
-  final Bloc bloc = Bloc();
-
-  void initState() {
-    super.initState();
-    bloc._initialize();
-  }
-
-  @override
-  void dispose() {
-    bloc._dispose();
-    super.dispose();
-  }
-
-  Widget build(BuildContext context) => BlocHolder(bloc, widget.child);
-}
-
-class BlocHolder extends StatelessWidget {
-  BlocHolder(this.bloc, this.child);
-  
-  final Bloc bloc;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => child;
 }

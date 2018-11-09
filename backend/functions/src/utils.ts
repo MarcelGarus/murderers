@@ -1,6 +1,14 @@
 
 import { Game, isGame } from './models';
 
+// Errors.
+export const NO_ACCESS: string = 'Access denied.';
+export const GAME_NOT_FOUND: string = 'Game not found.';
+export const GAME_CORRUPT: string = 'Game corrupt.';
+
+// Success return codes.
+export const GAME_STARTED: string = 'Game started.';
+
 /// Generates a random string from the given base chars with the given length.
 export function generateRandomString(chars: string, length: number): string {
   let s: string = '';
@@ -19,19 +27,15 @@ export async function loadGame(firestore: FirebaseFirestore.Firestore, code: str
     .get();
 
   if (!snapshot.exists) {
-    console.log('Game ' + code + ' does not exist.');
-    return undefined;
+    throw new Error(GAME_NOT_FOUND);
   }
 
   const data = snapshot.data();
 
   if (!isGame(data)) {
-    console.log('Snapshot data ' + JSON.stringify(data) + ' is not a game.');
-    return undefined;
+    throw new Error(GAME_CORRUPT);
   }
 
-  // @ts-ignore
-  const game: Game = data;
-
-  return game;
+  // @ts-ignore (casting data to Game)
+  return data;
 }

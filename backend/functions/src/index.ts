@@ -3,6 +3,7 @@
 import * as functions from 'firebase-functions';
 import * as createGame from './create_game';
 import * as joinGame from './join_game';
+import * as startGame from './start_game';
 import * as admin from 'firebase-admin';
 import { log } from 'util';
 
@@ -16,13 +17,7 @@ exports.create_game = functions.https.onRequest(createGame.handleRequest);
 exports.join_game = functions.https.onRequest(joinGame.handleRequest);
 
 /// Starts or resumes the game.
-///
-/// Needs:
-/// * Firebase auth in header
-/// * a game id
-/// Returns:
-/// 200: {}
-// exports.start_game = functions.http.onRequest(startGame.handleRequest);
+exports.start_game = functions.https.onRequest(startGame.handleRequest);
 
 /// Pauses or stops the game.
 ///

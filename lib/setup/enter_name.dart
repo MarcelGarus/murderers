@@ -4,14 +4,6 @@ import 'setup_finished.dart';
 import 'setup_utils.dart';
 
 class EnterNameScreen extends StatefulWidget {
-  EnterNameScreen({
-    @required this.role,
-    @required this.code,
-  });
-
-  final UserRole role;
-  final String code;
-
   @override
   _EnterNameScreenState createState() => _EnterNameScreenState();
 }
@@ -43,10 +35,7 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
         primary: 'Done',
         onPrimary: () {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => SetupFinishedScreen(
-              role: widget.role,
-              code: widget.code
-            )
+            builder: (context) => SetupFinishedScreen()
           ));
         },
       ),

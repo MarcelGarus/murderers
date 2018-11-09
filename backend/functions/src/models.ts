@@ -67,11 +67,9 @@ export function isDeath(obj): boolean {
 ///   himself to the server and change some of the game configuration.
 /// * [name]: The name of the game.
 /// * [state]: The state of the game.
-/// * [start]: The start point of the game. May be null if the game didn't
-///   start yet.
-/// * [end]: The estimated end point of the game. May be changed by the
+/// * [created]: Timestamp when the game was created.
+/// * [end]: The estimated timestamp of the game's end. May be changed by the
 ///   creator.
-/// * The 
 export type GameCode = string;
 export type GoogleSignInId = number;
 export type GameState = number;
@@ -85,7 +83,7 @@ export interface Game {
   creator: GoogleSignInId,
   name: string,
   state: GameState,
-  start: number,
+  created: number,
   end: number,
 }
 export function isGame(obj): boolean {

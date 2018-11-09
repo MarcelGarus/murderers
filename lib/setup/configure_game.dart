@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../game.dart';
 import 'confirm_game.dart';
 import 'setup_utils.dart';
 
@@ -104,10 +103,7 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
       bottomNavigationBar: SetupBottomBar(
         primary: "Create game",
         onPrimary: () {
-          Navigator.of(context).push(SetupRoute(ConfirmGameScreen(
-            role: UserRole.CREATOR,
-            code: null,
-          )));
+          Navigator.of(context).push(SetupRoute(ConfirmGameScreen()));
         },
       ),
     );

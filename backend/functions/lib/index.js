@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const createGame = require("./create_game");
 const joinGame = require("./join_game");
+const startGame = require("./start_game");
 const admin = require("firebase-admin");
 const util_1 = require("util");
 util_1.log('Initializing app.');
@@ -13,13 +14,7 @@ exports.create_game = functions.https.onRequest(createGame.handleRequest);
 /// Joins a player to a game.
 exports.join_game = functions.https.onRequest(joinGame.handleRequest);
 /// Starts or resumes the game.
-///
-/// Needs:
-/// * Firebase auth in header
-/// * a game id
-/// Returns:
-/// 200: {}
-// exports.start_game = functions.http.onRequest(startGame.handleRequest);
+exports.start_game = functions.https.onRequest(startGame.handleRequest);
 /// Pauses or stops the game.
 ///
 /// Needs:

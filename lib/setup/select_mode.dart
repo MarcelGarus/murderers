@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../bloc.dart';
 import '../game.dart';
 import 'configure_game.dart';
-import 'join_game.dart';
+import 'enter_code.dart';
+import 'setup_bloc.dart';
 import 'setup_utils.dart';
 import 'sign_in.dart';
 
@@ -12,32 +13,37 @@ class SelectModeScreen extends StatefulWidget {
 }
 
 class _SelectModeScreenState extends State<SelectModeScreen> with TickerProviderStateMixin {
-  UserRole role = UserRole.PLAYER;
-
   void _selectRole(UserRole role) => setState(() {
-    this.role = role;
+    SetupBloc.of(context).role = role;
   });
 
-  void _next() {
-    print('You chose some $role.');
+  void _proceedToNextScreen() {
+    final role = SetupBloc.of(context).role;
     final navigator = Navigator.of(context);
-    Widget nextScreen = (role == UserRole.PLAYER || role == UserRole.WATCHER)
-      // If the user wants to join an existing game, let her enter the code.
-      ? JoinGameScreen(role: role)
-      // Otherwise (she wants to create a new game), she needs to be signed in.
-      : (Bloc.of(context).isSignedIn)
-      // If she is, everything's fine.
-      ? ConfigureGameScreen()
-      // Otherwise, display a sign in screen first.
-      : SignInScreen(
-        onSignedIn: () => navigator.push(SetupRoute(ConfigureGameScreen())),
-      );
+    Widget nextScreen;
+    
+    if (role == UserRole.PLAYER || role == UserRole.WATCHER) {
+      // For joining a game, enter the code.
+      nextScreen = EnterCodeScreen();
+    } else {
+      // User wants to create a new game.
+      if (SetupBloc.of(context).canCreateNewGame) {
+        nextScreen = ConfigureGameScreen();
+      } else {
+        // Still needs to sign in.
+        nextScreen = SignInScreen(
+          onSignedIn: () => navigator.push(SetupRoute(ConfigureGameScreen())),
+        );
+      }
+    }
 
     navigator.push(SetupRoute(nextScreen));
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserRole role = SetupBloc.of(context).role;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
@@ -70,10 +76,10 @@ class _SelectModeScreenState extends State<SelectModeScreen> with TickerProvider
       ),
       bottomNavigationBar: SetupBottomBar(
         primary: 'Next',
-        onPrimary: _next,
+        onPrimary: _proceedToNextScreen,
         secondary: 'Sign out of Google', // TODO: remove
         onSecondary: () {
-          Bloc.of(context).signOut();
+          MainBloc.of(context).signOut();
         },
       ),
     );

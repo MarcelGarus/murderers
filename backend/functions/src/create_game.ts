@@ -2,12 +2,11 @@
 ///
 /// Needs:
 /// * Firebase auth in header
-/// * a name
-/// * ...
+/// * a game name
 ///
-/// Returns:
-/// 200: { code: 'abcd', game: { /* game configuration */ } }
-/// 403: {}
+/// Returns either:
+/// 200: { code: 'abcd' }
+/// 403: Access denied.
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
@@ -15,6 +14,7 @@ import { log } from 'util';
 import { Game, GameCode, GAME_NOT_STARTED_YET } from './models';
 import { generateRandomString } from './utils';
 
+const GAME_CODE_CHARS = 'abcdefghiojklnopqrstuvwxyz0123456789';
 const GAME_CODE_LENGTH = 4;
 
 /// Creates a new game code.
@@ -22,13 +22,14 @@ const GAME_CODE_LENGTH = 4;
 // TODO: use analytics to log how many tries were needed
 async function createGameCode(): Promise<GameCode> {
   const code: GameCode = generateRandomString(
-    'abcdefghiojklnopqrstuvwxyz0123456789',
+    GAME_CODE_CHARS,
     GAME_CODE_LENGTH
   );
   return code;
 }
 
 /// Creates a new game.
+/// TODO: make sure the user signed in with their Google account.
 export async function handleRequest(req: functions.Request, res: functions.Response) {
   log('App is ' + admin.app());
   log('Creating a game.');
@@ -37,7 +38,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     creator: 0,
     name: 'A sample game',
     state: GAME_NOT_STARTED_YET,
-    start: Date.now(),
+    created: Date.now(),
     end: Date.now() + 100,
   };
 
@@ -48,8 +49,8 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     .doc(code)
     .set(game);
 
+  // Send the game code back.
   res.set('application/json').send({
     code: code,
-    game: game,
   });
 }

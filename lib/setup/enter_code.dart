@@ -4,16 +4,12 @@ import '../game.dart';
 import 'setup_utils.dart';
 import 'confirm_game.dart';
 
-class JoinGameScreen extends StatefulWidget {
-  JoinGameScreen({ @required this.role });
-  
-  final UserRole role;
-
+class EnterCodeScreen extends StatefulWidget {
   @override
-  _JoinGameScreenState createState() => _JoinGameScreenState();
+  _EnterCodeScreenState createState() => _EnterCodeScreenState();
 }
 
-class _JoinGameScreenState extends State<JoinGameScreen> with TickerProviderStateMixin {
+class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +19,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> with TickerProviderStat
         children: <Widget>[
           SetupAppBar(
             title: 'Join a game',
-            subtitle: 'as a ' + (widget.role == UserRole.PLAYER ? 'player' : 'watcher'),
+            subtitle: 'by entering the code',
           ),
           SizedBox(height: 24.0),
           CodeInput(length: 4),
@@ -39,10 +35,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> with TickerProviderStat
               autofocus: true,
               onChanged: (code) {
                 if (code.length >= 4) {
-                  Navigator.of(context).push(SetupRoute(ConfirmGameScreen(
-                    role: widget.role,
-                    code: code
-                  )));
+                  Navigator.of(context).push(SetupRoute(ConfirmGameScreen()));
                 }
               },
             ),

@@ -9,6 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
+// Errors.
+exports.NO_ACCESS = 'Access denied.';
+exports.GAME_NOT_FOUND = 'Game not found.';
+exports.GAME_CORRUPT = 'Game corrupt.';
+// Success return codes.
+exports.GAME_STARTED = 'Game started.';
 /// Generates a random string from the given base chars with the given length.
 function generateRandomString(chars, length) {
     let s = '';
@@ -26,17 +32,14 @@ function loadGame(firestore, code) {
             .doc(code)
             .get();
         if (!snapshot.exists) {
-            console.log('Game ' + code + ' does not exist.');
-            return undefined;
+            throw new Error(exports.GAME_NOT_FOUND);
         }
         const data = snapshot.data();
         if (!models_1.isGame(data)) {
-            console.log('Snapshot data ' + JSON.stringify(data) + ' is not a game.');
-            return undefined;
+            throw new Error(exports.GAME_CORRUPT);
         }
-        // @ts-ignore
-        const game = data;
-        return game;
+        // @ts-ignore (casting data to Game)
+        return data;
     });
 }
 exports.loadGame = loadGame;

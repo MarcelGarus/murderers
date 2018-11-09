@@ -20,7 +20,7 @@ exports.isDeath = isDeath;
 exports.GAME_NOT_STARTED_YET = 0;
 exports.GAME_RUNNING = 1;
 exports.GAME_PAUSED = 2;
-exports.GAME_ENDED = 3;
+exports.GAME_OVER = 3;
 function isGame(obj) {
     return typeof obj.creator === "number"
         && typeof obj.name === "string"

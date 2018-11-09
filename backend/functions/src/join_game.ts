@@ -3,59 +3,66 @@
 /// Needs:
 /// * a player name
 ///
-/// Returns:
-/// 200: { id: 'abcdefghiojklmonop', auth: 'dfsiidfsd' }
+/// Returns either:
+/// 200: { id: 'abcdefghiojklmonop', authToken: 'dfsiidfsd' }
+/// 404: Game not found.
+/// 500: Game corrupt.
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { GameCode, Game, PlayerId, AuthToken, Player } from './models';
 import { loadGame, generateRandomString } from './utils';
-import { isUndefined } from 'util';
 
+const PLAYER_ID_CHARS = 'abcdefghiojklnopqrstuvwxyz0123456789';
 const PLAYER_ID_LENGTH = 2;
+const AUTH_TOKEN_CHARS = 'abcdefghiojklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 const AUTH_TOKEN_LENGTH = 16;
 
 /// Creates a new player id.
 // TODO: make sure id doesn't already exist
 // TODO: use analytics to log how many tries were needed
 async function createPlayerId(): Promise<PlayerId> {
-  const id: PlayerId = generateRandomString(
-    'abcdefghiojklnopqrstuvwxyz0123456789',
-    PLAYER_ID_LENGTH
-  );
+  const id: PlayerId = generateRandomString(PLAYER_ID_CHARS, PLAYER_ID_LENGTH);
   return id;
 }
 
 /// Creates a new auth token.
 function createAuthToken(): AuthToken {
-  return generateRandomString(
-    'abcdefghiojklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-    AUTH_TOKEN_LENGTH
-  );
+  return generateRandomString(AUTH_TOKEN_CHARS, AUTH_TOKEN_LENGTH);
 }
 
 /// Joins a player to a game.
 export async function handleRequest(req: functions.Request, res: functions.Response) {
   console.log('Request query is ' + JSON.stringify(req.query));
 
+  // Get a reference to the database and the game code.
   const db = admin.app().firestore();
   const code: GameCode = req.query.code + '';
-  const game: Game = await loadGame(db, code);
+  let game: Game;
 
   console.log('Joining the game ' + code + '.');
 
-  if (isUndefined(game)) {
-    console.log("Joining the game failed, because the game couldn't be loaded.");
-    res.status(500).set('application/json').send('Joining the game failed.');
-    return;
+  // Try to load the game.
+  try {
+    game = await loadGame(db, code);
+  } catch (error) {
+    console.log("Joining the game failed, because the game couldn't be loaded. Error is:");
+    console.log(error);
+
+    if (true) { // TODO: check error message
+      res.status(404).send('Game not found.');
+    } else {
+      res.status(500).send('Game corrupt.');
+    }
   }
 
+  // Game loaded successfully. Now join it.
   console.log('Game to join is ' + game);
 
   const player: Player = {
     authToken: createAuthToken(),
     name: 'Marcel',
-    victim: '',
+    victim: null,
     death: null
   };
 
@@ -68,5 +75,9 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     .doc(id)
     .set(player);
 
-  res.set('application/json').send(player);
+  // Send back the player id and the authToken.
+  res.set('application/json').send({
+    id: id,
+    authToken: player.authToken,
+  });
 }

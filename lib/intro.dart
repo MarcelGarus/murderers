@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'setup_utils.dart';
-import 'select_mode.dart';
+import 'setup/setup.dart';
+import 'setup/setup_utils.dart';
 
 class IntroScreen extends StatefulWidget {
   @override
@@ -30,7 +30,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
   }
 
   void _goToNextScreen() {
-    Navigator.of(context).push(SetupRoute(SelectModeScreen()));
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SetupJourney())
+    );
   }
 
   @override

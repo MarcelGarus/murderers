@@ -25,7 +25,7 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
 
     setState(() { signingIn = true; });
     try {
-      success = await Bloc.of(context).signIn();
+      success = await MainBloc.of(context).signIn();
     } catch (e) { /* User aborted sign in or timeout (no internet). */ }
     setState(() { signingIn = false; });
 

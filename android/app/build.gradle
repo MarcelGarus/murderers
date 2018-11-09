@@ -59,4 +59,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
+// The plugin for google services.
+// Version checking is disabled because it causes errors while duplicating a
+// functionality that's built-in into grade.
 apply plugin: 'com.google.gms.google-services'
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
