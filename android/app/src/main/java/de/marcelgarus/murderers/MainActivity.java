@@ -1,4 +1,4 @@
-package com.example.murderers;
+package de.marcelgarus.murderers;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

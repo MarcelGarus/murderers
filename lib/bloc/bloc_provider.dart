@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 
 import 'bloc.dart';
-import 'game/game_bloc.dart';
-import 'setup/setup_bloc.dart';
 
+/// The generic bloc provider implemented by the specialized bloc providers
+/// above.
 class BlocProvider extends StatefulWidget {
   BlocProvider({ @required this.child });
   
-  final bloc = MainBloc();
+  final Bloc bloc = Bloc();
   final Widget child;
 
   _BlocProviderState createState() => _BlocProviderState();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'bloc_provider.dart';
-import 'intro.dart';
+
+import 'bloc/bloc_provider.dart';
+import 'screens/intro.dart';
 
 void main() => runApp(MyApp());
 

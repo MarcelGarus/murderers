@@ -12,6 +12,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { GameCode, Game, PlayerId, AuthToken, Player } from './models';
 import { loadGame, generateRandomString } from './utils';
+import { Message } from 'firebase-functions/lib/providers/pubsub';
 
 const PLAYER_ID_CHARS = 'abcdefghiojklnopqrstuvwxyz0123456789';
 const PLAYER_ID_LENGTH = 2;
@@ -80,4 +81,29 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     id: id,
     authToken: player.authToken,
   });
+
+  // TODO: Also send a notification to _all_ members of the game that opted in for notifications about new players.
+  var message: admin.messaging.Message = {
+    notification: {
+      title: 'Someone just joined the game ' + code,
+      body: 'Say hi by killing ' + id + '!',
+    },
+    android: {
+      priority: 'normal',
+      collapseKey: 'joins_' + code,
+      notification: {
+        color: '#ff0000',
+      },
+    },
+    token: 'emd1IxAjbQg:APA91bF7MNO65rvy3Pg_XGEkJPHNdCSLpmahmreQYYRVEAzsIXaeg2XQNdRUHphERXzAX8WTRXnEEdisiMNsWoTQF-ee5HHDN8Gn1TIfF0MVxDbWso21JxDJt5-9-QtVUc2Jfe6EJYq7'
+  };
+
+  admin.messaging().send(message)
+    .then((response) => {
+      // Response is a message ID string.
+      console.log('Successfully sent message:', response);
+    })
+    .catch((error) => {
+      console.log('Error sending message:', error);
+    });
 }

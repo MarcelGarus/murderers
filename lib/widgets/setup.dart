@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../bloc.dart';
 
 class SetupAppBar extends StatelessWidget {
   SetupAppBar({
@@ -148,3 +147,33 @@ class SetupRoute extends PageRouteBuilder {
     }
   );
 }
+
+
+class ModeIcon extends StatefulWidget {
+  ModeIcon({
+    @required this.selected,
+    @required this.iconData,
+  });
+
+  final bool selected;
+  final IconData iconData;
+
+  @override
+  _ModeIconState createState() => _ModeIconState();
+}
+
+class _ModeIconState extends State<ModeIcon> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 48.0,
+      width: 48.0,
+      decoration: BoxDecoration(
+        color: widget.selected ? Colors.red : Colors.black26,
+        shape: BoxShape.circle
+      ), 
+      child: Icon(widget.iconData, color: Colors.white)
+    );
+  }
+}
+

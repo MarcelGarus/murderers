@@ -79,6 +79,28 @@ function handleRequest(req, res) {
             id: id,
             authToken: player.authToken,
         });
+        // TODO: Also send a notification to _all_ members of the game that opted in for notifications about new players.
+        var message = {
+            notification: {
+                title: 'Someone just joined the game ' + code,
+                body: 'Say hi by killing ' + id + '!',
+            },
+            android: {
+                priority: 'normal',
+                notification: {
+                    color: '#ff0000',
+                },
+            },
+            token: 'emd1IxAjbQg:APA91bF7MNO65rvy3Pg_XGEkJPHNdCSLpmahmreQYYRVEAzsIXaeg2XQNdRUHphERXzAX8WTRXnEEdisiMNsWoTQF-ee5HHDN8Gn1TIfF0MVxDbWso21JxDJt5-9-QtVUc2Jfe6EJYq7'
+        };
+        admin.messaging().send(message)
+            .then((response) => {
+            // Response is a message ID string.
+            console.log('Successfully sent message:', response);
+        })
+            .catch((error) => {
+            console.log('Error sending message:', error);
+        });
     });
 }
 exports.handleRequest = handleRequest;

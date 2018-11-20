@@ -12,7 +12,8 @@ dependencies:
   code_input: ^0.0.2
   firebase_messaging: ^2.0.3
   google_sign_in: ^3.2.2
-  rxdart: any
+  http: any # TODO make specific
+  rxdart: any # TODO make specific
 
 dev_dependencies:
   flutter_test:

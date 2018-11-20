@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'setup/setup.dart';
-import 'setup/setup_utils.dart';
+
+import 'setup.dart';
+import '../widgets/setup.dart'; // TODO: don't use setup bottom bar
 
 class IntroScreen extends StatefulWidget {
   @override
