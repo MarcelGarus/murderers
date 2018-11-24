@@ -2,13 +2,14 @@
 
 import * as functions from 'firebase-functions';
 import * as createGame from './create_game';
+import * as getGame from './get_game';
 import * as joinGame from './join_game';
 import * as startGame from './start_game';
 import * as admin from 'firebase-admin';
 import { log } from 'util';
 
 log('Initializing app.');
-const app = admin.initializeApp();
+admin.initializeApp();
 
 /// Creates a new game.
 exports.create_game = functions.https.onRequest(createGame.handleRequest);
@@ -18,6 +19,9 @@ exports.join_game = functions.https.onRequest(joinGame.handleRequest);
 
 /// Starts or resumes the game.
 exports.start_game = functions.https.onRequest(startGame.handleRequest);
+
+/// Gets the game state.
+exports.get_game = functions.https.onRequest(getGame.handleRequest);
 
 /// Pauses or stops the game.
 ///

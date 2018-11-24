@@ -4,20 +4,19 @@ import '../bloc/bloc.dart';
 import '../widgets/active_content.dart';
 import '../widgets/preparation_content.dart';
 
-class HomeScreen extends StatefulWidget {
+class GameScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _GameScreenState createState() => _GameScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Bloc.of(context).game,
+      stream: Bloc.of(context).activeGameStream,
       builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
         if (!snapshot.hasData) {
-          print('No data to display.');
-          return Container();
+          return Center(child: CircularProgressIndicator());
         }
 
         final game = snapshot.data;

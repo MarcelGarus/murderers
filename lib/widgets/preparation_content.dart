@@ -18,6 +18,7 @@ class PreparationContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = <Widget>[
+      Spacer(),
       Text(game.code,
         style: TextStyle(
           color: Colors.black,
@@ -49,6 +50,20 @@ class PreparationContent extends StatelessWidget {
         )
       ]);
     }
+
+    items.addAll([
+      Spacer(),
+      InkResponse(
+        onTap: () {
+          print('Showing all the players');
+        },
+        child: Container(
+          height: 48.0,
+          alignment: Alignment.center,
+          child: Text('all players'.toUpperCase()),
+        ),
+      ),
+    ]);
 
     return Center(
       child: Column(

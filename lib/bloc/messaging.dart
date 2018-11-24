@@ -4,11 +4,16 @@ class MessagingHandler {
   /// The firebase cloud messaging service provider.
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  Future<void> initialize() async {
+
+  /// Requests the notification permissions. Only really does something on iOS.
+  void requestNotificationPermissions() {
     _firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(sound: true, badge: true, alert: true)
     );
+  }
 
+  /// Configures the firebase messaging service.
+  void configure() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('onMessage called: Message is $message.');

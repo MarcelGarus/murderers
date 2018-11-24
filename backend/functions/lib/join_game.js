@@ -87,6 +87,7 @@ function handleRequest(req, res) {
             },
             android: {
                 priority: 'normal',
+                collapseKey: 'joins_' + code,
                 notification: {
                     color: '#ff0000',
                 },

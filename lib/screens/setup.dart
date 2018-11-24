@@ -271,14 +271,13 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
         primary: 'Done',
         onPrimary: () {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => SetupFinishedScreen()
+            builder: (context) => SetupFinishedScreen(configuration: widget.configuration),
           ));
         },
       ),
     );
   }
 }
-
 
 
 /// Confirm game.
@@ -294,8 +293,9 @@ class ConfirmGameScreen extends StatefulWidget {
 }
 
 class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProviderStateMixin {
-  UserRole get role => widget.configuration.role;
-  String get code => widget.configuration.code;
+  SetupConfiguration get config => widget.configuration;
+  UserRole get role => config.role;
+  String get code => config.code;
 
   void _onConfirmed() {
     final navigator = Navigator.of(context);
@@ -305,11 +305,11 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
     // need a name. If already signed in, we use that, else we offer to sign in
     // and then continue to the game or - if skipped - enter the name manually.
     if (role != UserRole.PLAYER || Bloc.of(context).isSignedIn) {
-      nextScreen = SetupFinishedScreen();
+      nextScreen = SetupFinishedScreen(configuration: config);
     } else {
       nextScreen = SignInScreen(
-        onSignedIn: () => navigator.push(SetupRoute(SetupFinishedScreen())),
-        onSkipped: () => navigator.push(SetupRoute(EnterNameScreen())),
+        onSignedIn: () => navigator.push(SetupRoute(SetupFinishedScreen(configuration: config))),
+        onSkipped: () => navigator.push(SetupRoute(EnterNameScreen(configuration: config))),
       );
     }
 
@@ -461,7 +461,7 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
       bottomNavigationBar: SetupBottomBar(
         primary: "Create game",
         onPrimary: () {
-          Navigator.of(context).push(SetupRoute(ConfirmGameScreen()));
+          Navigator.of(context).push(SetupRoute(ConfirmGameScreen(configuration: widget.configuration)));
         },
       ),
     );
@@ -494,7 +494,7 @@ class SetupFinishedScreen extends StatefulWidget {
     @required this.configuration
   });
 
-  SetupConfiguration configuration;
+  final SetupConfiguration configuration;
 
   @override
   _SetupFinishedScreenState createState() => _SetupFinishedScreenState();
@@ -515,7 +515,7 @@ class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerPr
   void _finished(SetupResult result) {
     if (result.succeeded) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => HomeScreen(),
+        builder: (context) => GameScreen(),
       ));
     } else {
       print('Game couldnt be created.');

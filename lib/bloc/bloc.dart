@@ -1,15 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:rxdart/rxdart.dart';
 
 import 'account.dart';
-import 'messaging.dart';
-import 'setup.dart' as setup;
 import 'bloc_provider.dart';
+import 'messaging.dart';
 import 'models/game.dart';
 import 'models/setup.dart';
+import 'setup.dart' as setup;
+import 'streamed_property.dart';
 
 export 'bloc_provider.dart';
 export 'models/death.dart';
@@ -41,6 +41,9 @@ class Bloc {
   /// Whether the user knows the game.
   bool _knowsGame = false;
 
+  /// Whether the user enabled notifications.
+  bool _notificationsEnabled = false;
+
   // The handlers for all the specific tasks.
   AccountHandler _account = AccountHandler();
   MessagingHandler _messaging = MessagingHandler();
@@ -48,51 +51,65 @@ class Bloc {
   /// The user's name.
   String name;
 
-  /// All the games the user participated in. TODO make a list
-  List<Game> _games;
-  Game _game;
-
-  // The streams for communicating with the UI.
-  final _gameSubject = BehaviorSubject<Game>();
-  Stream<Game> get game => _gameSubject.stream; //.distinct(); TODO
+  /// All the games the user participated in.
+  List<Game> _games = <Game>[];
   
+  /// The active game.
+  final _activeGame = StreamedProperty<Game>();
+  Game get activeGame => _activeGame.value;
+  set activeGame(Game game) {
+    assert(game == null || _games.contains(game));
+    _activeGame.value = game;
+  }
+  get activeGameStream => _activeGame.stream;
+
+  /// Whether the user is signed in.
+  bool get isSignedIn => _account.isSignedIn;
+
 
   /// Initializes the BLoC.
   void initialize() async {
-    print('Initializing the BLoCs.');
+    print('Initializing the BLoC.');
 
     await _account.initialize();
-    await _messaging.initialize();  
+
+    _messaging.requestNotificationPermissions();
+    _messaging.configure();
   }
 
   /// Disposes all the streams.
   void dispose() {
-    _gameSubject.close();
+    _activeGame.dispose();
   }
 
-  bool get isSignedIn => _account.isSignedIn;
   Future<bool> signIn() => _account.signIn();
   Future<void> signOut() => _account.signOut();
 
-  /// Registers a game.
-  void registerGame(Game game) {
-    _game = game;
-    _games?.add(_game);
-    _gameSubject.add(_game);
-    //gameBloc.setActiveGame(_game);
+  // Adds or removes a game.
+  void addGame(Game game) {
+    _games?.add(game);
+    activeGame = game;
   }
-  void unregisterGame(Game game) {}
+  void removeGame(Game game) {
+    _games?.remove(game);
+    activeGame = _games.isEmpty ? null : _games[0];
+    game.dispose();
+  }
 
 
-  Future<void> setupGame(SetupConfiguration config) async {
+  Future<setup.SetupResult> setupGame(SetupConfiguration config) async {
     final result = await setup.setupGame(config);
+    if (result.status == setup.SetupStatus.SUCCESS) {
+      addGame(result.game);
+    }
+    return result;
   }
 
   
 
   /// Starts the game.
   Future<GameControlResult> startGame() async {
-    print('Starting game $_game');
+    print('Starting game $_activeGame');
     final response = await http.get('$firebase_root/start_game');
 
     if (response.statusCode == 403) {
@@ -105,7 +122,7 @@ class Bloc {
       return GameControlResult.SERVER_CORRUPT;
     }
 
-    _game?.state = GameState.RUNNING;
+    activeGame?.state = GameState.RUNNING;
     //setActiveGame(_game);
 
     return GameControlResult.SUCCESS;
