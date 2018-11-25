@@ -22,7 +22,7 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
     final navigator = Navigator.of(context);
     Widget nextScreen;
     
-    if (role == UserRole.PLAYER || role == UserRole.WATCHER) {
+    if (role == UserRole.player || role == UserRole.watcher) {
       // For joining a game, enter the code.
       nextScreen = EnterCodeScreen(configuration: config);
     } else {
@@ -52,24 +52,24 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
           SetupAppBar(title: 'Choose a game mode'),
           ListTile(
             contentPadding: EdgeInsets.all(16.0),
-            leading: ModeIcon(selected: role == UserRole.PLAYER, iconData: Icons.person),
+            leading: ModeIcon(selected: role == UserRole.player, iconData: Icons.person),
             title: Text("Join as assassin", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("Participate in a game and have fun killing players."),
-            onTap: () => _selectRole(UserRole.PLAYER),
+            onTap: () => _selectRole(UserRole.player),
           ),
           ListTile(
             contentPadding: EdgeInsets.all(16.0),
-            leading: ModeIcon(selected: role == UserRole.WATCHER, iconData: Icons.remove_red_eye),
+            leading: ModeIcon(selected: role == UserRole.watcher, iconData: Icons.remove_red_eye),
             title: Text("Join as watcher", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("Watch the rankings and get notified about what's happening without actually participating."),
-            onTap: () => _selectRole(UserRole.WATCHER),
+            onTap: () => _selectRole(UserRole.watcher),
           ),
           ListTile(
             contentPadding: EdgeInsets.all(16.0),
-            leading: ModeIcon(selected: role == UserRole.CREATOR, iconData: Icons.add),
+            leading: ModeIcon(selected: role == UserRole.creator, iconData: Icons.add),
             title: Text("Create new game", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("Create a completely new game. Make sure you gathered other people around you who are willing to play."),
-            onTap: () => _selectRole(UserRole.CREATOR),
+            onTap: () => _selectRole(UserRole.creator),
           ),
           SizedBox(height: 16.0),
         ],
@@ -304,7 +304,7 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
     // If the user doesn't want to play, the setup is finished. Otherwise, we
     // need a name. If already signed in, we use that, else we offer to sign in
     // and then continue to the game or - if skipped - enter the name manually.
-    if (role != UserRole.PLAYER || Bloc.of(context).isSignedIn) {
+    if (role != UserRole.player || Bloc.of(context).isSignedIn) {
       nextScreen = SetupFinishedScreen(configuration: config);
     } else {
       nextScreen = SignInScreen(
@@ -324,7 +324,7 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
         padding: EdgeInsets.zero,
         children: <Widget>[
           SetupAppBar(
-            title: widget.configuration.role == UserRole.CREATOR ? 'Create a game' : 'Join a game'
+            title: widget.configuration.role == UserRole.creator ? 'Create a game' : 'Join a game'
           ),
           SizedBox(height: 24.0),
           Column(
@@ -508,16 +508,16 @@ class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerPr
 
     final config = widget.configuration;
 
-    print('Setting up a game for user ${config.name}.');
+    print('Setting up a game for user ${config.playerName}.');
     Bloc.of(context).setupGame(config).then(_finished);
   }
 
   void _finished(SetupResult result) {
-    if (result.succeeded) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => GameScreen(),
-      ));
-    } else {
+    // If it succeeded, the new active game is already set and the setup widget
+    // subtree will be replaced by the game screen. That means, we only need to
+    // handle the error cases in here.
+
+    if (!result.succeeded) {
       print('Game couldnt be created.');
       // TODO: display appropriate error and offer to retry
     }
@@ -525,7 +525,7 @@ class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerPr
 
   @override
   Widget build(BuildContext context) {
-    String text = (widget.configuration.role == UserRole.CREATOR)
+    String text = (widget.configuration.role == UserRole.creator)
       ? "Wait while your game\nis being created."
       : "Wait while you're\njoining the game.";
 

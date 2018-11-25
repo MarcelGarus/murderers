@@ -71,7 +71,7 @@ function handleRequest(req, res) {
             state: game.state,
             created: game.created,
             end: game.end,
-            player: players.map((value, index, all) => {
+            players: players.map((value, index, _) => {
                 return {
                     id: playerIds[index],
                     name: value.name,

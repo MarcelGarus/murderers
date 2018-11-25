@@ -43,8 +43,10 @@ function handleRequest(req, res) {
         // Get a reference to the database and the game code.
         const db = admin.app().firestore();
         const code = req.query.code + '';
+        const name = req.query.name + '';
+        const messagingToken = req.query.messagingToken + '';
         let game;
-        console.log('Joining the game ' + code + '.');
+        console.log(name + ' joins the game ' + code + '.');
         // Try to load the game.
         try {
             game = yield utils_1.loadGame(db, code);
@@ -63,7 +65,8 @@ function handleRequest(req, res) {
         console.log('Game to join is ' + game);
         const player = {
             authToken: createAuthToken(),
-            name: 'Marcel',
+            messagingToken: messagingToken,
+            name: name,
             victim: null,
             death: null
         };
@@ -87,7 +90,7 @@ function handleRequest(req, res) {
             },
             android: {
                 priority: 'normal',
-                collapseKey: 'joins_' + code,
+                collapseKey: 'someone_joins_' + code,
                 notification: {
                     color: '#ff0000',
                 },

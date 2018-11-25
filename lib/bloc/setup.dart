@@ -14,37 +14,36 @@ import 'models/setup.dart';
 /// can occur.
 enum SetupStatus {
   /// The game was successfully set up.
-  SUCCESS,
+  success,
 
   /// There's no connection to the internet.
-  NO_INTERNET,
+  no_internet,
 
   /// The server couldn't be found. Maybe it's down or there's restricted
   /// network access.
-  NO_SERVER,
+  no_server,
 
   /// The connection timed out. Probably, the connection got interrupted or the
   /// network connection is just really bad.
-  TIMEOUT,
+  timeout,
 
   // The server sent an unexpected response code or content.
-  SERVER_CORRUPT,
+  server_corrupt,
 
   /// The access got denied. Probably the device didn't send a valid Firebase
   /// ID token.
-  ACCESS_DENIED,
+  access_denied,
 
   /// A game with the given code doesn't exist.
-  GAME_NOT_FOUND,
+  game_not_found,
 }
 
-/// A setup result which contains a status and - if the status is
-/// [SetupStatus.SUCCESS] - a game.
+/// A setup result which contains a status and - if successful - a game.
 class SetupResult {
   SetupResult(this.status, [ this.game ]);
 
   SetupStatus status;
-  bool get succeeded => status == SetupStatus.SUCCESS;
+  bool get succeeded => status == SetupStatus.success;
 
   Game game;
 }
@@ -52,29 +51,33 @@ class SetupResult {
 
 /// Does the necessary network stuff to set up a game returns a [SetupResult],
 /// which contains a [SetupStatus] and maybe a [Game].
-Future<SetupResult> setupGame(SetupConfiguration config) async {
+Future<SetupResult> setupGame(SetupConfiguration config, String messagingToken) async {
   assert(config?.role != null);
 
   switch (config?.role) {
-    case UserRole.PLAYER: return _joinGame(config);
-    case UserRole.WATCHER: return _watchGame(config);
-    case UserRole.CREATOR: return _createGame(config);
+    case UserRole.player: return _joinGame(config, messagingToken);
+    case UserRole.watcher: return _watchGame(config, messagingToken);
+    case UserRole.creator: return _createGame(config, messagingToken);
   }
   print('Error: Unknown role ${config.role} passed to setupGame.');
   return null;
 }
 
 /// Joins a game.
-Future<SetupResult> _joinGame(SetupConfiguration config) async {
-  assert(config.role == UserRole.PLAYER);
+Future<SetupResult> _joinGame(
+  SetupConfiguration config,
+  String messagingToken
+) async {
+  assert(config.role == UserRole.player);
   assert(config.code?.length == Game.CODE_LENGTH);
 
   final String code = config.code;
-  final response = await http.get('${Bloc.firebase_root}/join_game?code=$code');
+  final String name = config.playerName;
+  final response = await http.get('${Bloc.firebase_root}/join_game?code=$code&name=$name&messagingToken=$messagingToken');
 
   if (response.statusCode != 200) {
     print('Something went wrong while joining the game $code.');
-    return SetupResult(SetupStatus.SERVER_CORRUPT);
+    return SetupResult(SetupStatus.server_corrupt);
   }
 
   final data = json.decode(response.body);
@@ -82,27 +85,39 @@ Future<SetupResult> _joinGame(SetupConfiguration config) async {
 
   // Register game in the main bloc.
   final game = Game(
-    myRole: UserRole.PLAYER,
+    myRole: UserRole.player,
     code: code,
     name: 'Sample game',
     created: DateTime.now(),
     end: DateTime.now().add(Duration(days: 1)), // TODO: set
+    me: Player(
+      id: data['id'],
+      name: config.playerName
+    ),
+    authToken: data['authToken']
   );
 
-  return SetupResult(SetupStatus.SUCCESS, game);
+  return SetupResult(SetupStatus.success, game);
 }
 
 
 /// Creates a new game and registers it in the main bloc.
-Future<SetupResult> _createGame(SetupConfiguration config) async {
-  final response = await http.get('${Bloc.firebase_root}/create_game');
+Future<SetupResult> _createGame(
+  SetupConfiguration config,
+  String messagingToken
+) async {
+  assert(config.role == UserRole.creator);
+  assert(config.gameName?.isNotEmpty ?? true); // TODO: make sure name exists
+
+  final name = config.gameName;
+  final response = await http.get('${Bloc.firebase_root}/create_game?name=$name&messagingToken=$messagingToken');
 
   if (response.statusCode == 403) {
-    return SetupResult(SetupStatus.ACCESS_DENIED);
+    return SetupResult(SetupStatus.access_denied);
   } else if (response.statusCode != 200) {
     // TODO: log somewhere, probably in analytics
     print('Unknown server response code: ${response.statusCode}');
-    return SetupResult(SetupStatus.SERVER_CORRUPT);
+    return SetupResult(SetupStatus.server_corrupt);
   }
 
   // TODO: check if decoding works and game actually contains a 4-char code
@@ -113,18 +128,21 @@ Future<SetupResult> _createGame(SetupConfiguration config) async {
 
   // Register game in the main bloc.
   final game = Game(
-    myRole: UserRole.CREATOR,
+    myRole: UserRole.creator,
     code: code,
-    name: 'Sample game',
+    name: name,
     created: DateTime.now(),
     end: DateTime.now().add(Duration(days: 1)), // TODO: set
   );
 
-  return SetupResult(SetupStatus.SUCCESS, game);
+  return SetupResult(SetupStatus.success, game);
 }
 
 
 /// Watch a game.
-Future<SetupResult> _watchGame(SetupConfiguration config) async {
+Future<SetupResult> _watchGame(
+  SetupConfiguration config,
+  String messagingToken
+) async {
   return null; // TODO: implement
 }

@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
-import 'account.dart';
+import 'account.dart' as account;
+import 'messaging.dart' as messaging;
+import 'persistence.dart' as persistence;
+import 'setup.dart' as setup;
+
 import 'bloc_provider.dart';
-import 'messaging.dart';
 import 'models/game.dart';
 import 'models/setup.dart';
-import 'setup.dart' as setup;
 import 'streamed_property.dart';
 
 export 'bloc_provider.dart';
@@ -45,11 +47,11 @@ class Bloc {
   bool _notificationsEnabled = false;
 
   // The handlers for all the specific tasks.
-  AccountHandler _account = AccountHandler();
-  MessagingHandler _messaging = MessagingHandler();
+  final _account = account.Handler();
+  final _messaging = messaging.Handler();
 
   /// The user's name.
-  String name;
+  String _name;
 
   /// All the games the user participated in.
   List<Game> _games = <Game>[];
@@ -71,6 +73,11 @@ class Bloc {
   void initialize() async {
     print('Initializing the BLoC.');
 
+    _games = await persistence.loadGames();
+    if (_games.isNotEmpty) {
+      activeGame = _games.first;
+    }
+
     await _account.initialize();
 
     _messaging.requestNotificationPermissions();
@@ -89,6 +96,7 @@ class Bloc {
   void addGame(Game game) {
     _games?.add(game);
     activeGame = game;
+    persistence.saveGames(_games);
   }
   void removeGame(Game game) {
     _games?.remove(game);
@@ -98,8 +106,9 @@ class Bloc {
 
 
   Future<setup.SetupResult> setupGame(SetupConfiguration config) async {
-    final result = await setup.setupGame(config);
-    if (result.status == setup.SetupStatus.SUCCESS) {
+    final messagingToken = await _messaging.getToken();
+    final result = await setup.setupGame(config, messagingToken);
+    if (result.status == setup.SetupStatus.success) {
       addGame(result.game);
     }
     return result;
@@ -122,7 +131,7 @@ class Bloc {
       return GameControlResult.SERVER_CORRUPT;
     }
 
-    activeGame?.state = GameState.RUNNING;
+    activeGame?.state = GameState.running;
     //setActiveGame(_game);
 
     return GameControlResult.SUCCESS;

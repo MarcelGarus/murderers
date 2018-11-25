@@ -39,7 +39,7 @@ class PreparationContent extends StatelessWidget {
       ),
     ];
 
-    if (game.myRole == UserRole.CREATOR) {
+    if (game.myRole == UserRole.creator) {
       items.addAll([
         SizedBox(height: 16.0),
         MainActionButton(

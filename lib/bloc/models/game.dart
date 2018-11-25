@@ -1,32 +1,19 @@
+import 'package:flutter/widgets.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../streamed_property.dart';
 import 'player.dart';
 import 'user_role.dart';
 
+part 'game.g.dart';
+
+enum GameState { notStartedYet, running, paused, over }
+
 /// A game.
-
-
-enum GameState { NOT_STARTED_YET, RUNNING, PAUSED, OVER }
-
-/// 
+@JsonSerializable()
 class Game {
   static const int CODE_LENGTH = 4;
-
-  Game({
-    this.myRole,
-    this.code,
-    this.name,
-    GameState state = GameState.NOT_STARTED_YET,
-    this.created,
-    this.end,
-    List<Player> players = const [],
-    this.me,
-    Player victim,
-  }) :
-    _state = StreamedProperty(initial: state),
-    _players = StreamedProperty(initial: players),
-    _victim = StreamedProperty(initial: victim);
 
 
   /// This user's role in this game.
@@ -68,6 +55,11 @@ class Game {
   /// May be null if this user is not a player.
   Player me;
 
+  /// This player's auth token.
+  /// 
+  /// May be null if this user is only watching.
+  String authToken;
+
   /// This player's victim.
   /// 
   /// May be null if the user is not a player, the game didn't start yet or the
@@ -77,6 +69,25 @@ class Game {
   Player get victim => _victim.value;
   set victim(Player player) => _victim.value = player;
 
+
+  Game({
+    @required this.myRole,
+    @required this.code,
+    @required this.name,
+    GameState state = GameState.notStartedYet,
+    @required this.created,
+    @required this.end,
+    List<Player> players = const [],
+    this.me,
+    this.authToken,
+    Player victim,
+  }) :
+    _state = StreamedProperty(initial: state),
+    _players = StreamedProperty(initial: players),
+    _victim = StreamedProperty(initial: victim);
+
+  factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
+  Map<String, dynamic> toJson() => _$GameToJson(this);
 
   /// Disposes all streamed properties.
   void dispose() {

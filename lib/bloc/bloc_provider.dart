@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import 'bloc.dart';
 
-/// The generic bloc provider implemented by the specialized bloc providers
-/// above.
+/// The bloc provider that can be searched for by widgets in the subtree.
+/// Links the BLoC's lifecycle to this widget.
 class BlocProvider extends StatefulWidget {
   BlocProvider({ @required this.child });
   

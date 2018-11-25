@@ -15,19 +15,18 @@
 ///   player lives.
 export type PlayerId = string;
 export type AuthToken = string;
+export type MessagingToken = string;
 
 export interface Player {
   authToken: AuthToken,
+  messagingToken: MessagingToken,
   name: string,
   victim: PlayerId,
   death: Death,
 }
 export function isPlayer(obj): boolean {
-  console.log('Auth token valid? ' + (typeof obj.authToken === "string"));
-  console.log('Name valid? ' + (typeof obj.name === "string"));
-  console.log('Victim valid? ' + (obj.victim === null || typeof obj.victim === "string"));
-  console.log('Death valid? ' + (obj.death === null || isDeath(obj.death)));
   return typeof obj.authToken === "string"
+    && typeof obj.messagingToken === "string"
     && typeof obj.name === "string"
     && (obj.victim === null || typeof obj.victim === "string")
     && (obj.death === null || isDeath(obj.death));

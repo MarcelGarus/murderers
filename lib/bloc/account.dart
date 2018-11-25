@@ -1,6 +1,6 @@
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AccountHandler {
+class Handler {
   // The Google sign in provider.
   final _googleSignIn = GoogleSignIn.standard(
     scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]

@@ -36,11 +36,12 @@ function createGameCode() {
 /// TODO: make sure the user signed in with their Google account.
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        util_1.log('App is ' + admin.app());
-        util_1.log('Creating a game.');
+        const name = req.query.name + '';
+        const messagingToken = req.query.messagingToken + '';
+        util_1.log('Creating a game named ' + name + '. Creators messaging token: ' + messagingToken);
         const game = {
             creator: 0,
-            name: 'A sample game',
+            name: name,
             state: models_1.GAME_NOT_STARTED_YET,
             created: Date.now(),
             end: Date.now() + 100,

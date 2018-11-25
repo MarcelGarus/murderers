@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-class MessagingHandler {
+class Handler {
   /// The firebase cloud messaging service provider.
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -24,4 +24,6 @@ class MessagingHandler {
     _firebaseMessaging.getToken().then(print);
     print('Firebase messaging configured.');
   }
+
+  Future<String> getToken() => _firebaseMessaging.getToken();
 }

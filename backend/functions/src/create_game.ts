@@ -31,12 +31,14 @@ async function createGameCode(): Promise<GameCode> {
 /// Creates a new game.
 /// TODO: make sure the user signed in with their Google account.
 export async function handleRequest(req: functions.Request, res: functions.Response) {
-  log('App is ' + admin.app());
-  log('Creating a game.');
+  const name: string = req.query.name + '';
+  const messagingToken: string = req.query.messagingToken + '';
+
+  log('Creating a game named ' + name + '. Creators messaging token: ' + messagingToken);
 
   const game: Game = {
     creator: 0,
-    name: 'A sample game',
+    name: name,
     state: GAME_NOT_STARTED_YET,
     created: Date.now(),
     end: Date.now() + 100,

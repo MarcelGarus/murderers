@@ -10,9 +10,8 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, PlayerId, AuthToken, Player, isPlayer } from './models';
-import { loadGame, generateRandomString } from './utils';
-import { print } from 'util';
+import { GameCode, Game, Player, isPlayer } from './models';
+import { loadGame } from './utils';
 
 /// Returns a game's state.
 export async function handleRequest(req: functions.Request, res: functions.Response) {
@@ -72,7 +71,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     state: game.state,
     created: game.created,
     end: game.end,
-    players: players.map((value, index, all) => {
+    players: players.map((value, index, _) => {
       return {
         id: playerIds[index],
         name: value.name,

@@ -6,6 +6,7 @@ function isPlayer(obj) {
     console.log('Victim valid? ' + (obj.victim === null || typeof obj.victim === "string"));
     console.log('Death valid? ' + (obj.death === null || isDeath(obj.death)));
     return typeof obj.authToken === "string"
+        && typeof obj.messagingToken === "string"
         && typeof obj.name === "string"
         && (obj.victim === null || typeof obj.victim === "string")
         && (obj.death === null || isDeath(obj.death));

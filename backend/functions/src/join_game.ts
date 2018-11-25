@@ -39,9 +39,11 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
   // Get a reference to the database and the game code.
   const db = admin.app().firestore();
   const code: GameCode = req.query.code + '';
+  const name: string = req.query.name + '';
+  const messagingToken: string = req.query.messagingToken + '';
   let game: Game;
 
-  console.log('Joining the game ' + code + '.');
+  console.log(name + ' joins the game ' + code + '.');
 
   // Try to load the game.
   try {
@@ -62,7 +64,8 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
 
   const player: Player = {
     authToken: createAuthToken(),
-    name: 'Marcel',
+    messagingToken: messagingToken,
+    name: name,
     victim: null,
     death: null
   };
@@ -90,7 +93,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     },
     android: {
       priority: 'normal',
-      collapseKey: 'joins_' + code,
+      collapseKey: 'someone_joins_' + code,
       notification: {
         color: '#ff0000',
       },

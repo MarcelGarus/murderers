@@ -30,7 +30,7 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
           body: SafeArea(
-            child: game.state == GameState.NOT_STARTED_YET
+            child: game.state == GameState.notStartedYet
               ? PreparationContent(game: game)
               : ActiveContent(game: game)
           )
@@ -40,11 +40,11 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Color _getBackgroundColor(Game game) {
-    return (game.state == GameState.NOT_STARTED_YET)
+    return (game.state == GameState.notStartedYet)
       ? Colors.white
       : !(game.me?.isAlive ?? true)
       ? Colors.black
-      : (game.state == GameState.RUNNING)
+      : (game.state == GameState.running)
       ? Colors.red
       : Colors.white;
   }  
