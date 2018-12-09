@@ -4,46 +4,19 @@
 /// enum as well as a [SetupResult].
 
 import 'dart:convert';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:http/http.dart' as http;
 
 import 'bloc.dart';
+import 'function_status.dart';
 import 'models/setup.dart';
-
-/// These are all possible setup statuses that the [SetupResult] can contain.
-/// Note that depending on how the game is set up, not necessarily all of them
-/// can occur.
-enum SetupStatus {
-  /// The game was successfully set up.
-  success,
-
-  /// There's no connection to the internet.
-  no_internet,
-
-  /// The server couldn't be found. Maybe it's down or there's restricted
-  /// network access.
-  no_server,
-
-  /// The connection timed out. Probably, the connection got interrupted or the
-  /// network connection is just really bad.
-  timeout,
-
-  // The server sent an unexpected response code or content.
-  server_corrupt,
-
-  /// The access got denied. Probably the device didn't send a valid Firebase
-  /// ID token.
-  access_denied,
-
-  /// A game with the given code doesn't exist.
-  game_not_found,
-}
 
 /// A setup result which contains a status and - if successful - a game.
 class SetupResult {
   SetupResult(this.status, [ this.game ]);
 
-  SetupStatus status;
-  bool get succeeded => status == SetupStatus.success;
+  FunctionStatus status;
+  bool get succeeded => status == FunctionStatus.success;
 
   Game game;
 }
@@ -74,10 +47,11 @@ Future<SetupResult> _joinGame(
   final String code = config.code;
   final String name = config.playerName;
   final response = await http.get('${Bloc.firebase_root}/join_game?code=$code&name=$name&messagingToken=$messagingToken');
+  // await CloudFunctions.instance.call(functionName: 'join', parameters: { code: code, name: name, messagingToken: messagingToken });
 
   if (response.statusCode != 200) {
     print('Something went wrong while joining the game $code.');
-    return SetupResult(SetupStatus.server_corrupt);
+    return SetupResult(FunctionStatus.server_corrupt);
   }
 
   final data = json.decode(response.body);
@@ -97,7 +71,7 @@ Future<SetupResult> _joinGame(
     authToken: data['authToken']
   );
 
-  return SetupResult(SetupStatus.success, game);
+  return SetupResult(FunctionStatus.success, game);
 }
 
 
@@ -113,11 +87,11 @@ Future<SetupResult> _createGame(
   final response = await http.get('${Bloc.firebase_root}/create_game?name=$name&messagingToken=$messagingToken');
 
   if (response.statusCode == 403) {
-    return SetupResult(SetupStatus.access_denied);
+    return SetupResult(FunctionStatus.access_denied);
   } else if (response.statusCode != 200) {
     // TODO: log somewhere, probably in analytics
     print('Unknown server response code: ${response.statusCode}');
-    return SetupResult(SetupStatus.server_corrupt);
+    return SetupResult(FunctionStatus.server_corrupt);
   }
 
   // TODO: check if decoding works and game actually contains a 4-char code
@@ -135,7 +109,7 @@ Future<SetupResult> _createGame(
     end: DateTime.now().add(Duration(days: 1)), // TODO: set
   );
 
-  return SetupResult(SetupStatus.success, game);
+  return SetupResult(FunctionStatus.success, game);
 }
 
 

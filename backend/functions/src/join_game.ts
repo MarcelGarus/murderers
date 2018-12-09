@@ -12,7 +12,6 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { GameCode, Game, PlayerId, AuthToken, Player } from './models';
 import { loadGame, generateRandomString } from './utils';
-import { Message } from 'firebase-functions/lib/providers/pubsub';
 
 const PLAYER_ID_CHARS = 'abcdefghiojklnopqrstuvwxyz0123456789';
 const PLAYER_ID_LENGTH = 2;
@@ -86,7 +85,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
   });
 
   // TODO: Also send a notification to _all_ members of the game that opted in for notifications about new players.
-  var message: admin.messaging.Message = {
+  const message: admin.messaging.Message = {
     notification: {
       title: 'Someone just joined the game ' + code,
       body: 'Say hi by killing ' + id + '!',

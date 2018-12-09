@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
+import '../screens/players.dart';
 import 'main_action_button.dart';
 
 class PreparationContent extends StatelessWidget {
@@ -17,6 +18,8 @@ class PreparationContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building the preparation content.');
+
     final items = <Widget>[
       Spacer(),
       Text(game.code,
@@ -56,6 +59,9 @@ class PreparationContent extends StatelessWidget {
       InkResponse(
         onTap: () {
           print('Showing all the players');
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => PlayersScreen()
+          ));
         },
         child: Container(
           height: 48.0,

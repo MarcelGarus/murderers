@@ -53,16 +53,48 @@ function handleRequest(req, res) {
             .update({
             state: models_1.GAME_RUNNING
         });
-        // TODO: set victims of players.
         const snapshot = yield db
             .collection('games')
             .doc(code)
             .collection('players')
             .get();
-        console.log('Players to shuffle and connect are ' + JSON.stringify(snapshot));
-        res.send(snapshot);
-        // Send back the player id and the authToken.
-        //res.set('application/json').send(GAME_STARTED);
+        // Save all players.
+        const players = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            console.log(doc.id, '=>', data);
+            if (models_1.isPlayer(data)) {
+                players.push({
+                    id: doc.id,
+                    data: data
+                });
+            }
+            else {
+                console.log('Is not a player: ' + data);
+            }
+        });
+        console.log('Players to shuffle and connect are ' + JSON.stringify(players));
+        // Set the player's victims randomly.
+        utils_1.shuffle(players);
+        console.log('Shuffled players are ' + JSON.stringify(players));
+        players.forEach((player, index) => {
+            console.log('Setting the victim of player #' + index + ' (' + JSON.stringify(player) + ')');
+            if (index === 0) {
+                player.data.victim = players[players.length - 1].id;
+            }
+            else {
+                player.data.victim = players[index - 1].id;
+            }
+        });
+        players.forEach((player) => __awaiter(this, void 0, void 0, function* () {
+            yield db
+                .collection('games')
+                .doc(code)
+                .collection('players')
+                .doc(player.id)
+                .set(player.data);
+        }));
+        res.send('success');
     });
 }
 exports.handleRequest = handleRequest;

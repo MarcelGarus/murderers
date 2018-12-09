@@ -9,7 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cloud_functions: ^0.0.5
   code_input: ^0.0.2
+  firebase_analytics: ^1.0.6
   firebase_messaging: ^2.0.3
   google_sign_in: ^3.2.2
   http: any # TODO make specific

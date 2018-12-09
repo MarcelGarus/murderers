@@ -1,19 +1,22 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
 
 import 'account.dart' as account;
+import 'action.dart' as action;
 import 'messaging.dart' as messaging;
 import 'persistence.dart' as persistence;
 import 'setup.dart' as setup;
 
 import 'bloc_provider.dart';
+import 'function_status.dart';
 import 'models/game.dart';
 import 'models/setup.dart';
 import 'streamed_property.dart';
 
 export 'bloc_provider.dart';
+export 'function_status.dart';
 export 'models/death.dart';
 export 'models/game.dart';
 export 'models/player.dart';
@@ -31,8 +34,7 @@ enum GameControlResult {
 
 /// The BLoC.
 class Bloc {
-  // TODO: use the cloud function package
-  static const String firebase_root = 'https://us-central1-murderers-e67bb.cloudfunctions.net';
+  static String firebase_root = 'https://us-central1-murderers-e67bb.cloudfunctions.net';
 
   /// This methods allows subtree widgets to access this bloc.
   static Bloc of(BuildContext context) {
@@ -45,6 +47,8 @@ class Bloc {
 
   /// Whether the user enabled notifications.
   bool _notificationsEnabled = false;
+
+  FirebaseAnalytics analytics = FirebaseAnalytics();
 
   // The handlers for all the specific tasks.
   final _account = account.Handler();
@@ -70,16 +74,25 @@ class Bloc {
 
 
   /// Initializes the BLoC.
-  void initialize() async {
+  void initialize() {
     print('Initializing the BLoC.');
 
-    _games = await persistence.loadGames();
-    if (_games.isNotEmpty) {
-      activeGame = _games.first;
-    }
+    // Asynchronously load the games.
+    persistence.loadGames().then((games) {
+      _games = games;
+      if (_games.isNotEmpty) {
+        activeGame = _games.first;
+        updateActiveGame();
+      }
+    });
 
-    await _account.initialize();
+    // Asynchronously log app open event.
+    analytics.logAppOpen();
 
+    // Silently sign in asynchronously.
+    _account.initialize();
+
+    // Configure the messaging synchronously.
     _messaging.requestNotificationPermissions();
     _messaging.configure();
   }
@@ -104,36 +117,25 @@ class Bloc {
     game.dispose();
   }
 
+  void updateActiveGame() {
+    action.updateGame(activeGame).then((_) => activeGame = activeGame);
+  }
 
-  Future<setup.SetupResult> setupGame(SetupConfiguration config) async {
+
+  Future<FunctionStatus> setupGame(SetupConfiguration config) async {
     final messagingToken = await _messaging.getToken();
     final result = await setup.setupGame(config, messagingToken);
-    if (result.status == setup.SetupStatus.success) {
+    if (result.status == FunctionStatus.success) {
       addGame(result.game);
     }
-    return result;
+    updateActiveGame();
+    return result.status;
   }
 
   
 
-  /// Starts the game.
-  Future<GameControlResult> startGame() async {
-    print('Starting game $_activeGame');
-    final response = await http.get('$firebase_root/start_game');
-
-    if (response.statusCode == 403) {
-      return GameControlResult.ACCESS_DENIED;
-    } else if (response.statusCode == 404) {
-      return GameControlResult.GAME_NOT_FOUND;
-    } else if (response.statusCode != 200) {
-      // TODO: log somewhere
-      print('Unknown server response code: ${response.statusCode}');
-      return GameControlResult.SERVER_CORRUPT;
-    }
-
-    activeGame?.state = GameState.running;
-    //setActiveGame(_game);
-
-    return GameControlResult.SUCCESS;
+  Future<void> startGame() async {
+    await action.startGame(activeGame);
+    updateActiveGame();
   }
 }

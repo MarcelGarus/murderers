@@ -245,6 +245,15 @@ class EnterNameScreen extends StatefulWidget {
 }
 
 class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderStateMixin {
+  final controller = TextEditingController();
+
+  void _onNameEntered(String name) {
+    widget.configuration.playerName = name;
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SetupFinishedScreen(configuration: widget.configuration),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,6 +266,7 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
           ),
           SizedBox(height: 24.0),
           TextField(
+            controller: controller,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: "Enter first and last name",
@@ -269,11 +279,7 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
       ),
       bottomNavigationBar: SetupBottomBar(
         primary: 'Done',
-        onPrimary: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => SetupFinishedScreen(configuration: widget.configuration),
-          ));
-        },
+        onPrimary: () => _onNameEntered(controller.text),
       ),
     );
   }
@@ -299,19 +305,19 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
 
   void _onConfirmed() {
     final navigator = Navigator.of(context);
-    Widget nextScreen;
+    Widget nextScreen = EnterNameScreen(configuration: config);
     
     // If the user doesn't want to play, the setup is finished. Otherwise, we
     // need a name. If already signed in, we use that, else we offer to sign in
     // and then continue to the game or - if skipped - enter the name manually.
-    if (role != UserRole.player || Bloc.of(context).isSignedIn) {
+    /*if (role != UserRole.player || Bloc.of(context).isSignedIn) {
       nextScreen = SetupFinishedScreen(configuration: config);
     } else {
       nextScreen = SignInScreen(
         onSignedIn: () => navigator.push(SetupRoute(SetupFinishedScreen(configuration: config))),
         onSkipped: () => navigator.push(SetupRoute(EnterNameScreen(configuration: config))),
       );
-    }
+    }*/
 
     navigator.push(SetupRoute(nextScreen));
   }
@@ -512,12 +518,12 @@ class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerPr
     Bloc.of(context).setupGame(config).then(_finished);
   }
 
-  void _finished(SetupResult result) {
+  void _finished(FunctionStatus result) {
     // If it succeeded, the new active game is already set and the setup widget
     // subtree will be replaced by the game screen. That means, we only need to
     // handle the error cases in here.
 
-    if (!result.succeeded) {
+    if (result == FunctionStatus.success) {
       print('Game couldnt be created.');
       // TODO: display appropriate error and offer to retry
     }

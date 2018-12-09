@@ -45,10 +45,10 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     .collection('players')
     .get();
 
-  let playerIds: string[] = [];
-  let players: Player[] = [];
+  const playerIds: string[] = [];
+  const players: Player[] = [];
   
-  for (let doc of snapshot.docs) {
+  for (const doc of snapshot.docs) {
     const id = doc.id;
     const data = doc.data();
 

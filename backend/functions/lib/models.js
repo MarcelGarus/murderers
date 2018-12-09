@@ -1,10 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function isPlayer(obj) {
-    console.log('Auth token valid? ' + (typeof obj.authToken === "string"));
-    console.log('Name valid? ' + (typeof obj.name === "string"));
-    console.log('Victim valid? ' + (obj.victim === null || typeof obj.victim === "string"));
-    console.log('Death valid? ' + (obj.death === null || isDeath(obj.death)));
     return typeof obj.authToken === "string"
         && typeof obj.messagingToken === "string"
         && typeof obj.name === "string"

@@ -19,6 +19,20 @@ export function generateRandomString(chars: string, length: number): string {
   return s;
 }
 
+/// Shuffles an array in place using the Fisher-Yates algorithm.
+export function shuffle(array) {
+  let m = array.length, t, i;
+
+  while (m) {
+    i = Math.floor(Math.random() * m--);
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+
+  return array;
+}
+
 /// Loads a game with the given code.
 export async function loadGame(firestore: FirebaseFirestore.Firestore, code: string): Promise<Game> {
   const snapshot = await firestore

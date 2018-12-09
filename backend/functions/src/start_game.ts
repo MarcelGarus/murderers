@@ -12,8 +12,8 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, PlayerId, Player, GAME_RUNNING } from './models';
-import { loadGame, GAME_NOT_FOUND, GAME_CORRUPT, GAME_STARTED } from './utils';
+import { GameCode, Game, Player, GAME_RUNNING, isPlayer } from './models';
+import { loadGame, shuffle, GAME_NOT_FOUND, GAME_CORRUPT } from './utils';
 
 /// Starts an existing game.
 // TODO: check access
@@ -49,16 +49,50 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
       state: GAME_RUNNING
     });
 
-  // TODO: set victims of players.
   const snapshot = await db
     .collection('games')
     .doc(code)
     .collection('players')
     .get();
 
-  console.log('Players to shuffle and connect are ' + JSON.stringify(snapshot));
-  res.send(snapshot);
+  // Save all players.
+  const players: {id, data: Player}[] = [];
 
-  // Send back the player id and the authToken.
-  //res.set('application/json').send(GAME_STARTED);
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    console.log(doc.id, '=>', data);
+
+    if (isPlayer(data)) {
+      players.push({
+        id: doc.id,
+        data: data as Player
+      });
+    } else {
+      console.log('Is not a player: ' + data);
+    }
+  })
+
+  console.log('Players to shuffle and connect are ' + JSON.stringify(players));
+
+  // Set the player's victims randomly.
+  shuffle(players);
+  console.log('Shuffled players are ' + JSON.stringify(players));
+  players.forEach((player, index) => {
+    console.log('Setting the victim of player #' + index + ' (' + JSON.stringify(player) + ')');
+    if (index === 0) {
+      player.data.victim = players[players.length - 1].id;
+    } else {
+      player.data.victim = players[index - 1].id;
+    }
+  });
+  players.forEach(async (player) => {
+    await db
+      .collection('games')
+      .doc(code)
+      .collection('players')
+      .doc(player.id)
+      .set(player.data);
+  });
+
+  res.send('success');
 }

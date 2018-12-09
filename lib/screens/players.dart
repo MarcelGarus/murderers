@@ -14,7 +14,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: Text('Some players',
+        title: Text('The players',
           style: TextStyle(color: Colors.black)
         ),
       ),
@@ -56,8 +56,8 @@ class _PlayersScreenState extends State<PlayersScreen> {
 
   Widget _buildItem(Player player) {
     return ListTile(
-      title: Text(player.id),
-      subtitle: Text('aka ${player.name}'),
+      title: Text(player.name),
+      subtitle: Text('with id ${player.id}. Is alive? ${player.isAlive} Death: ${player.death}'),
     );
   }
 }

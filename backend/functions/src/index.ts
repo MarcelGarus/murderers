@@ -17,11 +17,11 @@ exports.create_game = functions.https.onRequest(createGame.handleRequest);
 /// Joins a player to a game.
 exports.join_game = functions.https.onRequest(joinGame.handleRequest);
 
-/// Starts or resumes the game.
-exports.start_game = functions.https.onRequest(startGame.handleRequest);
-
 /// Gets the game state.
 exports.get_game = functions.https.onRequest(getGame.handleRequest);
+
+/// Starts or resumes the game.
+exports.start_game = functions.https.onRequest(startGame.handleRequest);
 
 /// Pauses or stops the game.
 ///

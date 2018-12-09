@@ -43,11 +43,8 @@ class Game {
   StreamedProperty<List<Player>> _players;
   ValueObservable<List<Player>> get playersStream => _players.stream;
   List<Player> get players => _players.value;
-  void add(Player player) {
-    _players.value = _players.value.followedBy([ player ]).toList();
-  }
-  void remove(Player player) {
-    _players.value = _players.value.where((p) => p != player).toList();
+  set players(List<Player> players) {
+    _players.value = players;
   }
 
   /// This user as a player.

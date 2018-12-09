@@ -24,6 +24,18 @@ function generateRandomString(chars, length) {
     return s;
 }
 exports.generateRandomString = generateRandomString;
+/// Shuffles an array in place using the Fisher-Yates algorithm.
+function shuffle(array) {
+    let m = array.length, t, i;
+    while (m) {
+        i = Math.floor(Math.random() * m--);
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+    }
+    return array;
+}
+exports.shuffle = shuffle;
 /// Loads a game with the given code.
 function loadGame(firestore, code) {
     return __awaiter(this, void 0, void 0, function* () {

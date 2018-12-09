@@ -12,6 +12,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
+    print('Building the game screen');
     return StreamBuilder(
       stream: Bloc.of(context).activeGameStream,
       builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
@@ -25,8 +26,11 @@ class _GameScreenState extends State<GameScreen> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            title: Text('The Murderer Game',
-              style: TextStyle(color: Colors.black)
+            title: GestureDetector(
+              onTap: () => Bloc.of(context).removeGame(game),
+              child: Text('The Murderer Game',
+                style: TextStyle(color: Colors.black)
+              )
             ),
           ),
           body: SafeArea(

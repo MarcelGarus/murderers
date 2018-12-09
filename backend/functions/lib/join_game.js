@@ -83,7 +83,7 @@ function handleRequest(req, res) {
             authToken: player.authToken,
         });
         // TODO: Also send a notification to _all_ members of the game that opted in for notifications about new players.
-        var message = {
+        const message = {
             notification: {
                 title: 'Someone just joined the game ' + code,
                 body: 'Say hi by killing ' + id + '!',

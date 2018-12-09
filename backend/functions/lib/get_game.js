@@ -49,9 +49,9 @@ function handleRequest(req, res) {
             .doc(code)
             .collection('players')
             .get();
-        let playerIds = [];
-        let players = [];
-        for (let doc of snapshot.docs) {
+        const playerIds = [];
+        const players = [];
+        for (const doc of snapshot.docs) {
             const id = doc.id;
             const data = doc.data();
             console.log("Player has data " + JSON.stringify(data));
