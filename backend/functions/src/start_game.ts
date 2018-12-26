@@ -1,8 +1,9 @@
 /// Starts an existing game.
 ///
 /// Needs:
-/// * a Firebase auth in header
-/// * a game id
+/// * user [id]
+/// * [authToken]
+/// * game [code]
 ///
 /// Returns either:
 /// 200: Game started.
@@ -12,87 +13,48 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, Player, GAME_RUNNING, isPlayer } from './models';
-import { loadGame, shuffle, GAME_NOT_FOUND, GAME_CORRUPT } from './utils';
+import { GameCode, Game, GAME_RUNNING, FirebaseAuthToken, User, UserId } from './models';
+import { loadGame, queryContains, gameRef, loadPlayersAndIds, allPlayersRef, loadAndVerifyUser, verifyCreator, playerRef } from './utils';
+import { shuffleVictims } from './shuffle_victims';
+import { log } from 'util';
 
 /// Starts an existing game.
-// TODO: check access
+// TODO: make sure not already started
 export async function handleRequest(req: functions.Request, res: functions.Response) {
-  console.log('Request query is ' + JSON.stringify(req.query));
+  if (!queryContains(req.query, [
+    'id', 'authToken', 'code'
+  ], res)) return;
 
-  // Get a reference to the database and the game code.
-  const db = admin.app().firestore();
-  const code: GameCode = req.query.code + '';
-  let game: Game;
+  const firestore = admin.app().firestore();
+  const id: UserId = req.query.id;
+  const authToken: FirebaseAuthToken = req.query.authToken;
+  const code: GameCode = req.query.code;
 
-  // Try to load the game.
-  try {
-    game = await loadGame(db, code);
-  } catch (error) {
-    console.log("Starting the game failed, because the game couldn't be loaded. Error is:");
-    console.log(error);
+  log(code + ': Starting the game.');
 
-    if (true) { // TODO: check error message
-      res.status(404).send(GAME_NOT_FOUND);
-    } else {
-      res.status(500).send(GAME_CORRUPT);
-    }
-  }
+  // Load the game.
+  const game: Game = await loadGame(res, firestore, code);
+  if (game === null) return;
 
-  // Game loaded successfully. Now start it.
-  console.log('Game to start is ' + game);
+  // Verify the creator.
+  if (!verifyCreator(game, id, res)) return;
+  const user: User = await loadAndVerifyUser(firestore, id, authToken, res);
+  if (user === null) return;
 
-  await db
-    .collection('games')
-    .doc(code)
-    .update({
-      state: GAME_RUNNING
-    });
+  // First, shuffle all the players.
+  const players = await loadPlayersAndIds(res, allPlayersRef(firestore, code).get());
+  if (!players) return;
+  shuffleVictims(players);
 
-  const snapshot = await db
-    .collection('games')
-    .doc(code)
-    .collection('players')
-    .get();
-
-  // Save all players.
-  const players: {id, data: Player}[] = [];
-
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    console.log(doc.id, '=>', data);
-
-    if (isPlayer(data)) {
-      players.push({
-        id: doc.id,
-        data: data as Player
-      });
-    } else {
-      console.log('Is not a player: ' + data);
-    }
+  players.forEach(async (player) => {
+    await playerRef(firestore, code, player.id).update(player.data);
   })
 
-  console.log('Players to shuffle and connect are ' + JSON.stringify(players));
-
-  // Set the player's victims randomly.
-  shuffle(players);
-  console.log('Shuffled players are ' + JSON.stringify(players));
-  players.forEach((player, index) => {
-    console.log('Setting the victim of player #' + index + ' (' + JSON.stringify(player) + ')');
-    if (index === 0) {
-      player.data.victim = players[players.length - 1].id;
-    } else {
-      player.data.victim = players[index - 1].id;
-    }
+  // Then, start the game.
+  await gameRef(firestore, code).update({
+    state: GAME_RUNNING
   });
-  players.forEach(async (player) => {
-    await db
-      .collection('games')
-      .doc(code)
-      .collection('players')
-      .doc(player.id)
-      .set(player.data);
-  });
-
-  res.send('success');
+  
+  // Send a response.
+  res.send('Game started.');
 }

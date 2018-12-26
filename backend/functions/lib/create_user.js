@@ -1,15 +1,13 @@
 "use strict";
-/// Creates a new game.
+/// Creates a new user.
 ///
 /// Needs:
-/// * user [id]
-/// * [authToken]
-/// * game [name]
-/// * (preliminary) [start] time
-/// * (preliminary) [end] time
+/// * Firebase [authToken]
+/// * Firebase cloud [messagingToken]
+/// * user [name]
 ///
 /// Returns either:
-/// 200: { code: 'abcd' }
+/// 200: { id: 'abcdef...' }.
 /// 400: Bad request.
 /// 403: Access denied.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -23,61 +21,53 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const admin = require("firebase-admin");
 const util_1 = require("util");
-const models_1 = require("./models");
 const utils_1 = require("./utils");
-const GAME_CODE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
-const GAME_CODE_LENGTH = 4;
-/// Creates a new game code.
-function createGameCode(firestore) {
+const USER_ID_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+const USER_ID_LENGTH = 3;
+/// Creates a new user id.
+function createUserId(firestore) {
     return __awaiter(this, void 0, void 0, function* () {
-        let code = '';
+        let id = '';
         let tries = 0;
         while (true) {
-            code = utils_1.generateRandomString(GAME_CODE_CHARS, GAME_CODE_LENGTH);
+            id = utils_1.generateRandomString(USER_ID_CHARS, USER_ID_LENGTH);
             tries++;
-            const snapshot = yield utils_1.gameRef(firestore, code).get();
+            const snapshot = yield utils_1.userRef(firestore, id).get();
             if (!snapshot.exists)
                 break;
         }
-        util_1.log(code + ': It took ' + tries + ' tries to create this game code.');
-        return code;
+        util_1.log('It took ' + tries + ' tries to create the user ' + id + '.');
+        return id;
     });
 }
-/// Offers webhook for creating a new game.
+/// Offers webhook for creating a new user.
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!utils_1.queryContains(req.query, [
-            'id', 'authToken', 'name', 'start', 'end'
+            'authToken', 'messagingToken', 'name'
         ], res))
             return;
         const firestore = admin.app().firestore();
-        const id = req.query.id;
         const authToken = req.query.authToken;
+        const messagingToken = req.query.messagingToken;
         const name = req.query.name;
-        const start = parseInt(req.query.number);
-        const end = parseInt(req.query.end);
-        util_1.log(id + 'creates a game named ' + name + '.');
-        // Load and verify the user.
-        const user = yield utils_1.loadAndVerifyUser(firestore, id, authToken, res);
-        if (user === null)
-            return;
-        // Create the game.
-        const game = {
+        util_1.log('Creating a user named ' + name + '. Auth token: ' + authToken + ' Messaging token: ' + messagingToken);
+        // TODO: Confirm Firebase Auth token.
+        // TODO: Make sure user doesn't already exist.
+        // Create the user.
+        const user = {
+            authToken: authToken,
+            messagingToken: messagingToken,
             name: name,
-            state: models_1.GAME_NOT_STARTED_YET,
-            creator: id,
-            created: Date.now(),
-            start: start,
-            end: end,
         };
-        const code = yield createGameCode(firestore);
-        yield utils_1.gameRef(firestore, code).set(game);
-        util_1.log(code + ': Game created.');
+        const id = yield createUserId(firestore);
+        yield utils_1.userRef(firestore, id).set(user);
+        util_1.log('User created.');
         // Send back the code.
         res.set('application/json').send({
-            code: code,
+            id: id,
         });
     });
 }
 exports.handleRequest = handleRequest;
-//# sourceMappingURL=create_game.js.map
+//# sourceMappingURL=create_user.js.map

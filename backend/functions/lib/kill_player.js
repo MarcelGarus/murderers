@@ -1,5 +1,5 @@
 "use strict";
-/// Joins a player to a game.
+/// Kills a player. The victim still needs to confirm its death.
 ///
 /// Needs:
 /// * user [id]
@@ -7,11 +7,10 @@
 /// * game [code]
 ///
 /// Returns either:
-/// 200: Joined.
-/// 400: Bad request.
+/// 200: Kill request sent to victim.
 /// 403: Access denied.
 /// 404: Game not found.
-/// 500: Game corrupt.
+/// 500: Corrupt data.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -25,53 +24,51 @@ const admin = require("firebase-admin");
 const models_1 = require("./models");
 const utils_1 = require("./utils");
 const util_1 = require("util");
-/// Joins a player to a game.
-// TODO: Prevent player from joining twice.
+/// Offers webhook for killing the victim.
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!utils_1.queryContains(req.query, [
-            'user', 'authToken', 'code'
+            'id', 'authToken', 'code'
         ], res))
             return;
         const firestore = admin.app().firestore();
-        const id = req.query.user;
+        const id = req.query.id;
         const authToken = req.query.authToken;
         const code = req.query.code;
-        util_1.log(code + ': ' + id + ' joins.');
-        // Load and verify the user.
+        util_1.log(code + ': Player ' + id + ' kills his/her victim.');
+        // Load the user and verify Firebase Auth token.
         const user = yield utils_1.loadAndVerifyUser(firestore, id, authToken, res);
         if (user === null)
             return;
-        // Load the game.
-        const game = yield utils_1.loadGame(res, firestore, code);
-        if (game === null)
+        // Load the murderer.
+        const murderer = yield utils_1.loadPlayer(res, firestore, code, id);
+        if (murderer === null)
             return;
-        // Create the player.
-        const player = {
-            state: models_1.PLAYER_WAITING,
-            murderer: null,
-            victim: null,
-            wasOutsmarted: false,
-            deaths: [],
-            kills: 0
-        };
-        yield utils_1.playerRef(firestore, code, id).set(player);
-        // Send back the id.
-        res.set('application/json').send('Joined.');
-        // TODO: Also send a notification to _all_ members of the game that opted in for notifications about new players.
+        // Kill the victim.
+        if (murderer.victim === null)
+            return;
+        yield utils_1.playerRef(firestore, code, murderer.victim).update({
+            state: models_1.PLAYER_DYING,
+            murderer: id,
+        });
+        // Load the victim.
+        const victimUser = yield utils_1.loadUser(firestore, murderer.victim, res);
+        // Send response.
+        res.send('Kill request sent to victim.');
+        // Send notification to the victim.
         admin.messaging().send({
             notification: {
-                title: 'Someone just joined the game ' + code,
-                body: 'Say hi by killing ' + id + '!',
+                title: 'You are dying!',
+                body: 'Did ' + user.name + ' just kill you?',
             },
             android: {
-                priority: 'normal',
-                collapseKey: 'someone_joins_' + code,
+                priority: 'high',
+                collapseKey: 'killed_' + code,
                 notification: {
                     color: '#ff0000',
                 },
             },
-            token: 'emd1IxAjbQg:APA91bF7MNO65rvy3Pg_XGEkJPHNdCSLpmahmreQYYRVEAzsIXaeg2XQNdRUHphERXzAX8WTRXnEEdisiMNsWoTQF-ee5HHDN8Gn1TIfF0MVxDbWso21JxDJt5-9-QtVUc2Jfe6EJYq7'
+            token: victimUser.messagingToken,
         }).then((response) => {
             util_1.log('Successfully sent message. Message id: ' + response);
         }).catch((error) => {
@@ -80,4 +77,4 @@ function handleRequest(req, res) {
     });
 }
 exports.handleRequest = handleRequest;
-//# sourceMappingURL=join_game.js.map
+//# sourceMappingURL=kill_player.js.map

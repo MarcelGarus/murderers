@@ -15,3 +15,7 @@ android/app/google-services.json
 *.lock
 
 backend/functions/node_modules
+
+.vscode/
+nohup.out
+

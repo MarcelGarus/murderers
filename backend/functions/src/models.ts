@@ -1,3 +1,21 @@
+export type Timestamp = number;
+
+/// A User.
+export type UserId = string;
+export type FirebaseAuthToken = number;
+export type MessagingToken = string;
+
+export interface User {
+  authToken: FirebaseAuthToken,
+  messagingToken: MessagingToken,
+  name: string,
+}
+export function isUser(obj): boolean {
+  return true // TODO: check authToken
+    && typeof obj.messagingToken === "string"
+    && typeof obj.name === "string";
+}
+
 /// A player.
 ///
 /// The term player refers to all users participating in a game. Players only
@@ -13,52 +31,51 @@
 ///   be null.
 /// * [death]: Information about how the player died. If death is null, the
 ///   player lives.
-export type PlayerId = string;
-export type AuthToken = string;
-export type MessagingToken = string;
+export type PlayerState = number;
+export const PLAYER_IDLE: PlayerState = 0;
+export const PLAYER_WAITING: PlayerState = 1;
+export const PLAYER_ALIVE: PlayerState = 2;
+export const PLAYER_DYING: PlayerState = 3;
+export const PLAYER_DEAD: PlayerState = 4;
 
 export interface Player {
-  authToken: AuthToken,
-  messagingToken: MessagingToken,
-  name: string,
-  victim: PlayerId,
-  death: Death,
+  state: PlayerState,
+  murderer: UserId,
+  victim: UserId,
+  wasOutsmarted: boolean,
+  deaths: Death[],
+  kills: number,
 }
 export function isPlayer(obj): boolean {
-  return typeof obj.authToken === "string"
-    && typeof obj.messagingToken === "string"
-    && typeof obj.name === "string"
+  return typeof obj.state === "number"
+    && (obj.murderer === null || typeof obj.murderer === "string")
     && (obj.victim === null || typeof obj.victim === "string")
-    && (obj.death === null || isDeath(obj.death));
+    && typeof obj.wasOutsmarted === "boolean"
+    && true // TODO: check all the deaths are deaths
+    && typeof obj.kills === "number";
 }
-export function isAlive(obj): boolean {
-  return isPlayer(obj) && obj.death === null;
-}
-
 
 /// A death.
 ///
-/// A class that holds some information about how a player died. Victim refers
-/// to the player who died, murderer refers to the player who killed the
-/// victim. This class is owned by the victim.
+/// A class that holds some information about how a player died. This class is
+/// owned by the victim.
 ///
 /// This class holds:
 /// * [murderer]: The id of the murderer.
-/// * [lastWords]: The victim's last words. May be null if the game doesn't
-///   support providing last words.
-/// * [weapon]: The murderer's weapon. May be null if the game doesn't support
-///   providing weapons.
+/// * [lastWords]: The victim's last words.
+/// * [weapon]: The murderer's weapon.
 export interface Death {
-  murderer: PlayerId,
-  lastWords: string,
+  time: Timestamp,
+  murderer: UserId,
   weapon: string,
+  lastWords: string,
 }
 export function isDeath(obj): boolean {
-  return typeof obj.murderer === "string"
+  return typeof obj.time === "number"
+    && typeof obj.murderer === "string"
     && typeof obj.lastWords === "string"
     && typeof obj.weapon === "string";
 }
-
 
 /// A game.
 ///
@@ -74,25 +91,25 @@ export function isDeath(obj): boolean {
 /// * [end]: The estimated timestamp of the game's end. May be changed by the
 ///   creator.
 export type GameCode = string;
-export type GoogleSignInId = number;
 export type GameState = number;
-
 export const GAME_NOT_STARTED_YET: GameState = 0;
 export const GAME_RUNNING: GameState = 1;
 export const GAME_PAUSED: GameState = 2;
 export const GAME_OVER: GameState = 3;
 
 export interface Game {
-  creator: GoogleSignInId,
   name: string,
   state: GameState,
-  created: number,
-  end: number,
+  creator: UserId,
+  created: Timestamp,
+  start: Timestamp,
+  end: Timestamp,
 }
 export function isGame(obj): boolean {
-  return typeof obj.creator === "number"
-    && typeof obj.name === "string"
-    && typeof obj.state === "number";
-    //&& typeof obj.start === "Date"
-    //&& typeof obj.end === "Date"; TODO: check if it's dates
+  return typeof obj.name === "string"
+    && typeof obj.state === "number"
+    && typeof obj.creator === "string"
+    && typeof obj.created === "number"
+    && typeof obj.start === "number"
+    && typeof obj.end === "number";
 }

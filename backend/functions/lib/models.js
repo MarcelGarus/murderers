@@ -1,19 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function isPlayer(obj) {
-    return typeof obj.authToken === "string"
+function isUser(obj) {
+    return true // TODO: check authToken
         && typeof obj.messagingToken === "string"
-        && typeof obj.name === "string"
+        && typeof obj.name === "string";
+}
+exports.isUser = isUser;
+exports.PLAYER_IDLE = 0;
+exports.PLAYER_WAITING = 1;
+exports.PLAYER_ALIVE = 2;
+exports.PLAYER_DYING = 3;
+exports.PLAYER_DEAD = 4;
+function isPlayer(obj) {
+    return typeof obj.state === "number"
+        && (obj.murderer === null || typeof obj.murderer === "string")
         && (obj.victim === null || typeof obj.victim === "string")
-        && (obj.death === null || isDeath(obj.death));
+        && typeof obj.wasOutsmarted === "boolean"
+        && true // TODO: check all the deaths are deaths
+        && typeof obj.kills === "number";
 }
 exports.isPlayer = isPlayer;
-function isAlive(obj) {
-    return isPlayer(obj) && obj.death === null;
-}
-exports.isAlive = isAlive;
 function isDeath(obj) {
-    return typeof obj.murderer === "string"
+    return typeof obj.time === "number"
+        && typeof obj.murderer === "string"
         && typeof obj.lastWords === "string"
         && typeof obj.weapon === "string";
 }
@@ -23,11 +32,12 @@ exports.GAME_RUNNING = 1;
 exports.GAME_PAUSED = 2;
 exports.GAME_OVER = 3;
 function isGame(obj) {
-    return typeof obj.creator === "number"
-        && typeof obj.name === "string"
-        && typeof obj.state === "number";
-    //&& typeof obj.start === "Date"
-    //&& typeof obj.end === "Date"; TODO: check if it's dates
+    return typeof obj.name === "string"
+        && typeof obj.state === "number"
+        && typeof obj.creator === "string"
+        && typeof obj.created === "number"
+        && typeof obj.start === "number"
+        && typeof obj.end === "number";
 }
 exports.isGame = isGame;
 //# sourceMappingURL=models.js.map

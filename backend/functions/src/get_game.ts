@@ -1,69 +1,69 @@
 /// Returns a game's state.
 ///
 /// Needs:
-/// * a game code
+/// * game [code]
+/// Optional:
+/// * user [id]
+/// * [authToken]
 ///
 /// Returns either:
-/// 200: { id: 'abcdefghiojklmonop', authToken: 'dfsiidfsd' }
+/// 200: {
+///   name: 'The game\'s name',
+///   state: GameState.RUNNING,
+///   created: 'Some google id',
+///   end: 2222-12-22,
+///   players: [
+///     {
+///       id: 'player-id',
+///       name: 'Marcel',
+///       death: {
+///         ...
+///       }
+///     },
+///     ...
+///   ]
+/// }
 /// 404: Game not found.
 /// 500: Game corrupt.
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, Player, isPlayer } from './models';
-import { loadGame } from './utils';
+import { GameCode, Game, Player, UserId, FirebaseAuthToken, User } from './models';
+import { loadGame, loadPlayersAndIds, allPlayersRef, queryContains, loadAndVerifyUser, loadUser } from './utils';
 
 /// Returns a game's state.
 export async function handleRequest(req: functions.Request, res: functions.Response) {
-  console.log('Request query is ' + JSON.stringify(req.query));
+  if (!queryContains(req.query, [
+    'code'
+  ], res)) return;
 
-  // Get a reference to the database and the game code.
-  const db = admin.app().firestore();
+  const firestore = admin.app().firestore();
+  const id: UserId = req.query.user;
+  const authToken: FirebaseAuthToken = req.query.authToken;
   const code: GameCode = req.query.code + '';
-  let game: Game;
 
-  console.log('Getting the game ' + code + '.');
+  // Load the game.
+  const game: Game = await loadGame(res, firestore, code);
+  if (game === null) return;
 
-  // Try to load the game.
-  try {
-    game = await loadGame(db, code);
-  } catch (error) {
-    console.log("The game couldn't be loaded. Error is:");
-    console.log(error);
-
-    if (true) { // TODO: check error message
-      res.status(404).send('Game not found.');
-    } else {
-      res.status(500).send('Game corrupt.');
-    }
-  }
+  // Load the user.
+  const user: User = await loadAndVerifyUser(firestore, id, authToken, null);
 
   // Load the players.
-  const snapshot = await db
-    .collection('games')
-    .doc(code)
-    .collection('players')
-    .get();
-
-  const playerIds: string[] = [];
-  const players: Player[] = [];
-  
-  for (const doc of snapshot.docs) {
-    const id = doc.id;
-    const data = doc.data();
-
-    console.log("Player has data " + JSON.stringify(data));
-
-    if (!isPlayer(data)) {
-      res.status(500).send('Player corrupt.');
-      return;
-    } else {
-      playerIds.push(id);
-      players.push(data as Player);
-    }
-  }
-
+  const players: {id: string, data: Player}[] = await loadPlayersAndIds(
+    res, allPlayersRef(firestore, code).get());
+  if (players === null) return;
   console.log("Players are " + JSON.stringify(players));
+
+  // Load the other users.
+  const playerUsers = new Map();
+  for (const player of players) {
+    if (player.id === id) continue;
+
+    const playerUser: User = await loadUser(firestore, player.id, res);
+    if (playerUser === null) return;
+    playerUsers[player.id] = playerUser;
+  }
 
   // Send back the game's state.
   res.set('application/json').send({
@@ -71,12 +71,44 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     state: game.state,
     created: game.created,
     end: game.end,
-    players: players.map((value, index, _) => {
-      return {
-        id: playerIds[index],
-        name: value.name,
-        death: value.death
-      };
+    players: players.map((player, _, __) => {
+      if (player.id === id) {
+        // This is the player who requested the information.
+        // Provide detailed information.
+        return {
+          id: id,
+          name: user.name,
+          state: player.data.state,
+          murderer: player.data.murderer,
+          victim: player.data.victim,
+          wasOutsmarted: player.data.wasOutsmarted,
+          deaths: player.data.deaths.map((death, ___, ____) => {
+            return {
+              time: death.time,
+              murderer: death.murderer,
+              weapon: death.weapon,
+              lastWords: death.lastWords,
+            };
+          }),
+          kills: player.data.kills,
+        };
+      } else {
+        // This is some other player.
+        // Only provide superficial information.
+        const playerUser: User = playerUsers[player.id];
+        return {
+          id: player.id,
+          name: playerUser.name,
+          state: player.data.state,
+          deaths: player.data.deaths.map((death, ___, ____) => {
+            return {
+              time: death.time,
+              weapon: death.weapon,
+              lastWords: death.lastWords,
+            };
+          }),
+        };
+      }
     })
   });
 }
