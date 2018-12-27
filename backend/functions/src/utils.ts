@@ -82,6 +82,8 @@ export async function loadUser(
   id: UserId,
   res: functions.Response
 ): Promise<User> {
+  if (id === null || id === undefined) return null;
+
   const snapshot = await userRef(firestore, id).get();
 
   if (!snapshot.exists) {

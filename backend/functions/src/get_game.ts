@@ -32,14 +32,15 @@ import { GameCode, Game, Player, UserId, FirebaseAuthToken, User } from './model
 import { loadGame, loadPlayersAndIds, allPlayersRef, queryContains, loadAndVerifyUser, loadUser } from './utils';
 
 /// Returns a game's state.
+// TODO: handle no id and code given
 export async function handleRequest(req: functions.Request, res: functions.Response) {
   if (!queryContains(req.query, [
     'code'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id: UserId = req.query.user;
-  const authToken: FirebaseAuthToken = req.query.authToken;
+  let id: UserId = req.query.id;
+  let authToken: FirebaseAuthToken = req.query.authToken;
   const code: GameCode = req.query.code + '';
 
   // Load the game.
@@ -48,6 +49,10 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
 
   // Load the user.
   const user: User = await loadAndVerifyUser(firestore, id, authToken, null);
+  if (user === null) {
+    id = null;
+    authToken = null;
+  }
 
   // Load the players.
   const players: {id: string, data: Player}[] = await loadPlayersAndIds(

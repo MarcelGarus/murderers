@@ -88,7 +88,7 @@ export async function handleRequest(
     wasOutsmarted: false,
     deaths: victim.deaths.concat({
       time: Date.now(),
-      murderer: id,
+      murderer: victim.murderer,
       weapon: weapon,
       lastWords: lastWords
     })

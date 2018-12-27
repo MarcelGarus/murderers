@@ -25,11 +25,11 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'user', 'authToken', 'code'
+    'id', 'authToken', 'code'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id: UserId = req.query.user;
+  const id: UserId = req.query.id;
   const authToken: FirebaseAuthToken = req.query.authToken;
   const code: GameCode = req.query.code;
 
