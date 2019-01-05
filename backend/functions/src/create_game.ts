@@ -63,6 +63,7 @@ export async function handleRequest(
   if (user === null) return;
 
   // Create the game.
+  // TODO: sanitize name, make sure start and end dates are valid
   const game: Game = {
     name: name,
     state: GAME_NOT_STARTED_YET,
@@ -81,5 +82,9 @@ export async function handleRequest(
   // Send back the code.
   res.set('application/json').send({
     code: code,
+    name: game.name,
+    created: game.created,
+    start: game.start,
+    end: game.end
   });
 }

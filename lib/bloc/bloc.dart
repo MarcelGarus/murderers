@@ -17,36 +17,12 @@ import 'streamed_property.dart';
 
 export 'bloc_provider.dart';
 export 'function_status.dart';
-export 'models/death.dart';
-export 'models/game.dart';
-export 'models/player.dart';
-export 'models/setup.dart';
-export 'models/user_role.dart';
+export 'models.dart';
 export 'setup.dart';
-
-enum GameControlResult {
-  SUCCESS,
-  ACCESS_DENIED,
-  GAME_NOT_FOUND,
-  SERVER_CORRUPT
-}
-
 
 /// The BLoC.
 class Bloc {
-  static String firebase_root = 'https://us-central1-murderers-e67bb.cloudfunctions.net';
-
-  /// This methods allows subtree widgets to access this bloc.
-  static Bloc of(BuildContext context) {
-    final BlocProvider holder = context.ancestorWidgetOfExactType(BlocProvider);
-    return holder?.bloc;
-  }
-
-  /// Whether the user knows the game.
-  bool _knowsGame = false;
-
-  /// Whether the user enabled notifications.
-  bool _notificationsEnabled = false;
+  bool _introCompleted = false;
 
   FirebaseAnalytics analytics = FirebaseAnalytics();
 
@@ -54,11 +30,8 @@ class Bloc {
   final _account = account.Handler();
   final _messaging = messaging.Handler();
 
-  /// The user's name.
-  String _name;
-
-  /// All the games the user participated in.
   List<Game> _games = <Game>[];
+  StreamController c;
   
   /// The active game.
   final _activeGame = StreamedProperty<Game>();
@@ -70,11 +43,18 @@ class Bloc {
   get activeGameStream => _activeGame.stream;
 
   /// Whether the user is signed in.
-  bool get isSignedIn => _account.isSignedIn;
+  bool get isSignedIn => _account.signedInWithFirebase;
 
+
+  /// This methods allows subtree widgets to access this bloc.
+  static Bloc of(BuildContext context) {
+    final BlocProvider holder = context.ancestorWidgetOfExactType(BlocProvider);
+    return holder?.bloc;
+  }
 
   /// Initializes the BLoC.
   void initialize() {
+    c.isClosed;
     print('Initializing the BLoC.');
 
     // Asynchronously load the games.
@@ -105,7 +85,7 @@ class Bloc {
   Future<bool> signIn() => _account.signIn();
   Future<void> signOut() => _account.signOut();
 
-  // Adds or removes a game.
+  /// Adds or removes a game.
   void addGame(Game game) {
     _games?.add(game);
     activeGame = game;

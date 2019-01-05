@@ -62,6 +62,7 @@ function handleRequest(req, res) {
         if (user === null)
             return;
         // Create the game.
+        // TODO: sanitize name, make sure start and end dates are valid
         const game = {
             name: name,
             state: models_1.GAME_NOT_STARTED_YET,
@@ -76,6 +77,10 @@ function handleRequest(req, res) {
         // Send back the code.
         res.set('application/json').send({
             code: code,
+            name: game.name,
+            created: game.created,
+            start: game.start,
+            end: game.end
         });
     });
 }

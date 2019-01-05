@@ -74,6 +74,8 @@ exports.userRef = userRef;
 /// Loads a user.
 function loadUser(firestore, id, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (id === null || id === undefined)
+            return null;
         const snapshot = yield userRef(firestore, id).get();
         if (!snapshot.exists) {
             res.status(exports.CODE_USER_NOT_FOUND).send(exports.TEXT_USER_NOT_FOUND);

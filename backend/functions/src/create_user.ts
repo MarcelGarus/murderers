@@ -1,9 +1,9 @@
 /// Creates a new user.
 ///
 /// Needs:
+/// * user [name]
 /// * Firebase [authToken]
 /// * Firebase cloud [messagingToken]
-/// * user [name]
 ///
 /// Returns either:
 /// 200: { id: 'abcdef...' }.

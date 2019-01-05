@@ -147,7 +147,7 @@ Creates a new user by saving the auth token, the messaging token and the name.
 TODO: Validate auth token.
 
 ```url
-create_user?authToken=...&messagingToken=...&name=Marcel
+create_user?name=Marcel&authToken=...&messagingToken=...
 > { id: 'abcd' }
 ```
 

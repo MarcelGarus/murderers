@@ -28,7 +28,7 @@ enum SetupStatus {
   /// network connection is just really bad.
   timeout,
 
-  // The server sent an unexpected response code or content.
+  /// The server sent an unexpected response code or content.
   server_corrupt,
 
   /// The access got denied. Probably the device didn't send a valid Firebase

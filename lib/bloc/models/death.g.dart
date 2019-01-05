@@ -8,6 +8,8 @@ part of 'death.dart';
 
 Death _$DeathFromJson(Map<String, dynamic> json) {
   return Death(
+      time:
+          json['time'] == null ? null : DateTime.parse(json['time'] as String),
       murderer: json['murderer'] == null
           ? null
           : Player.fromJson(json['murderer'] as Map<String, dynamic>),
@@ -16,6 +18,7 @@ Death _$DeathFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DeathToJson(Death instance) => <String, dynamic>{
+      'time': instance.time?.toIso8601String(),
       'murderer': instance.murderer,
       'weapon': instance.weapon,
       'lastWords': instance.lastWords

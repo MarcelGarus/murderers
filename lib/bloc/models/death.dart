@@ -8,6 +8,9 @@ part 'death.g.dart';
 /// A class that holds some information about how a player died.
 @JsonSerializable()
 class Death {
+  /// The moment of death.
+  DateTime time;
+
   /// The victim's murderer. May be [null] if unknown in the current context.
   Player murderer;
 
@@ -19,7 +22,8 @@ class Death {
 
 
   Death({
-    this.murderer,
+    @required this.time,
+    @required this.murderer,
     @required this.weapon,
     @required this.lastWords,
   });
