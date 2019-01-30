@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'setup.dart';
-import '../widgets/setup.dart'; // TODO: don't use setup bottom bar
+import '../widgets/primary_button.dart';
 
 class IntroScreen extends StatefulWidget {
   @override
@@ -16,7 +15,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
   void initState() {
     super.initState();
 
-    controller = TabController(length: 3, vsync: this)
+    controller = TabController(length: 4, vsync: this)
     ..addListener(() => setState(() {
       isAtLastSlide = controller.index == controller.length - 1;
     }));
@@ -31,9 +30,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
   }
 
   void _goToNextScreen() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => SetupJourney())
-    );
+    Navigator.of(context).pushNamed('/signin');
   }
 
   @override
@@ -71,14 +68,16 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                 "Right after they took it, tell them they've been killed and "
                 'mark your job done in this app.'
             ),
+            Center(
+              child: PrimaryButton(
+                color: Colors.green,
+                onPressed: _goToNextScreen,
+                text: 'Sign in',
+                textColor: Colors.white,
+              )
+            )
           ],
         )
-      ),
-      bottomNavigationBar: SetupBottomBar(
-        primary: 'Next',
-        onPrimary: _goToNextSlide,
-        secondary: 'Skip',
-        onSecondary: _goToNextScreen
       ),
     );
   }
@@ -97,18 +96,31 @@ class IntroStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(16.0),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        image ?? Material(
-          color: Colors.black12,
-          borderRadius: BorderRadius.circular(8.0),
-          child: Container(height: 200.0),
+        Container(
+          width: 300,
+          height: 200,
+          child: Placeholder(),
         ),
-        SizedBox(height: 32.0),
-        Text(title, style: TextStyle(fontFamily: 'Signature', color: Colors.red, fontSize: 20.0)),
-        SizedBox(height: 16.0),
-        Text(content, textAlign: TextAlign.justify, style: TextStyle(height: 1.1, fontSize: 16.0),),
+        SizedBox(height: 32),
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(title,
+            textAlign: TextAlign.center,
+            textScaleFactor: 1.4,
+            style: TextStyle(fontFamily: 'Signature', color: Colors.red),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          child: Text(content,
+            textAlign: TextAlign.center,
+            textScaleFactor: 1.1,
+            style: TextStyle(height: 1.1),
+          ),
+        ),
       ],
     );
   }

@@ -26,13 +26,13 @@ Game _$GameFromJson(Map<String, dynamic> json) {
       me: json['me'] == null
           ? null
           : Player.fromJson(json['me'] as Map<String, dynamic>),
+      murderer: json['murderer'] == null
+          ? null
+          : Player.fromJson(json['murderer'] as Map<String, dynamic>),
       victim: json['victim'] == null
           ? null
-          : Player.fromJson(json['victim'] as Map<String, dynamic>))
-    ..murderer = json['murderer'] == null
-        ? null
-        : Player.fromJson(json['murderer'] as Map<String, dynamic>)
-    ..wasOutsmarted = json['wasOutsmarted'] as bool;
+          : Player.fromJson(json['victim'] as Map<String, dynamic>),
+      wasOutsmarted: json['wasOutsmarted'] as bool);
 }
 
 Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{

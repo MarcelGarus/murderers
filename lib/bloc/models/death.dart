@@ -7,18 +7,12 @@ part 'death.g.dart';
 
 /// A class that holds some information about how a player died.
 @JsonSerializable()
+@immutable
 class Death {
-  /// The moment of death.
-  DateTime time;
-
-  /// The victim's murderer. May be [null] if unknown in the current context.
-  Player murderer;
-
-  /// The weapon used to kill the victim.
-  String weapon;
-
-  /// The victim's last words.
-  String lastWords;
+  final DateTime time; // The moment of death.
+  final Player murderer; // The victim's murderer. May be [null].
+  final String weapon; // The weapon used to kill the victim.
+  final String lastWords; // The victim's last words.
 
 
   Death({

@@ -1,10 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:rxdart/rxdart.dart';
 
-import '../streamed_property.dart';
 import 'player.dart';
-import 'user_role.dart';
 
 part 'game.g.dart';
 
@@ -29,95 +26,70 @@ GameState intToGameState(int i) {
 
 /// A game.
 @JsonSerializable()
+@immutable
 class Game {
   static const int CODE_LENGTH = 4;
 
 
-  /// Whether this user is the creator.
-  bool isCreator;
-
-  /// This game's code.
-  String code;
-
-  /// This game's name.
-  StreamedProperty<String> _name;
-  ValueObservable<String> get nameStream => _name.stream;
-  String get name => _name.value;
-  set name(String name) => _name.value = name;
-
-  /// This game's state.
-  StreamedProperty<GameState> _state;
-  ValueObservable<GameState> get stateStream => _state.stream;
-  GameState get state => _state.value;
-  set state(GameState state) => _state.value = state;
-
-  /// The creation timestamp.
-  DateTime created;
-
-  /// The estimated start timestamp. May change.
-  StreamedProperty<DateTime> _start;
-  ValueObservable<DateTime> get startStream => _start.stream;
-  DateTime get start => _start.value;
-  set start(DateTime start) => _start.value = start;
-
-  /// The estimated end timestamp. May change.
-  StreamedProperty<DateTime> _end;
-  ValueObservable<DateTime> get endStream => _end.stream;
-  DateTime get end => _end.value;
-  set end(DateTime end) => _end.value = end;
-
-  /// All the players.
-  StreamedProperty<List<Player>> _players;
-  ValueObservable<List<Player>> get playersStream => _players.stream;
-  List<Player> get players => _players.value;
-  set players(List<Player> players) => _players.value = players;
-
-  /// This user as a player.
-  /// 
-  /// May be null if this user is not a player.
-  Player me;
-
-  Player murderer;
-
-  /// This player's victim.
-  /// 
-  /// May be null if the user is not a player, the game didn't start yet or the
-  /// player is already dead.
-  StreamedProperty<Player> _victim;
-  ValueObservable<Player> get victimStream => _victim.stream;
-  Player get victim => _victim.value;
-  set victim(Player player) => _victim.value = player;
-
-  bool wasOutsmarted;
+  final bool isCreator; // Whether this user is the creator.
+  final String code; // This game's code.
+  final String name; // This game's name.
+  final GameState state; // This game's state.
+  final DateTime created; // The creation timestamp.
+  final DateTime start; // The estimated start timestamp. May change.
+  final DateTime end; // The estimated end timestamp. May change.
+  final List<Player> players; // All the players.
+  final Player me; // This player. May be [null].
+  final Player murderer; // This player's murderer. May be [null].
+  final Player victim; // This player's victim. May be [null].
+  final bool wasOutsmarted; // Whether this player's victim outsmarted this player.
 
 
   Game({
     @required this.isCreator,
     @required this.code,
-    @required String name,
-    GameState state = GameState.notStartedYet,
+    @required this.name,
+    this.state = GameState.notStartedYet,
     @required this.created,
-    @required DateTime start,
-    @required DateTime end,
-    List<Player> players = const [],
+    @required this.start,
+    @required this.end,
+    this.players = const [],
     this.me,
     this.murderer,
-    Player victim,
-    bool wasOutsmarted,
-  }) :
-    _name = StreamedProperty(initial: name),
-    _state = StreamedProperty(initial: state),
-    _start = StreamedProperty(initial: start),
-    _end = StreamedProperty(initial: end),
-    _players = StreamedProperty(initial: players),
-    _victim = StreamedProperty(initial: victim);
+    this.victim,
+    this.wasOutsmarted,
+  });
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
   Map<String, dynamic> toJson() => _$GameToJson(this);
 
-  /// Disposes all streamed properties.
-  void dispose() {
-    _state.dispose();
-    _victim.dispose();
+  Game copyWith({
+    bool isCreator,
+    String code,
+    String name,
+    GameState state,
+    DateTime created,
+    DateTime start,
+    DateTime end,
+    List<Player> players,
+    Player me,
+    Player murderer,
+    Player victim,
+    bool wasOutsmarted,
+  }) {
+    return Game(
+      isCreator: isCreator ?? this.isCreator,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      state: state ?? this.state,
+      created: created ?? this.created,
+      start: start ?? this.start,
+      end: end ?? this.end,
+      players: players ?? this.players,
+      me: me ?? this.me,
+      murderer: murderer ?? this.murderer,
+      victim: victim ?? this.victim,
+      wasOutsmarted: wasOutsmarted ?? this.wasOutsmarted
+    );
   }
 }

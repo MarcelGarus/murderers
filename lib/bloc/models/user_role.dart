@@ -1,7 +1,7 @@
 
 /// 
 enum UserRole {
-  player,
   watcher, // TODO: implement
+  player,
   creator
 }

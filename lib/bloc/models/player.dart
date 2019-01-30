@@ -32,12 +32,13 @@ PlayerState intToPlayerState(int i) {
 /// exist in the context and scope of games - if a user plays in two games, he
 /// is represented by two distinct players.
 @JsonSerializable()
+@immutable
 class Player {
-  String id;
-  String name;
-  PlayerState state;
-  List<Death> deaths;
-  int kills;
+  final String id; // A unique id.
+  final String name; // A given name.
+  final PlayerState state;
+  final List<Death> deaths; // All the player's deaths.
+  final int kills; // How many other players this player killed.
 
   bool get isAlive => state == PlayerState.alive || state == PlayerState.dying;
 
@@ -45,7 +46,7 @@ class Player {
     @required this.id,
     @required this.name,
     this.state = PlayerState.waiting,
-    this.deaths,
+    this.deaths = const [],
     this.kills = 0
   });
 

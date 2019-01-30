@@ -26,28 +26,18 @@ class _PlayersScreenState extends State<PlayersScreen> {
 
   Widget _buildList() {
     return StreamBuilder(
-      stream: Bloc.of(context).activeGameStream,
+      stream: Bloc.of(context).currentGameStream,
       builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());
         }
 
         final game = snapshot.data;
+        final players = game.players;
 
-        return StreamBuilder(
-          stream: game.playersStream,
-          builder: (BuildContext context, AsyncSnapshot<List<Player>> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: LinearProgressIndicator());
-            }
-
-            final players = snapshot.data;
-
-            return ListView.builder(
-              itemBuilder: (BuildContext context, int i) {
-                return i >= players.length ? null : _buildItem(players[i]);
-              },
-            );
+        return ListView.builder(
+          itemBuilder: (BuildContext context, int i) {
+            return i >= players.length ? null : _buildItem(players[i]);
           },
         );
       }
@@ -57,7 +47,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
   Widget _buildItem(Player player) {
     return ListTile(
       title: Text(player.name),
-      subtitle: Text('with id ${player.id}. Is alive? ${player.isAlive} Death: ${player.death}'),
+      subtitle: Text('with id ${player.id}. Is alive? ${player.isAlive} Deaths: ${player.deaths}'),
     );
   }
 }

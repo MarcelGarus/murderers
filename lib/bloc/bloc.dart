@@ -1,49 +1,34 @@
 import 'dart:async';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
+//import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
 
 import 'account.dart' as account;
-import 'action.dart' as action;
+import 'network.dart' as network;
 import 'messaging.dart' as messaging;
 import 'persistence.dart' as persistence;
-import 'setup.dart' as setup;
 
 import 'bloc_provider.dart';
-import 'function_status.dart';
 import 'models/game.dart';
-import 'models/setup.dart';
 import 'streamed_property.dart';
 
 export 'bloc_provider.dart';
 export 'function_status.dart';
 export 'models.dart';
-export 'setup.dart';
+export 'account.dart' show SignInType;
+export 'network.dart' show Result;
 
 /// The BLoC.
 class Bloc {
-  bool _introCompleted = false;
-
-  FirebaseAnalytics analytics = FirebaseAnalytics();
+  //FirebaseAnalytics analytics = FirebaseAnalytics();
 
   // The handlers for all the specific tasks.
   final _account = account.Handler();
+  final _network = network.Handler();
   final _messaging = messaging.Handler();
 
   List<Game> _games = <Game>[];
-  StreamController c;
-  
-  /// The active game.
-  final _activeGame = StreamedProperty<Game>();
-  Game get activeGame => _activeGame.value;
-  set activeGame(Game game) {
-    assert(game == null || _games.contains(game));
-    _activeGame.value = game;
-  }
-  get activeGameStream => _activeGame.stream;
-
-  /// Whether the user is signed in.
-  bool get isSignedIn => _account.signedInWithFirebase;
+  final _currentGame = StreamedProperty<Game>();
 
 
   /// This methods allows subtree widgets to access this bloc.
@@ -54,15 +39,14 @@ class Bloc {
 
   /// Initializes the BLoC.
   void initialize() {
-    c.isClosed;
     print('Initializing the BLoC.');
 
     // Asynchronously load the games.
-    persistence.loadGames().then((games) {
+    /*persistence.loadGames().then((games) async {
       _games = games;
       if (_games.isNotEmpty) {
-        activeGame = _games.first;
-        updateActiveGame();
+        final current = await persistence.loadCurrentGame();
+        currentGame = _games.singleWhere((g) => g.code == current);
       }
     });
 
@@ -74,48 +58,158 @@ class Bloc {
 
     // Configure the messaging synchronously.
     _messaging.requestNotificationPermissions();
-    _messaging.configure();
+    _messaging.configure();*/
   }
 
   /// Disposes all the streams.
   void dispose() {
-    _activeGame.dispose();
+    _currentGame.dispose();
   }
 
-  Future<bool> signIn() => _account.signIn();
-  Future<void> signOut() => _account.signOut();
+  Future<bool> signIn(account.SignInType type) => _account.signIn(type);
 
-  /// Adds or removes a game.
-  void addGame(Game game) {
-    _games?.add(game);
-    activeGame = game;
-    persistence.saveGames(_games);
-  }
-  void removeGame(Game game) {
-    _games?.remove(game);
-    activeGame = _games.isEmpty ? null : _games[0];
-    game.dispose();
+  Future<bool> signOut() => _account.signOut();
+
+  bool get isSignedIn => _account.isSignedInWithFirebase;
+
+  Future<network.Result<void>> createAccount(String name) async {
+    return await _account.createUser(_network, _messaging, name);
   }
 
-  void updateActiveGame() {
-    action.updateGame(activeGame).then((_) => activeGame = activeGame);
+  bool get hasAccount => _account.userWasCreated;
+
+  String get name => _account.name;
+  set name(String name) => _account.rename(_network, name); // TODO: handle result
+
+  List<Game> get allGames => _games;
+
+  Game get currentGame => _currentGame.value;
+  set currentGame(Game game) {
+    assert(game == null || _games.contains(game));
+    print("Setting current game to $game");
+    _currentGame.value = game;
+    persistence.saveCurrentGame(game?.code ?? '');
   }
-
-
-  Future<FunctionStatus> setupGame(SetupConfiguration config) async {
-    final messagingToken = await _messaging.getToken();
-    final result = await setup.setupGame(config, messagingToken);
-    if (result.status == FunctionStatus.success) {
-      addGame(result.game);
-    }
-    updateActiveGame();
-    return result.status;
-  }
-
+  get currentGameStream => _currentGame.stream;
   
+  Future<network.Result<Game>> previewGame(String code) async {
+    return await _network.getGame(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: code
+    );
+  }
 
-  Future<void> startGame() async {
-    await action.startGame(activeGame);
-    updateActiveGame();
+  Future<network.Result<Game>> watchGame({ @required String code }) async {
+    // TODO: implement
+    return null;
+  }
+
+  Future<network.Result<Game>> joinGame({ @required String code }) async {
+    assert(_account.userWasCreated);
+
+    await _network.joinGame(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: code
+    );
+    return await _addGame(await _network.getGame(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: code
+    ));
+  }
+
+  Future<network.Result<Game>> createGame({
+    @required String name,
+    @required DateTime start,
+    @required DateTime end
+  }) async {
+    assert(_account.userWasCreated);
+
+    return await _addGame(await _network.createGame(
+      id: _account.id,
+      authToken: _account.authToken,
+      name: name,
+      start: start,
+      end: end
+    ));
+  }
+
+  Future<network.Result<Game>> _addGame(network.Result<Game> result) async {
+     if (result.didSucceed) {
+      _games.add(result.data);
+      currentGame = result.data;
+      await persistence.saveGames(_games);
+    }
+    return result;
+  }
+
+  // TODO: if we're a player or creator, disallow or notify server
+  void removeGame(Game game) async {
+    _games.remove(game);
+    if (!_games.contains(currentGame)) {
+      currentGame = _games.isEmpty ? null : _games.first;
+    }
+    await persistence.saveGames(_games);
+  }
+
+  void _updateCurrentGame(Game game) async {
+    _games.remove(currentGame);
+    _games.add(game);
+    currentGame = game;
+    await persistence.saveGames(_games);
+  }
+
+  Future<network.Result<Game>> refreshGame() async {
+    final result = await _network.getGame(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: currentGame.code
+    );
+    if (result.didSucceed) {
+      _updateCurrentGame(result.data);
+    }
+    return result;
+  }
+
+  Future<network.Result<void>> startGame() async {
+    final result = await _network.startGame(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: currentGame.code
+    );
+    if (result.didSucceed) await refreshGame();
+    return result;
+  }
+
+  Future<network.Result<void>> killPlayer() async {
+    final result = await _network.killPlayer(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: currentGame.code
+    );
+    if (result.didSucceed) await refreshGame();
+    return result;
+  }
+
+  Future<network.Result<void>> confirmDeath() async {
+    final result = await _network.die(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: currentGame.code
+    );
+    if (result.didSucceed) await refreshGame();
+    return result;
+  }
+
+  Future<network.Result<void>> shuffleVictims(bool onlyOutsmartedPlayers) async {
+    final result = await _network.shuffleVictims(
+      authToken: _account.authToken,
+      code: currentGame.code,
+      onlyOutsmartedPlayers: onlyOutsmartedPlayers,
+    );
+    if (result.didSucceed) await refreshGame();
+    return result;
   }
 }

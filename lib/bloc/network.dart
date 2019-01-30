@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
@@ -25,13 +26,13 @@ class Result<T> {
 
   Status _status;
   get status => _status;
+  bool get didSucceed => _status == Status.success;
 
   T _data;
   T get data => _data;
 }
 
 /// A simple get request to the server.
-@immutable
 class _Request<T> {
   _Request({
     @required this.functionName,
@@ -53,7 +54,7 @@ class _Request<T> {
   /// Executes the request.
   Future<Result<T>> _execute() async {
     // Build the URL. TODO: encode parameter values
-    final url = 'https://us-central1-murderers-e67bb.cloudfunctions.net'
+    final url = 'https://us-central1-murderers-e67bb.cloudfunctions.net/'
       + functionName + '?' + parameters.keys
       .map((key) => '$key=${parameters[key]}')
       .reduce((a, b) => '$a&$b');
@@ -77,8 +78,9 @@ class _Request<T> {
         Status.success,
         (parser == null) ? null : parser(res.body)
       );
-    } catch (e) {
+    } catch (e, stacktrace) {
       print('Seems like the server output is corrupt: $e');
+      print(stacktrace);
       return Result(Status.server_corrupt);
     }
   }
@@ -88,12 +90,15 @@ class _Request<T> {
     List<_Request> requestsToWaitFor
   ) async {
     // Wait for the given requests.
+    print("Before executing the query, let's first await all ${requestsToWaitFor.length} requests: $requestsToWaitFor");
     while (requestsToWaitFor.first != this) {
       await requestsToWaitFor.first._executeScheduled(requestsToWaitFor);
     }
 
-    if (_executor != null) return await _executor;
-    _executor = _execute();
+    if (_executor == null) {
+      _executor = _execute();
+    }
+    return await _executor;
   }
 
   bool operator == (Object other) {
@@ -101,6 +106,12 @@ class _Request<T> {
       && functionName == other.functionName
       && true; // TODO: check for parameters
   }
+
+  String toString() => functionName;
+}
+
+DateTime _parseTime(int time) {
+  return time == null ? null : DateTime.fromMillisecondsSinceEpoch(time);
 }
 
 class Handler {
@@ -108,9 +119,11 @@ class Handler {
 
   /// Makes a request after all the other requests completed.
   // TODO: merge multiple requests that do effectively the same
-  Future<Result<T>> _makeRequest<T>(_Request request) {
+  Future<Result<T>> _makeRequest<T>(_Request<T> request) async {
     queue.add(request);
-    return request._executeScheduled(queue);
+    final result = await request._executeScheduled(queue);
+    queue.remove(request);
+    return result;
   }
 
   /// Creates a user on the server.
@@ -158,7 +171,7 @@ class Handler {
   ));
 
   /// Joins a game on the server.
-  Future<Result<Game>> joinGame({
+  Future<Result<void>> joinGame({
     @required String id,
     @required String authToken,
     @required String code,
@@ -185,42 +198,47 @@ class Handler {
     },
     parser: (body) {
       final data = json.decode(body);
-      final playersData = data['players'] as List<Map<String, dynamic>>;
+      final playersData = data['players'] as List;
       final players = <Player>[];
       
       for (final player in playersData) {
+        print("Player's data is ${json.encode(player)}");
         players.add(Player(
           id: player['id'],
           name: player['name'],
           state: intToPlayerState(player['state']),
           kills: player['kills'],
+          deaths: []
         ));
       }
       for (final player in players) {
         final deathsData = playersData
           .singleWhere((p) => p['id'] == player.id)
-          ['deaths'] as List<Map<String, dynamic>>;
-        player.deaths = deathsData.map((death) => Death(
-          time: death['time'],
-          murderer: players.singleWhere((p) => p.id == death['murderer']),
+          ['deaths'] as List;
+        player.deaths.addAll(deathsData.map((death) => Death(
+          time: _parseTime(death['time']),
+          murderer: players
+            .singleWhere((p) => p.id == death['murderer'], orElse: () => null),
           lastWords: death['lastWords'],
           weapon: death['weapon']
-        )).toList();
+        )));
       }
 
-      final myData = playersData.singleWhere((p) => p['id'] == id, orElse: null);
+      final myData = playersData
+        .singleWhere((p) => p['id'] == id, orElse: () => null);
 
       return Game(
         isCreator: (data['creator'] == id),
         code: code,
         name: data['name'],
         state: intToGameState(data['state']),
-        created: data['created'],
-        start: data['start'],
-        end: data['end'],
+        created: data['created'] == null ? null : _parseTime(data['created']),
+        start: _parseTime(data['start']),
+        end: _parseTime(data['end']),
         players: players,
         me: players.singleWhere((p) => p.id == id, orElse: () => null),
-        victim: (myData == null) ? null : players.singleWhere((p) => p.id == myData['victim']),
+        victim: (myData == null) ? null : players
+          .singleWhere((p) => p.id == myData['victim'], orElse: () => null),
       );
     }
   ));

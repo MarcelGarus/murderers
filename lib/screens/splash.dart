@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import '../bloc/bloc.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -9,8 +13,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacementNamed(context, '/signin');
+    Future.delayed(Duration(seconds: 1), () {
+      final bloc = Bloc.of(context);
+      final targetRoute = (bloc.currentGame == null) ? '/intro' : '/game';
+      Navigator.pushReplacementNamed(context, targetRoute);
     });
   }
 

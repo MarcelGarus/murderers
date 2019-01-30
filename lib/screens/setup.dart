@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/setup.dart';
-import 'game.dart';
+import '../widgets/primary_button.dart';
+
+/// A game configuration. It's passed between all the setup screens to carry
+/// setup information through the setup flow.
+class SetupConfiguration {
+  UserRole role;
+  String code;
+  String gameName;
+}
+
 
 /// Select a mode.
 class SetupJourney extends StatefulWidget {
@@ -16,6 +25,7 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
 
   void _selectRole(UserRole role) => setState(() {
     config.role = role;
+    _proceedToNextScreen();
   });
 
   void _proceedToNextScreen() {
@@ -27,16 +37,7 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
       nextScreen = EnterCodeScreen(configuration: config);
     } else {
       // User wants to create a new game.
-      if (Bloc.of(context).isSignedIn) {
-        nextScreen = ConfigureGameScreen(configuration: config);
-      } else {
-        // Still needs to sign in.
-        nextScreen = SignInScreen(
-          onSignedIn: () => navigator.push(SetupRoute(ConfigureGameScreen(
-            configuration: config
-          ))),
-        );
-      }
+      nextScreen = ConfigureGameScreen(configuration: config);
     }
 
     navigator.push(SetupRoute(nextScreen));
@@ -46,42 +47,40 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          SetupAppBar(title: 'Choose a game mode'),
-          ListTile(
-            contentPadding: EdgeInsets.all(16.0),
-            leading: ModeIcon(selected: role == UserRole.player, iconData: Icons.person),
-            title: Text("Join as assassin", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Participate in a game and have fun killing players."),
-            onTap: () => _selectRole(UserRole.player),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 200,
+                height: 300,
+                child: Placeholder(),
+              ),
+              SizedBox(height: 32),
+              PrimaryButton(
+                color: Colors.red,
+                text: 'Join a game',
+                textColor: Colors.white,
+                onPressed: () => _selectRole(UserRole.player),
+              ),
+              SizedBox(height: 16),
+              SecondaryButton(
+                color: Colors.red,
+                text: 'Watch a game',
+                onPressed: () => _selectRole(UserRole.watcher),
+              ),
+              SizedBox(height: 4),
+              SecondaryButton(
+                color: Colors.red,
+                text: 'Create a new game',
+                onPressed: () => _selectRole(UserRole.watcher),
+              ),
+            ],
           ),
-          ListTile(
-            contentPadding: EdgeInsets.all(16.0),
-            leading: ModeIcon(selected: role == UserRole.watcher, iconData: Icons.remove_red_eye),
-            title: Text("Join as watcher", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Watch the rankings and get notified about what's happening without actually participating."),
-            onTap: () => _selectRole(UserRole.watcher),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.all(16.0),
-            leading: ModeIcon(selected: role == UserRole.creator, iconData: Icons.add),
-            title: Text("Create new game", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Create a completely new game. Make sure you gathered other people around you who are willing to play."),
-            onTap: () => _selectRole(UserRole.creator),
-          ),
-          SizedBox(height: 16.0),
-        ],
-      ),
-      bottomNavigationBar: SetupBottomBar(
-        primary: 'Next',
-        onPrimary: _proceedToNextScreen,
-        secondary: 'Sign out of Google', // TODO: remove
-        onSecondary: () {
-          Bloc.of(context).signOut();
-        },
-      ),
+        ),
+      )
     );
   }
 }
@@ -115,172 +114,36 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          SetupAppBar(
-            title: 'Join a game',
-            subtitle: 'by entering the code',
-          ),
-          SizedBox(height: 24.0),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Enter the code',
-                labelStyle: TextStyle(fontFamily: ''),
-              ),
-              style: TextStyle(fontFamily: 'Mono', color: Colors.black, fontSize: 32.0),
-              autofocus: true,
-              onChanged: (code) {
-                if (code.length >= 4) {
-                  _onCodeFinished(code);
-                }
-              },
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 200,
+              height: 200,
+              child: Placeholder(),
             ),
-          ),
-          SizedBox(height: 16.0),
-        ],
+            Padding(
+              padding: EdgeInsets.all(32.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Enter the code',
+                  labelStyle: TextStyle(fontFamily: ''),
+                ),
+                style: TextStyle(fontFamily: 'Mono', color: Colors.black, fontSize: 32.0),
+                autofocus: true,
+                onChanged: (code) {
+                  if (code.length >= 4) {
+                    _onCodeFinished(code);
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: SetupBottomBar(),
-    );
-  }
-}
-
-
-/// Sign in.
-class SignInScreen extends StatefulWidget {
-  SignInScreen({
-    this.onSignedIn,
-    this.onSkipped,
-  });
-
-  final VoidCallback onSignedIn;
-
-  final VoidCallback onSkipped;
-  bool get isSkippable => onSkipped != null;
-
-  @override
-  _SignInScreenState createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMixin {
-  bool signingIn = false;
-
-  void _signIn() async {
-    bool success;
-
-    setState(() { signingIn = true; });
-    try {
-      success = await Bloc.of(context).signIn();
-    } catch (e) { /* User aborted sign in or timeout (no internet). */ }
-    setState(() { signingIn = false; });
-
-    if (success) {
-      widget.onSignedIn();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          SetupAppBar(
-            title: 'Sign in with Google',
-            subtitle: widget.isSkippable ? 'to make your life easier' : null,
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            title: Text("Be lazy", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("You won't need to manually fill in your name."),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            title: Text("Start new games", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("You'll be able to start new murderer games yourself."),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            title: Text("Synchronize games", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("You'll be able to synchronize your games across all your devices."),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            title: Text("Confirm your identity", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Some games require players to be signed in so their identities can be confirmed."),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text("Only the game admin will be able to see your email address.",
-              style: TextStyle(color: Colors.black54)
-            )
-          ),
-        ],
-      ),
-      bottomNavigationBar: SetupBottomBar(
-        primary: signingIn ? null : 'Sign in',
-        onPrimary: signingIn ? null : _signIn,
-        secondary: widget.isSkippable ? 'Skip' : null,
-        onSecondary: widget.onSkipped,
-      ),
-    );
-  }
-}
-
-
-/// Enter the name.
-class EnterNameScreen extends StatefulWidget {
-  EnterNameScreen({
-    @required this.configuration,
-  });
-
-  final SetupConfiguration configuration;
-
-  @override
-  _EnterNameScreenState createState() => _EnterNameScreenState();
-}
-
-class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderStateMixin {
-  final controller = TextEditingController();
-
-  void _onNameEntered(String name) {
-    widget.configuration.playerName = name;
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => SetupFinishedScreen(configuration: widget.configuration),
-    ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          SetupAppBar(
-            title: "What's your name?",
-          ),
-          SizedBox(height: 24.0),
-          TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Enter first and last name",
-            ),
-          ),
-          SizedBox(height: 16.0),
-          Text('Other players will be able to see it. To counter confusion in large groups, it\'s recommended to enter both your first and last name.'),
-          SizedBox(height: 16.0),
-        ],
-      ),
-      bottomNavigationBar: SetupBottomBar(
-        primary: 'Done',
-        onPrimary: () => _onNameEntered(controller.text),
-      ),
     );
   }
 }
@@ -304,55 +167,43 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
   String get code => config.code;
 
   void _onConfirmed() {
-    final navigator = Navigator.of(context);
-    Widget nextScreen = EnterNameScreen(configuration: config);
-    
-    // If the user doesn't want to play, the setup is finished. Otherwise, we
-    // need a name. If already signed in, we use that, else we offer to sign in
-    // and then continue to the game or - if skipped - enter the name manually.
-    /*if (role != UserRole.player || Bloc.of(context).isSignedIn) {
-      nextScreen = SetupFinishedScreen(configuration: config);
-    } else {
-      nextScreen = SignInScreen(
-        onSignedIn: () => navigator.push(SetupRoute(SetupFinishedScreen(configuration: config))),
-        onSkipped: () => navigator.push(SetupRoute(EnterNameScreen(configuration: config))),
-      );
-    }*/
-
-    navigator.push(SetupRoute(nextScreen));
+    Navigator.of(context).push(
+      SetupRoute(SetupFinishedScreen(configuration: config))
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          SetupAppBar(
-            title: widget.configuration.role == UserRole.creator ? 'Create a game' : 'Join a game'
-          ),
-          SizedBox(height: 24.0),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("You'll be joining"),
-              Text('${widget.configuration.code}'),
-              Text('as a'),
-              Text(widget.configuration.role.toString())
+              Text("You'll be joining",
+                textScaleFactor: 1.2,
+              ),
+              SizedBox(height: 8),
+              Text("${widget.configuration.code}",
+                textScaleFactor: 2.5,
+                style: TextStyle(color: Colors.red, fontFamily: 'Signature'),
+              ),
+              SizedBox(height: 8),
+              Text("as a\n${widget.configuration.role}",
+                textAlign: TextAlign.center,
+                textScaleFactor: 1.2,
+              ),
+              SizedBox(height: 32),
+              PrimaryButton(
+                color: Colors.red,
+                text: "Join",
+                textColor: Colors.white,
+                onPressed: _onConfirmed,
+              ),
             ],
           ),
-          SizedBox(height: 16.0),
-        ],
-      ),
-      bottomNavigationBar: SetupBottomBar(
-        primary: "Join",
-        onPrimary: _onConfirmed,
-        secondary: 'Cancel',
-        onSecondary: () {
-          Navigator.of(context).pop();
-        },
+        ),
       ),
     );
   }
@@ -389,18 +240,7 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
             title: Text("Name", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("Give your game a name. This could be the name of the event where this game takes place."),
           ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            title: Text("Code", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("The game code that allows other players to join will be generated when the game is created."),
-          ),
           SectionHeader('Joining the game'),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            title: Text("Only signed in players", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Only allow players to join that signed in with their Google account. This allows for easy identity confirmation."),
-            trailing: Switch(value: false, onChanged: null),
-          ),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             title: Text("Confirm players", style: TextStyle(fontFamily: 'Signature')),
@@ -416,43 +256,8 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
           SectionHeader('Gameplay'),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            title: Text("Custom rule", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text('You can provide a custom definition of killing. Note that your definition still needs to be legal, so no real killing please.'),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            title: Text("Configure running game", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Do you want to be able to configure the game while it's running? If you do so, you cannot participate, as you'd be able to cheat."),
-            trailing: Switch(value: false, onChanged: null),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            title: Text("Murder weapon", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Allow players to enter the murder weapon once they're killed."),
-            trailing: Switch(value: true, onChanged: null),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            title: Text("Last words", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Allow players to enter their last words once they're killed."),
-            trailing: Switch(value: true, onChanged: null),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             title: Text("Publish murderer", style: TextStyle(fontFamily: 'Signature')),
             subtitle: Text("When a player dies, the murderer's name will be shown to all players. This is a disadvantage for the murderer, if the victim's victim knows the victim was supposed to be his assassin."),
-            trailing: Switch(value: true, onChanged: null),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            title: Text("Provide deaths right away", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("All players will get notified as soon as a death occurs."),
-            trailing: Switch(value: true, onChanged: null),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            title: Text("Send out daily summaries", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Send out daily summaries of how many players got killed etc."),
             trailing: Switch(value: true, onChanged: null),
           ),
           SectionHeader('End of the game'),
@@ -511,20 +316,39 @@ class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerPr
   @override
   void initState() {
     super.initState();
-
-    final config = widget.configuration;
-
-    print('Setting up a game for user ${config.playerName}.');
-    Bloc.of(context).setupGame(config).then(_finished);
+    _setItUp();
   }
 
-  void _finished(FunctionStatus result) {
-    // If it succeeded, the new active game is already set and the setup widget
-    // subtree will be replaced by the game screen. That means, we only need to
-    // handle the error cases in here.
+  void _setItUp() async {
+    final config = widget.configuration;
+    final bloc = Bloc.of(context);
+    Result<Game> result;
 
-    if (result == FunctionStatus.success) {
-      print('Game couldnt be created.');
+    print('Setting up a game.');
+
+    switch (config.role) {
+      case UserRole.player:
+        print('Awaiting joining the game.');
+        result = await bloc.joinGame(code: config.code);
+        break;
+      case UserRole.watcher:
+        result = await bloc.watchGame(code: config.code);
+        break;
+      case UserRole.creator:
+        result = await bloc.createGame(
+          name: config.gameName,
+          start: DateTime.now().add(Duration(days: 1)),
+          end: DateTime.now().add(Duration(days: 10))
+        );
+        break;
+    }
+
+    if (result.didSucceed) {
+      print('Game created successfully.');
+      await Navigator.of(context)
+        .pushNamedAndRemoveUntil('/game', (route) => false);
+    } else {
+      print('Creating the game failed.');
       // TODO: display appropriate error and offer to retry
     }
   }
@@ -550,4 +374,3 @@ class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerPr
     );
   }
 }
-

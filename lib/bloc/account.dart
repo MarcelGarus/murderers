@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'messaging.dart' as messaging;
 import 'network.dart' as network;
+import 'persistence.dart' as persistence;
 
 enum SignInType {
   anonymous,
@@ -11,9 +13,6 @@ enum SignInType {
 }
 
 class Handler {
-  static String _SHARED_PREFS_ID = 'id';
-  static String _SHARED_PREFS_NAME = 'name';
-
   final _auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn.standard(
     scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
@@ -21,20 +20,19 @@ class Handler {
   FirebaseUser _user;
   String _id;
   String _name;
-  SharedPreferences _sharedPrefs;
 
-  bool get signedInWithFirebase => _user != null;
-  bool get userCreated => _id != null;
+  bool get isSignedInWithFirebase => _user != null;
+  bool get userWasCreated => _id != null;
   String get name => _name ?? _user?.displayName;
+  String get id => _id;
   String get authToken => _user?.uid;
 
 
   /// Initializes account on app startup.
   Future<void> initialize() async {
-    _sharedPrefs = await SharedPreferences.getInstance();
     _user = await _auth.currentUser();
-    _id = _sharedPrefs.getString(_SHARED_PREFS_ID);
-    _name = _sharedPrefs.getString(_SHARED_PREFS_NAME);
+    _id = await persistence.loadId();
+    _name = await persistence.loadName();
   }
 
   /// Signs in the user.
@@ -53,7 +51,7 @@ class Handler {
         break;
     }
     print('Signed in: $_user');
-    return signedInWithFirebase;
+    return isSignedInWithFirebase;
   }
 
   /// Signs the user out.
@@ -61,7 +59,7 @@ class Handler {
     await _auth.signOut();
     _user = null;
     print('Signed out.');
-    return !signedInWithFirebase;
+    return !isSignedInWithFirebase;
   }
 
   /// Creates a user on the server.
@@ -71,10 +69,10 @@ class Handler {
     String name
   ) async {
     assert(name != null);
-    assert(signedInWithFirebase);
+    assert(isSignedInWithFirebase);
 
     _name = name;
-    await _sharedPrefs.setString(_SHARED_PREFS_NAME, name);
+    await persistence.saveName(name);
 
     final result = await networkHandler.createUser(
       name: name,
@@ -85,7 +83,7 @@ class Handler {
     // If the user creation was successful, save the id.
     if (result.status == network.Status.success) {
       _id = result.data;
-      await _sharedPrefs.setString(_SHARED_PREFS_ID, _id);
+      await persistence.saveId(_id);
     }
 
     return network.Result<void>(result.status);
@@ -96,12 +94,13 @@ class Handler {
     network.Handler networkHandler,
     String name
   ) async {
-    assert(userCreated);
+    assert(userWasCreated);
 
     _name = name;
-    await _sharedPrefs.setString(_SHARED_PREFS_NAME, name);
+    await persistence.saveName(name);
  
-    final result = null; // TODO: rename user on the server
+    // TODO: rename user on the server
+    //final result = null;
 
     return network.Result<void>(network.Status.success);
   }
