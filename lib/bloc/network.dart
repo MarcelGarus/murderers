@@ -6,31 +6,12 @@ import 'package:http/http.dart' as http;
 
 import 'models.dart';
 
-/// Possible network statuses.
-enum Status {
-  success,
-  no_connection,
-  internal_failure,
-  server_corrupt,
-  authentication_failed,
-  resource_not_found,
-}
-
-/// This is the result of a network request.
-/// It contains a status and some data.
-class Result<T> {
-  Result(this._status, [ this._data ]);
-  Result fromStatus(Status status) {
-    return Result(status, null);
-  }
-
-  Status _status;
-  get status => _status;
-  bool get didSucceed => _status == Status.success;
-
-  T _data;
-  T get data => _data;
-}
+class NetworkError {}
+class NoConnectionError extends NetworkError {}
+class BadRequestError extends NetworkError {}
+class ServerCorruptError extends NetworkError {}
+class AuthenticationFailedError extends NetworkError {}
+class ResourceNotFoundError extends NetworkError {}
 
 /// A simple get request to the server.
 class _Request<T> {
@@ -38,7 +19,7 @@ class _Request<T> {
     @required this.functionName,
     @required this.parameters,
     T Function(String body) this.parser,
-    void Function(Result<T> result) callback
+    void Function(T result) callback
   }) {
     if (callback != null) {
       callbacks.add(callback);
@@ -48,11 +29,11 @@ class _Request<T> {
   final String functionName;
   final Map<String, String> parameters;
   final T Function(String body) parser;
-  final callbacks = Set<void Function(Result<T> result)>();
-  Future<Result<T>> _executor;
+  final callbacks = Set<void Function(T result)>();
+  Future<T> _executor;
 
   /// Executes the request.
-  Future<Result<T>> _execute() async {
+  Future<T> _execute() async {
     // Build the URL. TODO: encode parameter values
     final url = 'https://us-central1-murderers-e67bb.cloudfunctions.net/'
       + functionName + '?' + parameters.keys
@@ -65,28 +46,25 @@ class _Request<T> {
     // Handle errors. TODO: check for no internet & timeout
     switch (res.statusCode) {
       case 200: break;
-      case 400: return Result(Status.internal_failure);
-      case 403: return Result(Status.authentication_failed);
-      case 404: return Result(Status.resource_not_found);
-      case 500: return Result(Status.server_corrupt);
-      default: return Result(Status.server_corrupt);
+      case 400: throw BadRequestError();
+      case 403: throw AuthenticationFailedError();
+      case 404: throw ResourceNotFoundError();
+      case 500: throw ServerCorruptError();
+      default: throw ServerCorruptError();
     }
 
     // Parse response.
     try {
-      return Result(
-        Status.success,
-        (parser == null) ? null : parser(res.body)
-      );
+      return (parser == null) ? null : parser(res.body);
     } catch (e, stacktrace) {
       print('Seems like the server output is corrupt: $e');
       print(stacktrace);
-      return Result(Status.server_corrupt);
+      throw ServerCorruptError();
     }
   }
 
   /// Executes the requests scheduled.
-  Future<Result<T>> _executeScheduled(
+  Future<T> _executeScheduled(
     List<_Request> requestsToWaitFor
   ) async {
     // Wait for the given requests.
@@ -119,7 +97,7 @@ class Handler {
 
   /// Makes a request after all the other requests completed.
   // TODO: merge multiple requests that do effectively the same
-  Future<Result<T>> _makeRequest<T>(_Request<T> request) async {
+  Future<T> _makeRequest<T>(_Request<T> request) async {
     queue.add(request);
     final result = await request._executeScheduled(queue);
     queue.remove(request);
@@ -127,7 +105,7 @@ class Handler {
   }
 
   /// Creates a user on the server.
-  Future<Result<String>> createUser({
+  Future<String> createUser({
     @required String name,
     @required String authToken,
     String messagingToken
@@ -142,7 +120,7 @@ class Handler {
   ));
 
   /// Creates a game on the server.
-  Future<Result<Game>> createGame({
+  Future<Game> createGame({
     @required String id,
     @required String authToken,
     @required String name,
@@ -163,15 +141,15 @@ class Handler {
         isCreator: true,
         code: data['code'],
         name: data['name'],
-        created: data['created'],
-        start: data['start'],
-        end: data['end'],
+        created: DateTime.fromMillisecondsSinceEpoch(data['created'] ?? 0), // TODO: make webhook return something
+        start: DateTime.fromMillisecondsSinceEpoch(data['start'] ?? 0), // TODO: make webhook return something
+        end: DateTime.fromMillisecondsSinceEpoch(data['end'] ?? 0), // TODO: make webhook return something
       );
     }
   ));
 
   /// Joins a game on the server.
-  Future<Result<void>> joinGame({
+  Future<void> joinGame({
     @required String id,
     @required String authToken,
     @required String code,
@@ -185,7 +163,7 @@ class Handler {
   ));
 
   /// Gets a game from the server.
-  Future<Result<Game>> getGame({
+  Future<Game> getGame({
     @required String id,
     @required String authToken,
     @required String code,
@@ -244,7 +222,7 @@ class Handler {
   ));
 
   /// Starts a game on the server.
-  Future<Result<void>> startGame({
+  Future<void> startGame({
     @required String id,
     @required String authToken,
     @required String code,
@@ -258,7 +236,7 @@ class Handler {
   ));
 
   /// Kills a player on the server.
-  Future<Result<void>> killPlayer({
+  Future<void> killPlayer({
     @required String id,
     @required String authToken,
     @required String code,
@@ -272,7 +250,7 @@ class Handler {
   ));
 
   /// A player dies on the server.
-  Future<Result<void>> die({
+  Future<void> die({
     @required String id,
     @required String authToken,
     @required String code,
@@ -286,7 +264,7 @@ class Handler {
   ));
 
   /// Shuffles some victims on the server.
-  Future<Result<void>> shuffleVictims({
+  Future<void> shuffleVictims({
     @required String authToken,
     @required String code,
     @required bool onlyOutsmartedPlayers,

@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
-import 'players.dart';
-import '../widgets/primary_button.dart';
+import '../widgets/button.dart';
+import '../widgets/game_scaffold.dart';
 import '../widgets/victim_name.dart';
+import '../widgets/theme.dart';
+import 'players.dart';
 
 class GameScreen extends StatefulWidget {
   @override
@@ -22,34 +26,75 @@ class _GameScreenState extends State<GameScreen> {
         }
 
         final game = snapshot.data;
-        return Scaffold(
-          backgroundColor: _getBackgroundColor(game),
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            title: GestureDetector(
-              onTap: () => Bloc.of(context).removeGame(game),
-              child: Text('The Murderer Game',
-                style: TextStyle(color: Colors.red)
-              )
+        return MyTheme(
+          data: getThemeData(game),
+          child: GameScaffold(
+            main: Stack(
+              children: [
+                GradientBackground(),
+                SafeArea(
+                  child: game.state == GameState.notStartedYet
+                    ? PreparationContent(game: game)
+                    : ActiveContent(game: game)
+                ),
+              ],
             ),
+            bar: Material(
+              elevation: 6,
+              child: Container(color: Colors.yellow, height: 72)
+            ),
+            players: Placeholder(color: Colors.green),
           ),
-          body: SafeArea(
-            child: game.state == GameState.notStartedYet
-              ? PreparationContent(game: game)
-              : ActiveContent(game: game)
-          )
         );
       }
     );
   }
 
-  Color _getBackgroundColor(Game game) {
-    return Colors.yellow;
-    return !(game.me?.isAlive ?? true) ? Colors.black
-      : (game.state == GameState.running) ? Colors.red
-      : Colors.white;
-  }  
+  MyThemeData getThemeData(Game game) {
+    final theme = MyTheme.of(context);
+
+    if (!(game.me?.isAlive ?? true)) {
+      // The player is dead.
+      return theme.copyWith(
+        backgroundColor: Colors.black,
+        backgroundGradientColor: Colors.deepPurple,
+        textColor: Colors.white,
+        buttonColor: Colors.black,
+        primaryButtonTextColor: Colors.black,
+      );
+    } else if (game.state == GameState.running) {
+      // The game is running.
+      return theme.copyWith(
+        backgroundColor: Colors.red,
+      );
+    } else {
+      // The game is currently not running.
+      return theme.copyWith(
+        backgroundColor: Colors.white,
+        backgroundGradientColor: Color.lerp(Colors.white, Colors.pink, 0.1),
+        textColor: Colors.black,
+        buttonColor: Colors.red,
+        primaryButtonTextColor: Colors.white,
+      );
+    }
+  }
+}
+
+class GradientBackground extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            MyTheme.of(context).backgroundColor,
+            MyTheme.of(context).backgroundGradientColor,
+          ],
+          begin: Alignment.bottomCenter,
+        )
+      ),
+    );
+  }
 }
 
 
@@ -60,48 +105,41 @@ class PreparationContent extends StatelessWidget {
   
   final Game game;
 
-
-  void _startGame(BuildContext context) {
-    Bloc.of(context).startGame();
+  Future<void> _startGame(BuildContext context) {
+    return Bloc.of(context).startGame();
   }
 
   @override
   Widget build(BuildContext context) {
     print('Building the preparation content.');
+    final theme = MyTheme.of(context);
 
     final items = <Widget>[
       Spacer(),
-      Text(game.code,
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'Signature',
-          fontSize: 92.0,
-        )
-      ),
-      SizedBox(height: 8.0),
+      Text(game.code, textScaleFactor: 3, style: theme.headerText),
+      SizedBox(height: 8),
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         child: Text(
           "Share this code with other people \n to let them join.",
-          style: TextStyle(
-            fontFamily: 'Signature'
-          ),
           textAlign: TextAlign.center,
+          style: theme.headerText
         ),
       ),
     ];
 
-    /*if (game.myRole == UserRole.creator) {
+    if (game.isCreator) {
       items.addAll([
-        SizedBox(height: 16.0),
-        MainActionButton(
-          onPressed: () => _startGame(context),
-          color: Colors.black,
+        SizedBox(height: 16),
+        Button(
           text: 'Start the game',
-          textColor: Colors.white,
+          onPressed: () => _startGame(context),
+          onSuccess: (result) {
+            print(result);
+          },
         )
       ]);
-    }*/
+    }
 
     items.addAll([
       Spacer(),
@@ -113,7 +151,7 @@ class PreparationContent extends StatelessWidget {
           ));
         },
         child: Container(
-          height: 48.0,
+          height: 48,
           alignment: Alignment.center,
           child: Text('all players'.toUpperCase()),
         ),
@@ -123,7 +161,6 @@ class PreparationContent extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: items
       )
     );
@@ -148,10 +185,9 @@ class ActiveContent extends StatelessWidget {
 
     if (game.victim != null) {
       items.add(VictimName());
-      items.add(PrimaryButton(
-        color: Colors.white,
+      items.add(Button(
         text: 'Victim killed',
-        textColor: Colors.red,
+        onPressed: () {},
       ));
     }
 
@@ -203,12 +239,13 @@ class Statistics extends StatelessWidget {
           SizedBox(height: 16.0),
           Text(number.toString(),
             style: TextStyle(
+              color: Colors.white,
               fontSize: 24.0,
               fontWeight: FontWeight.bold
             ),
           ),
           SizedBox(height: 8.0),
-          Text(text),
+          Text(text, style: TextStyle(color: Colors.white)),
           SizedBox(height: 16.0),
         ],
       )

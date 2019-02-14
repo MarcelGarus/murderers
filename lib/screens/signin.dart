@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
-import '../widgets/setup.dart';
-import '../widgets/primary_button.dart';
+import '../widgets/button.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMixin {
   bool signingIn = false;
 
-  void _signIn(SignInType type) async {
+  Future<void> _signIn(SignInType type) async {
     setState(() => signingIn = true);
 
     try {
@@ -25,8 +26,8 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
     ));
   }
 
-  void _signInWithGoogle() => _signIn(SignInType.google);
-  void _signInAnonymously() => _signIn(SignInType.anonymous);
+  Future<void> _signInWithGoogle() => _signIn(SignInType.google);
+  Future<void> _signInAnonymously() => _signIn(SignInType.anonymous);
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +52,21 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
                   textScaleFactor: 1.2,
                 )
               ),
-              PrimaryButton(
-                color: Colors.red,
-                text: 'Sign in',
-                textColor: Colors.white,
+              Button(
                 onPressed: _signInWithGoogle,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(Icons.g_translate),
+                    SizedBox(width: 8),
+                    Text('Sign in'),
+                  ],
+                ),
               ),
               SizedBox(height: 16),
-              SecondaryButton(
-                color: Colors.red,
+              Button(
                 text: 'Skip',
+                isRaised: false,
                 onPressed: _signInAnonymously,
               ),
               Spacer(),
@@ -93,7 +99,8 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
     controller.text = Bloc.of(context).name;
   }
 
-  void _onNameEntered(String name) async {
+  Future<void> _onNameEntered() async {
+    final name = controller.text;
     await Bloc.of(context).createAccount(name);
 
     if (Bloc.of(context).isSignedIn) {
@@ -125,11 +132,9 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
                   ),
                 ),
               ),
-              PrimaryButton(
-                color: Colors.red,
+              Button(
                 text: "Continue",
-                textColor: Colors.white,
-                onPressed: () => _onNameEntered(controller.text),
+                onPressed: _onNameEntered,
               ),
               Spacer(),
               Padding(

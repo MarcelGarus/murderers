@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/primary_button.dart';
+import '../widgets/button.dart';
+import '../widgets/theme.dart';
 
 class IntroScreen extends StatefulWidget {
   @override
@@ -21,26 +22,15 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
     }));
   }
 
-  void _goToNextSlide() {
-    if (isAtLastSlide) {
-      _goToNextScreen();
-    } else {
-      controller.animateTo(controller.index + 1);
-    }
-  }
-
-  void _goToNextScreen() {
-    Navigator.of(context).pushNamed('/signin');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyTheme.of(context).backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         title: Text('The Murderer Game', style: TextStyle(color: Colors.red)),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: TabBarView(
@@ -69,11 +59,11 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                 'mark your job done in this app.'
             ),
             Center(
-              child: PrimaryButton(
-                color: Colors.green,
-                onPressed: _goToNextScreen,
+              child: Button(
                 text: 'Sign in',
-                textColor: Colors.white,
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/signin');
+                },
               )
             )
           ],
@@ -96,6 +86,7 @@ class IntroStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = MyTheme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -110,7 +101,7 @@ class IntroStep extends StatelessWidget {
           child: Text(title,
             textAlign: TextAlign.center,
             textScaleFactor: 1.4,
-            style: TextStyle(fontFamily: 'Signature', color: Colors.red),
+            style: theme.headerText,
           ),
         ),
         Padding(
@@ -118,7 +109,7 @@ class IntroStep extends StatelessWidget {
           child: Text(content,
             textAlign: TextAlign.center,
             textScaleFactor: 1.1,
-            style: TextStyle(height: 1.1),
+            style: theme.bodyText.copyWith(height: 1.1),
           ),
         ),
       ],

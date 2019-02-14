@@ -63,7 +63,7 @@ class Handler {
   }
 
   /// Creates a user on the server.
-  Future<network.Result<void>> createUser(
+  Future<void> createUser(
     network.Handler networkHandler,
     messaging.Handler messagingHandler,
     String name
@@ -74,23 +74,19 @@ class Handler {
     _name = name;
     await persistence.saveName(name);
 
-    final result = await networkHandler.createUser(
+    final id = await networkHandler.createUser(
       name: name,
       authToken: authToken,
       messagingToken: await messagingHandler.getToken()
     );
 
     // If the user creation was successful, save the id.
-    if (result.status == network.Status.success) {
-      _id = result.data;
-      await persistence.saveId(_id);
-    }
-
-    return network.Result<void>(result.status);
+    _id = id;
+    await persistence.saveId(_id);
   }
 
   /// Renames the user.
-  Future<network.Result<void>> rename(
+  Future<void> rename(
     network.Handler networkHandler,
     String name
   ) async {
@@ -101,7 +97,5 @@ class Handler {
  
     // TODO: rename user on the server
     //final result = null;
-
-    return network.Result<void>(network.Status.success);
   }
 }
