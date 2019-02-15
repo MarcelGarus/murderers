@@ -70,7 +70,7 @@ class _ButtonState<T> extends State<Button>
       shape: _isLoading
         ? CircleBorder()
         : RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      animationDuration: Duration(milliseconds: 800),
+      animationDuration: Duration(milliseconds: 200),
       child: Container(
         width: _isLoading ? 48 : null,
         height: _isLoading ? 48 : null,
@@ -86,7 +86,7 @@ class _ButtonState<T> extends State<Button>
         height: 24,
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(
-            widget.isRaised ? Colors.white : theme.flatButtonColor
+            widget.isRaised ? theme.raisedButtonTextColor : theme.flatButtonColor
           ),
         )
       )

@@ -1,6 +1,21 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+
+class BouncyScrollPhysics extends ScrollPhysics {
+  const BouncyScrollPhysics({ ScrollPhysics parent }) : super(parent: parent);
+
+  @override
+  BouncyScrollPhysics applyTo(ScrollPhysics ancestor) {
+    return BouncyScrollPhysics(parent: buildParent(ancestor));
+  }
+
+  get spring {
+    print("Creating a spring.");
+    return SpringDescription(mass: 2, damping: 4, stiffness: 3);
+  }
+}
 
 /// A custom version of a Scaffold, adding the basic structure of this app.
 /// 
@@ -20,16 +35,16 @@ import 'package:flutter/material.dart';
 class GameScaffold extends StatefulWidget {
   GameScaffold({
     @required this.main,
-    @required this.bar,
-    @required this.players,
+    @required this.left,
+    @required this.right,
   }) :
       assert(main != null),
-      assert(bar != null),
-      assert(players != null);
+      assert(left != null),
+      assert(right != null);
   
   final Widget main;
-  final Widget bar;
-  final Widget players;
+  final Widget left;
+  final Widget right;
 
   @override
   _GameScaffoldState createState() => _GameScaffoldState();
@@ -37,101 +52,33 @@ class GameScaffold extends StatefulWidget {
 
 class _GameScaffoldState extends State<GameScaffold>
     with SingleTickerProviderStateMixin {
-  static const double _barHeight = 72;
-
-  // Variables for the swipe up gesture. The _pos value can reach from 0.0
-  // (players hidden) to 1.0 (players fully visible).
-  double _pos = 0;
-  double _posWhenDragStarted = 0;
-  Offset _dragStart;
-  AnimationController _controller;
-  Animation<double> _animation;
+  TabController _controller;
 
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: Duration(seconds: 2),
-      vsync: this
-    )..addListener(() => setState(() {
-      _pos = _animation?.value ?? 0;
-    }));
+    _controller = TabController(length: 3, vsync: this, initialIndex: 1);
   }
-
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _animatePlayers(double target, { double velocity }) {
-    _animation = Tween(begin: _pos, end: target).animate(_controller);
-    _controller
-      ..value = 0.0
-      ..fling(velocity: velocity ?? 2.0);
-  }
-
-  // Helping variables for rendering.
-  Size get screen => MediaQuery.of(context).size;
-  double get animationHeight => screen.height - _barHeight;
-
-  // Touch handlers for a stack drag.
-  void _onDragDown(DragDownDetails details) {
-    _dragStart = details.globalPosition;
-    _posWhenDragStarted = _pos;
-  }
-
-  void _onDragUpdate(DragUpdateDetails details) => setState(() {
-    final visibilityDelta = (_dragStart - details.globalPosition).dy
-        / animationHeight;
-    _pos = (_posWhenDragStarted + visibilityDelta).clamp(0, 1);
-  });
-
-  void _onDragEnd(DragEndDetails details) {
-    final dragVelocity = details.velocity.pixelsPerSecond.dy / 1000;
-    final visibilityVelocity = -dragVelocity / screen.height;
-    final extrapolatedVisibility = _pos + visibilityVelocity * 1500;
-    final targetVisibility = extrapolatedVisibility.clamp(0, 1).roundToDouble();
-
-    _animatePlayers(targetVisibility, velocity: dragVelocity.abs());
-  }
-
-  // The position of the bottom part (stack + FAB). Effectively top of FAB.
-  double get _playersResting => screen.height;
-  double get _playersVisible => _barHeight;
-  double get _playersOffset => lerpDouble(_playersResting, _playersVisible, _pos);
-  double get _barBottom => screen.height - _barHeight;
-  double get _barTop => 0;
-  double get _barOffset => lerpDouble(_barBottom, _barTop, _pos);
-  
-  // The size of the safe area.
-  double get safeAreaSize => MediaQuery.of(context).padding.top * _pos;
 
   @override
   Widget build(BuildContext context) {
-    final main = widget.main;
-    final players = Transform(
-      transform: Matrix4.translationValues(0, _playersOffset, 0),
-      child: widget.players
-    );
-    final bar = Transform(
-      transform: Matrix4.translationValues(0, _barOffset, 0),
-      child: GestureDetector(
-        onVerticalDragDown: _onDragDown,
-        onVerticalDragUpdate: _onDragUpdate,
-        onVerticalDragEnd: _onDragEnd,
-        child: widget.bar,
-      ),
-    );
-
-    // Everything.
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: WillPopScope(
         onWillPop: () async {
-          if (_pos == 0) return true;
-          _animatePlayers(0);
-          return false;
+          if (_controller.index != 1) {
+            _controller.index = 1;
+            return false;
+          } else return true;
         },
-        child: Stack(children: [ main, players, bar ]),
-      )
+        child: TabBarView(
+          controller: _controller,
+          children: <Widget>[
+            widget.left,
+            widget.main,
+            widget.right,
+          ],
+        ),
+      ),
     );
   }
 }

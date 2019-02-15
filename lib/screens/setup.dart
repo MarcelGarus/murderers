@@ -156,10 +156,31 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
   UserRole get role => config.role;
   String get code => config.code;
 
-  void _onConfirmed() {
-    Navigator.of(context).push(
-      SetupRoute(SetupFinishedScreen(configuration: config))
-    );
+  Future<void> _onConfirmed() async {
+    final config = widget.configuration;
+    final bloc = Bloc.of(context);
+
+    print('Setting up a game.');
+
+    switch (config.role) {
+      case UserRole.player:
+        print('Awaiting joining the game.');
+        await bloc.joinGame(code: config.code);
+        break;
+      case UserRole.watcher:
+        await bloc.watchGame(code: config.code);
+        break;
+      case UserRole.creator:
+        await bloc.createGame(
+          name: config.gameName,
+          start: DateTime.now().add(Duration(days: 1)),
+          end: DateTime.now().add(Duration(days: 10))
+        );
+        break;
+    }
+
+    await Navigator.of(context)
+      .pushNamedAndRemoveUntil('/game', (route) => false);
   }
 
   @override
@@ -276,77 +297,6 @@ class SectionHeader extends StatelessWidget {
           color: Theme.of(context).primaryColor
         )
       ),
-    );
-  }
-}
-
-
-/// Setup finished.
-class SetupFinishedScreen extends StatefulWidget {
-  SetupFinishedScreen({
-    @required this.configuration
-  });
-
-  final SetupConfiguration configuration;
-
-  @override
-  _SetupFinishedScreenState createState() => _SetupFinishedScreenState();
-}
-
-class _SetupFinishedScreenState extends State<SetupFinishedScreen> with TickerProviderStateMixin {
-
-  @override
-  void initState() {
-    super.initState();
-    _setItUp();
-  }
-
-  Future<void> _setItUp() async {
-    final config = widget.configuration;
-    final bloc = Bloc.of(context);
-    Game game;
-
-    print('Setting up a game.');
-
-    switch (config.role) {
-      case UserRole.player:
-        print('Awaiting joining the game.');
-        game = await bloc.joinGame(code: config.code);
-        break;
-      case UserRole.watcher:
-        game = await bloc.watchGame(code: config.code);
-        break;
-      case UserRole.creator:
-        game = await bloc.createGame(
-          name: config.gameName,
-          start: DateTime.now().add(Duration(days: 1)),
-          end: DateTime.now().add(Duration(days: 10))
-        );
-        break;
-    }
-
-    await Navigator.of(context)
-      .pushNamedAndRemoveUntil('/game', (route) => false);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    String text = (widget.configuration.role == UserRole.creator)
-      ? "Wait while your game\nis being created."
-      : "Wait while you're\njoining the game.";
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CircularProgressIndicator(),
-            SizedBox(height: 16.0),
-            Text(text, style: TextStyle(fontFamily: 'Signature'), textAlign: TextAlign.center),
-          ],
-        ),
-      )
     );
   }
 }

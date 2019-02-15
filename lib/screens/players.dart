@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../bloc/bloc.dart';
 
 class PlayersScreen extends StatefulWidget {
+  PlayersScreen(this.game);
+  
+  final Game game;
+
   @override
   _PlayersScreenState createState() => _PlayersScreenState();
 }
@@ -11,9 +15,9 @@ class _PlayersScreenState extends State<PlayersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
+        elevation: 0,
         title: Text('The players',
           style: TextStyle(color: Colors.black)
         ),
@@ -25,29 +29,25 @@ class _PlayersScreenState extends State<PlayersScreen> {
   }
 
   Widget _buildList() {
-    return StreamBuilder(
-      stream: Bloc.of(context).currentGameStream,
-      builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        }
+    final players = widget.game.players;
 
-        final game = snapshot.data;
-        final players = game.players;
-
-        return ListView.builder(
-          itemBuilder: (BuildContext context, int i) {
-            return i >= players.length ? null : _buildItem(players[i]);
-          },
-        );
-      }
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int i) {
+        return i >= players.length ? null : _buildPlayer(players[i]);
+      },
     );
   }
 
-  Widget _buildItem(Player player) {
-    return ListTile(
-      title: Text(player.name),
-      subtitle: Text('with id ${player.id}. Is alive? ${player.isAlive} Deaths: ${player.deaths}'),
+  Widget _buildPlayer(Player player) {
+    return Container(
+      color: Colors.white,
+      child: ListTile(
+        leading: CircleAvatar(child: Text(player.id)),
+        title: Text(player.name),
+        subtitle: Text('Is alive? ${player.isAlive} Deaths: ${player.deaths}'),
+        trailing: Text('${player.kills ?? 0}'),
+        onTap: () {},
+      ),
     );
   }
 }

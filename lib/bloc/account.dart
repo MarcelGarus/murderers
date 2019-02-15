@@ -26,6 +26,7 @@ class Handler {
   String get name => _name ?? _user?.displayName;
   String get id => _id;
   String get authToken => _user?.uid;
+  String get photoUrl => _user.photoUrl;
 
 
   /// Initializes account on app startup.

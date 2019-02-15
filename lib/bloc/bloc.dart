@@ -42,13 +42,13 @@ class Bloc {
     print('Initializing the BLoC.');
 
     // Asynchronously load the games.
-    /*persistence.loadGames().then((games) async {
+    persistence.loadGames().then((games) async {
       _games = games;
       if (_games.isNotEmpty) {
         final current = await persistence.loadCurrentGame();
         currentGame = _games.singleWhere((g) => g.code == current);
       }
-    });*/
+    });
 
     // Asynchronously log app open event.
     //analytics.logAppOpen();
@@ -80,6 +80,8 @@ class Bloc {
 
   String get name => _account.name;
   set name(String name) => _account.rename(_network, name); // TODO: handle result
+
+  String get accountPhotoUrl => _account.photoUrl;
 
   List<Game> get allGames => _games;
 
