@@ -1,6 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class VictimName extends StatefulWidget {
+  VictimName({
+    @required this.name,
+  });
+
+  final String name;
+
   @override
   _VictimNameState createState() => _VictimNameState();
 }
@@ -8,14 +16,17 @@ class VictimName extends StatefulWidget {
 class _VictimNameState extends State<VictimName>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  double _showNameValue = 0.0; // ranges from 0 (name hidden) to 1 (name shown)
+  Animation<double> _animation;
+  double _nameVisibility = 0; // ranges from 0 (name hidden) to 1 (name shown)
 
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 200),
       vsync: this,
-    )..addListener(() => setState(() => _showNameValue = _controller?.value));
+    )..addListener(() => setState(() {
+      _nameVisibility = _animation?.value ?? 0;
+    }));
   }
 
   void dispose() {
@@ -23,8 +34,18 @@ class _VictimNameState extends State<VictimName>
     super.dispose();
   }
 
-  void _showName() => _controller?.forward();
-  void _hideName() => _controller?.reverse();
+  void _setNameVisibility(double visibility) {
+    print('Setting name visibility to $visibility.');
+    _animation = Tween(begin: _nameVisibility, end: visibility).animate(_controller);
+    _controller..value = 0.0..forward();
+  }
+  void _showName() => _setNameVisibility(1);
+  void _hideName() => _setNameVisibility(0);
+
+  double get _nameScale => Curves.easeOut.transform(_nameVisibility);
+  double get _blurSigma => (1 - _nameVisibility) * 10.0;
+  double get _nameOpacity => (5 * _nameVisibility).clamp(0.0, 1.0);
+  double get _hintOpacity => (1 - 1.5 * _nameVisibility).clamp(0.0, 1.0);
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +55,35 @@ class _VictimNameState extends State<VictimName>
       alignment: Alignment.center,
       height: 160,
       child: GestureDetector(
-        onPanDown: (_) => _showName,
-        onPanEnd: (_) => _hideName,
+        onPanDown: (_) => _showName(),
+        onPanEnd: (_) => _hideName(),
         onPanCancel: _hideName,
         child: Stack(
           children: <Widget>[
-            Material(
-              color: Color.lerp(Colors.black12, Colors.transparent, _showNameValue),
+            Opacity(
+              opacity: _nameOpacity,
+              child: Align(
+                alignment: Alignment.center,
+                child: Transform.scale(
+                  scale: _nameScale,
+                  child: Text(widget.name,
+                    textScaleFactor: 2,
+                    style: TextStyle(color: Colors.white, fontFamily: 'Signature')
+                  ),
+                ),
+              ),
+            ),
+            ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Container(),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: _blurSigma, sigmaY: _blurSigma),
+                child: Container(
+                  color: Color.lerp(Color(0x19000000), Colors.transparent, _nameVisibility),
+                ),
+              ),
             ),
             Opacity(
-              opacity: 1 - _showNameValue,
+              opacity: _hintOpacity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -58,16 +96,6 @@ class _VictimNameState extends State<VictimName>
                 ],
               ),
             ),
-            Opacity(
-              opacity: _showNameValue,
-              child: Align(
-                alignment: Alignment.center,
-                child: Text('your first victim',
-                  textScaleFactor: 2,
-                  style: TextStyle(color: Colors.white, fontFamily: 'Signature')
-                ),
-              ),
-            )
           ],
         ),
       )

@@ -126,7 +126,7 @@ class ActiveContent extends StatelessWidget {
 
     print('Victim is ${game.victim}');
     if (game.victim != null || true) {
-      items.add(VictimName());
+      items.add(VictimName(name: 'Marcel Garus'));
       items.add(Button(
         text: 'Victim killed',
         onPressed: () async {
