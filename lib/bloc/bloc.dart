@@ -42,13 +42,13 @@ class Bloc {
     print('Initializing the BLoC.');
 
     // Asynchronously load the games.
-    persistence.loadGames().then((games) async {
+    /*persistence.loadGames().then((games) async {
       _games = games;
       if (_games.isNotEmpty) {
         final current = await persistence.loadCurrentGame();
         currentGame = _games.singleWhere((g) => g.code == current);
       }
-    });
+    });*/
 
     // Asynchronously log app open event.
     //analytics.logAppOpen();

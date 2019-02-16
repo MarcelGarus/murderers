@@ -62,7 +62,9 @@ class MyTheme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(scaffoldBackgroundColor: data.backgroundColor),
+      data: ThemeData(
+        scaffoldBackgroundColor: data.backgroundColor,
+      ),
       child: child
     );
   }

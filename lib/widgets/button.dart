@@ -72,8 +72,8 @@ class _ButtonState<T> extends State<Button>
         : RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       animationDuration: Duration(milliseconds: 200),
       child: Container(
-        width: _isLoading ? 48 : null,
-        height: _isLoading ? 48 : null,
+        width: _isLoading ? 52 : null,
+        height: _isLoading ? 52 : null,
         child: _isLoading ? buildLoadingContent(theme) : buildIdleContent(theme)
       ),
     );
@@ -97,10 +97,10 @@ class _ButtonState<T> extends State<Button>
     return widget.child ?? Padding(
       padding: EdgeInsets.all(16),
       child: Text(widget.text,
-        textScaleFactor: 1.2,
         style: TextStyle(
           color: widget.isRaised ? theme.raisedButtonTextColor : theme.flatButtonColor,
           fontFamily: 'Signature',
+          fontSize: 16
         )
       )
     );

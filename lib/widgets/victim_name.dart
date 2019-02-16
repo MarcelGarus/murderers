@@ -67,8 +67,7 @@ class _VictimNameState extends State<VictimName>
                 child: Transform.scale(
                   scale: _nameScale,
                   child: Text(widget.name,
-                    textScaleFactor: 2,
-                    style: TextStyle(color: Colors.white, fontFamily: 'Signature')
+                    style: TextStyle(color: Colors.white, fontFamily: 'Signature', fontSize: 36)
                   ),
                 ),
               ),
@@ -90,8 +89,7 @@ class _VictimNameState extends State<VictimName>
                   Container(), // to fill the whole width
                   Text('Tap & hold to reveal', style: TextStyle(color: Colors.white)),
                   Text('your first victim',
-                    textScaleFactor: 2,
-                    style: TextStyle(color: Colors.white, fontFamily: 'Signature')
+                    style: TextStyle(color: Colors.white, fontFamily: 'Signature', fontSize: 30)
                   ),
                 ],
               ),

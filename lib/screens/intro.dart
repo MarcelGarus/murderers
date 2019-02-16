@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
+import 'signin.dart';
 
 class IntroScreen extends StatefulWidget {
   @override
@@ -9,17 +10,12 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin {
-  TabController controller;
-  bool isAtLastSlide = false;
+  TabController _controller;
 
   @override
   void initState() {
     super.initState();
-
-    controller = TabController(length: 4, vsync: this)
-    ..addListener(() => setState(() {
-      isAtLastSlide = controller.index == controller.length - 1;
-    }));
+    _controller = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -33,39 +29,57 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
         centerTitle: true,
       ),
       body: SafeArea(
-        child: TabBarView(
-          controller: controller,
+        child: Column(
           children: <Widget>[
-            IntroStep(
-              image: null,
-              title: "Who's this game for?",
-              content: 'This game is intended to be played by large groups of '
-                'players over a duration of several hours, days or even weeks.',
+            Expanded(
+              child: TabBarView(
+                controller: _controller,
+                children: <Widget>[
+                  IntroStep(
+                    image: null,
+                    title: "Welcome to\nThe Murderer Game.",
+                    content: 'A real world game for large groups of players '
+                      'hanging out for several days.',
+                  ),
+                  IntroStep(
+                    image: null,
+                    title: 'Kill players',
+                    content: "This app tells you who's your victim. Kill it by "
+                      "giving it a phyiscal object. After you informed your "
+                      "victim about its death, mark the job as done in this app."
+                  ),
+                  IntroStep(
+                    image: null,
+                    title: 'Be the greatest assassin.',
+                    content: "Once you killed your victim, you'll get a new "
+                      "one. Try to kill as many players without dying."
+                  ),
+                  SignInScreen(),
+                ].map(
+                  (step) => Padding(padding: EdgeInsets.all(32), child: step)
+                ).toList(),
+              ),
             ),
-            IntroStep(
-              image: null,
-              title: 'Your destiny: Being a great assassin.',
-              content: 'The objective is to "kill" as many players as '
-                'possible without getting killed by others. '
-                'This app tells you which player to kill - only after you '
-                'succeeded, you can proceed to your next victim.'
+            Padding(
+              padding: EdgeInsets.fromLTRB(32, 16, 16, 16),
+              child: Row(
+                children: <Widget>[
+                  TabPageSelector(
+                    controller: _controller,
+                  ),
+                  Spacer(),
+                  Button(
+                    text: 'Next',
+                    isRaised: false,
+                    onPressed: () {
+                      if (_controller.index < _controller.length - 1) {
+                        _controller.index++;
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-            IntroStep(
-              image: null,
-              title: 'How to kill players',
-              content: 'You can "kill" players if they take a physical object '
-                'you gave to them. '
-                "Right after they took it, tell them they've been killed and "
-                'mark your job done in this app.'
-            ),
-            Center(
-              child: Button(
-                text: 'Sign in',
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/signin');
-                },
-              )
-            )
           ],
         )
       ),
@@ -89,29 +103,13 @@ class IntroStep extends StatelessWidget {
     final theme = MyTheme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          width: 300,
-          height: 200,
-          child: Placeholder(),
-        ),
+        Container(height: 200, child: Placeholder()),
         SizedBox(height: 32),
-        Padding(
-          padding: EdgeInsets.all(16),
-          child: Text(title,
-            textAlign: TextAlign.center,
-            textScaleFactor: 1.4,
-            style: theme.headerText,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          child: Text(content,
-            textAlign: TextAlign.center,
-            textScaleFactor: 1.1,
-            style: theme.bodyText.copyWith(height: 1.1),
-          ),
-        ),
+        Text(title, style: theme.headerText),
+        SizedBox(height: 16),
+        Text(content, style: theme.bodyText.copyWith(height: 1.1)),
       ],
     );
   }

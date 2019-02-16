@@ -19,8 +19,12 @@ class MurderersApp extends StatelessWidget {
       data: MyThemeData(
         backgroundColor: Colors.white,
         backgroundGradientColor: Colors.white,
-        headerText: TextStyle(fontFamily: 'Signature', color: Colors.red),
-        bodyText: TextStyle(color: Colors.black),
+        headerText: TextStyle(
+          fontFamily: 'Signature',
+          color: Colors.red,
+          fontSize: 32
+        ),
+        bodyText: TextStyle(color: Colors.black, fontSize: 16),
         raisedButtonFillColor: Colors.red,
         raisedButtonTextColor: Colors.white,
         flatButtonColor: Colors.red,

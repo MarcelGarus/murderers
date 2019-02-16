@@ -13,8 +13,8 @@ class SetupConfiguration {
   UserRole role;
   String code;
   String gameName;
+  DateTime end;
 }
-
 
 /// Select a mode.
 class SetupJourney extends StatefulWidget {
@@ -75,7 +75,6 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
     );
   }
 }
-
 
 /// Enter code.
 class EnterCodeScreen extends StatefulWidget {
@@ -138,6 +137,111 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
   }
 }
 
+/// Configure the game.
+class ConfigureGameScreen extends StatefulWidget {
+  ConfigureGameScreen({
+    @required this.configuration,
+  });
+
+  final SetupConfiguration configuration;
+
+  @override
+  _ConfigureGameScreenState createState() => _ConfigureGameScreenState();
+}
+
+class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerProviderStateMixin {
+  SetupConfiguration get config => widget.configuration;
+
+  void _chooseEndDate() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now().add(Duration(days: 5)),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    ).then((picked) {
+      if (picked != null && picked != config.end) {
+        setState(() => config.end =picked);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = MyTheme.of(context);
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Name for the game',
+                ),
+                style: TextStyle(
+                  fontFamily: 'Signature',
+                  color: Colors.black,
+                  fontSize: 32
+                ),
+                autofocus: true,
+                onChanged: (name) => config.gameName = name,
+              ),
+              SizedBox(height: 16),
+              Text('When should the game end?',
+                style: TextStyle(
+                  fontFamily: 'Signature',
+                  fontSize: 20
+                ),
+              ),
+              Button(
+                text: '${config.end}',
+                isRaised: false,
+                onPressed: _chooseEndDate,
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                title: Text("End timestamp", style: TextStyle(fontFamily: 'Signature')),
+                subtitle: Text("Provide a specific point in time when the game will end."),
+              ),
+              SizedBox(height: 16),
+              Button(
+                text: 'Create game',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    SetupRoute(ConfirmGameScreen(configuration: widget.configuration))
+                  );
+                },
+              ),
+              Spacer(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SectionHeader extends StatelessWidget {
+  SectionHeader(this.text);
+  
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 4.0),
+      child: Text(text,
+        style: TextStyle(
+          fontFamily: 'Signature',
+          color: Theme.of(context).primaryColor
+        )
+      ),
+    );
+  }
+}
 
 /// Confirm game.
 class ConfirmGameScreen extends StatefulWidget {
@@ -188,115 +292,52 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text("You'll be joining",
-                textScaleFactor: 1.2,
-              ),
-              SizedBox(height: 8),
-              Text("${widget.configuration.code}",
-                textScaleFactor: 2.5,
-                style: MyTheme.of(context).headerText,
-              ),
-              SizedBox(height: 8),
-              Text("as a\n${widget.configuration.role}",
-                textAlign: TextAlign.center,
-                textScaleFactor: 1.2,
-                style: MyTheme.of(context).bodyText,
-              ),
-              SizedBox(height: 32),
-              Button(text: "Join", onPressed: _onConfirmed),
-            ],
+          child: FutureBuilder<Game>(
+            future: Bloc.of(context).previewGame(config.code),
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                ? buildPreview(snapshot.data)
+                : buildPlaceholder();
+            }
           ),
         ),
       ),
     );
   }
-}
 
-
-/// Configure the game.
-class ConfigureGameScreen extends StatefulWidget {
-  ConfigureGameScreen({
-    @required this.configuration,
-  });
-
-  final SetupConfiguration configuration;
-
-  @override
-  _ConfigureGameScreenState createState() => _ConfigureGameScreenState();
-}
-
-class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerProviderStateMixin {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          SectionHeader('Game metadata'),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            title: Text("Name", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Give your game a name. This could be the name of the event where this game takes place."),
-          ),
-          SectionHeader('Joining the game'),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            title: Text("Confirm players", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Once players join, you'll need to approve them before they're actually added to the game."),
-            trailing: Switch(value: false, onChanged: null),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            title: Text("Joining to running game", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Players that join while the game is running will be added the next time a player gets killed."),
-            trailing: Switch(value: false, onChanged: null),
-          ),
-          SectionHeader('Gameplay'),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            title: Text("Publish murderer", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("When a player dies, the murderer's name will be shown to all players. This is a disadvantage for the murderer, if the victim's victim knows the victim was supposed to be his assassin."),
-            trailing: Switch(value: true, onChanged: null),
-          ),
-          SectionHeader('End of the game'),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            title: Text("End timestamp", style: TextStyle(fontFamily: 'Signature')),
-            subtitle: Text("Provide a specific point in time when the game will end."),
-          ),
-          SizedBox(height: 16),
-          Button(
-            text: 'Create game',
-            onPressed: () {
-              Navigator.of(context).push(
-                SetupRoute(ConfirmGameScreen(configuration: widget.configuration))
-              );
-            },
-          )
-        ],
-      ),
+  Widget buildPlaceholder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        CircularProgressIndicator(),
+        SizedBox(height: 32),
+        Text("Searching for game\nwith id ${config.code}",
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
-}
 
-class SectionHeader extends StatelessWidget {
-  SectionHeader(this.text);
-  
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 4.0),
-      child: Text(text,
-        style: TextStyle(
-          fontFamily: 'Signature',
-          color: Theme.of(context).primaryColor
-        )
-      ),
+  Widget buildPreview(Game game) {
+    MyThemeData theme = MyTheme.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text("You'll be ${config.role == UserRole.player ? "joining" : "watching"}",
+          style: theme.bodyText,
+        ),
+        SizedBox(height: 8),
+        Text("${game.name}", style: theme.headerText),
+        SizedBox(height: 8),
+        Text("with id ${game.code}.",
+          style: theme.bodyText
+        ),
+        SizedBox(height: 32),
+        Button(
+          text: config.role == UserRole.player ? "Join" : "Watch",
+          onPressed: _onConfirmed
+        ),
+      ],
     );
   }
 }

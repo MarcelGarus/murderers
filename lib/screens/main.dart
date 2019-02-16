@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
-import '../screens/players.dart';
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
 import '../widgets/victim_name.dart';
+import 'kill_warning.dart';
+import 'players.dart';
 
 class MainScreen extends StatelessWidget {
   MainScreen(this.game);
@@ -57,7 +58,7 @@ class PreparationContent extends StatelessWidget {
 
     final items = <Widget>[
       Spacer(),
-      Text(game.code, textScaleFactor: 3, style: theme.headerText),
+      Text(game.code, style: theme.headerText),
       SizedBox(height: 8),
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -131,9 +132,18 @@ class ActiveContent extends StatelessWidget {
         text: 'Victim killed',
         onPressed: () async {
           await Future.delayed(Duration(seconds: 1));
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) => KillWarning(game)
+          ));
           throw "whoopsie";
           return true;
         },
+      ));
+      items.add(SizedBox(height: 8));
+      items.add(Button(
+        text: 'More actions',
+        isRaised: false,
+        onPressed: () {},
       ));
     }
 

@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/button.dart';
+import '../widgets/theme.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -31,51 +33,58 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Column(
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Spacer(),
+          Container(
+            height: 300,
+            child: Placeholder(),
+          ),
+          SizedBox(height: 32),
+          Text(
+            "If you sign in, your games will be synchronized across all "
+            "your devices.",
+            textAlign: TextAlign.center,
+            textScaleFactor: 1.2,
+          ),
+          SizedBox(height: 16),
+          _buildGoogleButton(context),
+          SizedBox(height: 16),
+          Button(
+            text: 'Sign in anonymously',
+            isRaised: false,
+            onPressed: _signInAnonymously,
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGoogleButton(BuildContext context) {
+    return MyTheme(
+      data: MyTheme.of(context).copyWith(
+        primaryButtonBackgroundColor: Colors.white,
+        primaryButtonTextColor: Colors.red,
+      ),
+      child: Button(
+        onPressed: _signInWithGoogle,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Spacer(),
-              Container(
-                width: 200,
-                height: 300,
-                child: Placeholder(),
+              SvgPicture.asset(
+                'images/google_icon.svg',
+                width: 36,
+                height: 36,
+                semanticsLabel: 'Google logo',
               ),
-              Padding(
-                padding: EdgeInsets.all(32),
-                child: Text(
-                  "If you sign in, your games will be synchronized across all "
-                  "your devices.\nAlso, you'll be able to create your own games.",
-                  textAlign: TextAlign.center,
-                  textScaleFactor: 1.2,
-                )
-              ),
-              Button(
-                onPressed: _signInWithGoogle,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.g_translate),
-                    SizedBox(width: 8),
-                    Text('Sign in'),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16),
-              Button(
-                text: 'Skip',
-                isRaised: false,
-                onPressed: _signInAnonymously,
-              ),
-              Spacer(),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text("Only the game creator will be able to see your email address.",
-                  textAlign: TextAlign.center,
-                  textScaleFactor: 0.9,
-                )
+              SizedBox(width: 16),
+              Text('Sign in with Google',
+                textScaleFactor: 1.2,
+                style: TextStyle(fontFamily: 'Signature')
               ),
             ],
           ),
