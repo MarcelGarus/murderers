@@ -77,13 +77,15 @@ function loadUser(firestore, id, res) {
         if (id === null || id === undefined)
             return null;
         const snapshot = yield userRef(firestore, id).get();
-        if (!snapshot.exists) {
+        if (!snapshot.exists && res !== null) {
             res.status(exports.CODE_USER_NOT_FOUND).send(exports.TEXT_USER_NOT_FOUND);
             return null;
         }
         const data = snapshot.data();
         if (!models_1.isUser(data)) {
-            res.status(exports.CODE_USER_CORRUPT).send(exports.TEXT_USER_CORRUPT);
+            if (res !== null) {
+                res.status(exports.CODE_USER_CORRUPT).send(exports.TEXT_USER_CORRUPT);
+            }
             util_1.log('Corrupt user: ' + JSON.stringify(data));
             return null;
         }

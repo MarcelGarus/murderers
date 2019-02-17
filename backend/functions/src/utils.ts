@@ -86,7 +86,7 @@ export async function loadUser(
 
   const snapshot = await userRef(firestore, id).get();
 
-  if (!snapshot.exists) {
+  if (!snapshot.exists && res !== null) {
     res.status(CODE_USER_NOT_FOUND).send(TEXT_USER_NOT_FOUND);
     return null;
   }
@@ -94,7 +94,9 @@ export async function loadUser(
   const data = snapshot.data();
 
   if (!isUser(data)) {
-    res.status(CODE_USER_CORRUPT).send(TEXT_USER_CORRUPT);
+    if (res !== null) {
+      res.status(CODE_USER_CORRUPT).send(TEXT_USER_CORRUPT);
+    }
     log('Corrupt user: ' + JSON.stringify(data));
     return null;
   }

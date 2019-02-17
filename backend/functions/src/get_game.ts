@@ -75,6 +75,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     name: game.name,
     state: game.state,
     created: game.created,
+    creator: game.creator,
     end: game.end,
     players: players.map((player, _, __) => {
       if (player.id === id) {

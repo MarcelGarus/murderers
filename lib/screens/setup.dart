@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/setup.dart';
@@ -152,17 +153,39 @@ class ConfigureGameScreen extends StatefulWidget {
 class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerProviderStateMixin {
   SetupConfiguration get config => widget.configuration;
 
-  void _chooseEndDate() {
-    showDatePicker(
+  Future<void> _chooseEndDate() async {
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now().add(Duration(days: 5)),
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    ).then((picked) {
-      if (picked != null && picked != config.end) {
-        setState(() => config.end =picked);
-      }
-    });
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 7*3)),
+    );
+    if (pickedDate == null) return;
+    // TODO: save date
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
+    );
+    if (pickedTime == null) return;
+    final picked = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+    setState(() => config.end = picked);
+  }
+
+  Future<void> _createGame() async {
+    print('Creating a game.');
+    await Bloc.of(context).createGame(
+      name: config.gameName,
+      start: DateTime.now(),
+      end: config.end,
+    );
+    await Navigator.of(context)
+      .pushNamedAndRemoveUntil('/game', (route) => false);
   }
 
   @override
@@ -187,7 +210,7 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
                   fontSize: 32
                 ),
                 autofocus: true,
-                onChanged: (name) => config.gameName = name,
+                onChanged: (name) => setState(() => config.gameName = name),
               ),
               SizedBox(height: 16),
               Text('When should the game end?',
@@ -197,47 +220,23 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
                 ),
               ),
               Button(
-                text: '${config.end}',
+                text: config.end == null ? 'Choose a date'
+                  : DateFormat('MMMM d, H:mm').format(config.end.toLocal()),
                 isRaised: false,
-                onPressed: _chooseEndDate,
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                title: Text("End timestamp", style: TextStyle(fontFamily: 'Signature')),
-                subtitle: Text("Provide a specific point in time when the game will end."),
+                onPressed: () {
+                  _chooseEndDate();
+                },
               ),
               SizedBox(height: 16),
               Button(
                 text: 'Create game',
-                onPressed: () {
-                  Navigator.of(context).push(
-                    SetupRoute(ConfirmGameScreen(configuration: widget.configuration))
-                  );
-                },
+                isRaised: config.gameName != null && config.gameName != '' && config.end != null,
+                onPressed: _createGame,
               ),
               Spacer(),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class SectionHeader extends StatelessWidget {
-  SectionHeader(this.text);
-  
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 4.0),
-      child: Text(text,
-        style: TextStyle(
-          fontFamily: 'Signature',
-          color: Theme.of(context).primaryColor
-        )
       ),
     );
   }

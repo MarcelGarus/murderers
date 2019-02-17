@@ -14,6 +14,12 @@ class MainScreen extends StatelessWidget {
 
   final Game game;
 
+  void _showGames(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (ctx) => GamesSelector()
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +29,12 @@ class MainScreen extends StatelessWidget {
         elevation: 0,
         actions: <Widget>[
           Align(
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(Bloc.of(context).accountPhotoUrl),
-              radius: 24,
+            child: InkWell(
+              onTap: () => _showGames(context),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(Bloc.of(context).accountPhotoUrl),
+                radius: 24,
+              ),
             ),
           ),
           SizedBox(width: 8)
@@ -35,6 +44,30 @@ class MainScreen extends StatelessWidget {
         child: game.state == GameState.notStartedYet
           ? PreparationContent(game: game)
           : ActiveContent(game: game)
+      ),
+    );
+  }
+}
+
+class GamesSelector extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: Bloc.of(context).allGames.map((game) {
+          return ListTile(
+            leading: CircleAvatar(child: Text(game.code)),
+            title: Text(game.name),
+            subtitle: Text(game.code),
+            onTap: () {
+              Bloc.of(context).currentGame = game;
+            },
+            trailing: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () => Bloc.of(context).removeGame(game),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -51,6 +84,10 @@ class PreparationContent extends StatelessWidget {
     return Bloc.of(context).startGame();
   }
 
+  Future<Game> _joinGame(BuildContext context) {
+    return Bloc.of(context).joinGame(code: game.code);
+  }
+
   @override
   Widget build(BuildContext context) {
     print('Building the preparation content.');
@@ -63,9 +100,9 @@ class PreparationContent extends StatelessWidget {
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: Text(
-          "Share this code with other people \n to let them join.",
+          "Share this code with other people\nto let them join.",
           textAlign: TextAlign.center,
-          style: theme.headerText
+          style: theme.bodyText,
         ),
       ),
     ];
@@ -80,6 +117,17 @@ class PreparationContent extends StatelessWidget {
             print(result);
           },
         )
+      ]);
+    }
+
+    if (!game.isPlayer) {
+      items.addAll([
+        SizedBox(height: 16),
+        Button(
+          text: 'Join the game',
+          onPressed: () => _joinGame(context),
+          onSuccess: (game) => print('Joined the game.'),
+        ),
       ]);
     }
 
@@ -127,24 +175,23 @@ class ActiveContent extends StatelessWidget {
 
     print('Victim is ${game.victim}');
     if (game.victim != null || true) {
-      items.add(VictimName(name: 'Marcel Garus'));
-      items.add(Button(
-        text: 'Victim killed',
-        onPressed: () async {
-          await Future.delayed(Duration(seconds: 1));
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (ctx) => KillWarning(game)
-          ));
-          throw "whoopsie";
-          return true;
-        },
-      ));
-      items.add(SizedBox(height: 8));
-      items.add(Button(
-        text: 'More actions',
-        isRaised: false,
-        onPressed: () {},
-      ));
+      items.addAll([
+        VictimName(name: game.victim?.name ?? 'some victim'),
+        Button(
+          text: 'Victim killed',
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (ctx) => KillWarning(game)
+            ));
+          },
+        ),
+        SizedBox(height: 8),
+        Button(
+          text: 'More actions',
+          isRaised: false,
+          onPressed: () {},
+        ),
+      ]);
     }
 
     items.addAll([

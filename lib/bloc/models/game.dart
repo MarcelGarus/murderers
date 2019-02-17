@@ -44,6 +44,7 @@ class Game {
   final Player victim; // This player's victim. May be [null].
   final bool wasOutsmarted; // Whether this player's victim outsmarted this player.
 
+  bool get isPlayer => me != null;
 
   Game({
     @required this.isCreator,

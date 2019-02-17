@@ -42,13 +42,14 @@ class Bloc {
     print('Initializing the BLoC.');
 
     // Asynchronously load the games.
-    /*persistence.loadGames().then((games) async {
+    persistence.loadGames().then((games) async {
       _games = games;
       if (_games.isNotEmpty) {
         final current = await persistence.loadCurrentGame();
         currentGame = _games.singleWhere((g) => g.code == current);
+        await refreshGame();
       }
-    });*/
+    });
 
     // Asynchronously log app open event.
     //analytics.logAppOpen();
@@ -109,6 +110,11 @@ class Bloc {
 
   Future<Game> joinGame({ @required String code }) async {
     assert(_account.userWasCreated);
+    
+    final existingGame = _games.singleWhere((game) => game.code == code);
+    if (existingGame?.isPlayer ?? false) {
+      return existingGame;
+    }
 
     await _network.joinGame(
       id: _account.id,
@@ -118,14 +124,14 @@ class Bloc {
     return await _network.getGame(
       id: _account.id,
       authToken: _account.authToken,
-      code: code
+      code: code,
     ).then(_addGame);
   }
 
   Future<Game> createGame({
     @required String name,
     @required DateTime start,
-    @required DateTime end
+    @required DateTime end,
   }) async {
     assert(_account.userWasCreated);
 
@@ -141,7 +147,9 @@ class Bloc {
   Future<Game> _addGame(Game game) async {
     assert(game != null);
 
-    _games.add(game);
+    _games
+      ..removeWhere((g) => g.code == game.code)
+      ..add(game);
     currentGame = game;
     await persistence.saveGames(_games);
     return game;

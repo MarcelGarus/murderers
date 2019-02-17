@@ -35,7 +35,6 @@ class _VictimNameState extends State<VictimName>
   }
 
   void _setNameVisibility(double visibility) {
-    print('Setting name visibility to $visibility.');
     _animation = Tween(begin: _nameVisibility, end: visibility).animate(_controller);
     _controller..value = 0.0..forward();
   }

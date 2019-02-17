@@ -11,7 +11,7 @@ export interface User {
   name: string,
 }
 export function isUser(obj): boolean {
-  return true // TODO: check authToken
+  return obj !== undefined // TODO: check authToken
     && typeof obj.messagingToken === "string"
     && typeof obj.name === "string";
 }
@@ -47,7 +47,8 @@ export interface Player {
   kills: number,
 }
 export function isPlayer(obj): boolean {
-  return typeof obj.state === "number"
+  return obj !== undefined
+    && typeof obj.state === "number"
     && (obj.murderer === null || typeof obj.murderer === "string")
     && (obj.victim === null || typeof obj.victim === "string")
     && typeof obj.wasOutsmarted === "boolean"
@@ -71,7 +72,8 @@ export interface Death {
   lastWords: string,
 }
 export function isDeath(obj): boolean {
-  return typeof obj.time === "number"
+  return obj !== undefined
+    && typeof obj.time === "number"
     && typeof obj.murderer === "string"
     && typeof obj.lastWords === "string"
     && typeof obj.weapon === "string";
@@ -106,7 +108,8 @@ export interface Game {
   end: Timestamp,
 }
 export function isGame(obj): boolean {
-  return typeof obj.name === "string"
+  return obj !== undefined
+    && typeof obj.name === "string"
     && typeof obj.state === "number"
     && typeof obj.creator === "string"
     && typeof obj.created === "number"

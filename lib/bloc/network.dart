@@ -41,7 +41,9 @@ class _Request<T> {
       .reduce((a, b) => '$a&$b');
     
     // Make the request.
+    print('Making a request to ' + functionName);
     final res = await http.get(url);
+    print('Got response: ${res.body}');
 
     // Handle errors. TODO: check for no internet & timeout
     switch (res.statusCode) {
