@@ -42,7 +42,12 @@ class KillWarning extends StatelessWidget {
                   SizedBox(width: 8),
                   Button(
                     text: "Yes, I killed xx",
-                    onPressed: () async {}
+                    onPressed: () {
+                      return Bloc.of(context).killPlayer();
+                    },
+                    onSuccess: (_) {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
               ),

@@ -182,7 +182,6 @@ class Handler {
       final players = <Player>[];
       
       for (final player in playersData) {
-        print("Player's data is ${json.encode(player)}");
         players.add(Player(
           id: player['id'],
           name: player['name'],
@@ -256,12 +255,16 @@ class Handler {
     @required String id,
     @required String authToken,
     @required String code,
+    @required String weapon,
+    @required String lastWords,
   }) => _makeRequest(_Request(
     functionName: 'die',
     parameters: {
       'id': id,
       'authToken': authToken,
       'code': code,
+      'weapon': weapon,
+      'lastWords': lastWords
     },
   ));
 

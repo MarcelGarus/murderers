@@ -41,21 +41,20 @@ class Bloc {
   void initialize() {
     print('Initializing the BLoC.');
 
-    // Asynchronously load the games.
-    persistence.loadGames().then((games) async {
-      _games = games;
-      if (_games.isNotEmpty) {
-        final current = await persistence.loadCurrentGame();
-        currentGame = _games.singleWhere((g) => g.code == current);
-        await refreshGame();
-      }
+    // Silently sign in asynchronously. Then, asynchronously load the games.
+    _account.initialize().then((_) {
+      persistence.loadGames().then((games) async {
+        _games = games;
+        if (_games.isNotEmpty) {
+          final current = await persistence.loadCurrentGame();
+          currentGame = _games.singleWhere((g) => g.code == current);
+          await refreshGame();
+        }
+      });
     });
 
     // Asynchronously log app open event.
     //analytics.logAppOpen();
-
-    // Silently sign in asynchronously.
-    _account.initialize();
 
     // Configure the messaging synchronously.
     _messaging.requestNotificationPermissions();
@@ -199,11 +198,16 @@ class Bloc {
     return await refreshGame();
   }
 
-  Future<void> confirmDeath() async {
+  Future<void> confirmDeath({
+    @required String weapon,
+    @required String lastWords,
+  }) async {
     await _network.die(
       id: _account.id,
       authToken: _account.authToken,
-      code: currentGame.code
+      code: currentGame.code,
+      weapon: weapon,
+      lastWords: lastWords,
     );
     return await refreshGame();
   }

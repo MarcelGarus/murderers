@@ -61,7 +61,7 @@ class _GameScreenState extends State<GameScreen> {
   MyThemeData getThemeData(Game game) {
     final theme = MyTheme.of(context);
 
-    if (game.state != GameState.running) {
+    if (game.state != GameState.running || !game.isPlayer) {
       // The game is currently not running.
       return theme.copyWith(
         backgroundColor: Colors.white,

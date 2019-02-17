@@ -41,9 +41,15 @@ class MainScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: game.state == GameState.notStartedYet
-          ? PreparationContent(game: game)
-          : ActiveContent(game: game)
+        child: (game.state == GameState.notStartedYet)
+          ? PreparationContent(game)
+          : (game.me.state == PlayerState.dying)
+          ? Dying(game)
+          : (game.victim?.state == PlayerState.alive)
+          ? ActiveContent(game)
+          : (game.me.state == PlayerState.dead)
+          ? Dead(game)
+          : WaitingForVictimsDeath(game)
       ),
     );
   }
@@ -74,10 +80,7 @@ class GamesSelector extends StatelessWidget {
 }
 
 class PreparationContent extends StatelessWidget {
-  PreparationContent({
-    @required this.game
-  });
-  
+  PreparationContent(this.game);
   final Game game;
 
   Future<void> _startGame(BuildContext context) {
@@ -148,33 +151,19 @@ class PreparationContent extends StatelessWidget {
       ),
     ]);
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: items
-      )
-    );
+    return Center(child: Column(children: items));
   }
 }
 
-
-
 class ActiveContent extends StatelessWidget {
-  ActiveContent({
-    @required this.game
-  });
-  
+  ActiveContent(this.game);
   final Game game;
-
 
   @override
   Widget build(BuildContext context) {
-    final items = <Widget>[
-      Spacer(flex: 2),
-    ];
+    final items = <Widget>[ Spacer(flex: 2) ];
 
-    print('Victim is ${game.victim}');
-    if (game.victim != null || true) {
+    if (game.victim != null) {
       items.addAll([
         VictimName(name: game.victim?.name ?? 'some victim'),
         Button(
@@ -204,6 +193,107 @@ class ActiveContent extends StatelessWidget {
   }
 }
 
+class WaitingForVictimsDeath extends StatelessWidget {
+  WaitingForVictimsDeath(this.game);
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Spacer(),
+          Text('Waiting for your victim\'s approval.',
+            style: MyTheme.of(context).bodyText,
+          ),
+          Spacer(),
+          Statistics(rank: 2, killedByUser: 2, alive: 5, total: 13),
+        ]
+      )
+    );
+  }
+}
+
+class Dying extends StatelessWidget {
+  Dying(this.game);
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 32),
+      child: Column(
+        children: <Widget>[
+          Spacer(),
+          Text("Did you get killed?",
+            style: MyTheme.of(context).headerText,
+          ),
+          SizedBox(height: 16),
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Weapon',
+            ),
+            style: TextStyle(
+              fontFamily: 'Signature',
+              color: Colors.white,
+              fontSize: 32
+            ),
+            //onChanged: (name) => setState(() => config.gameName = name),
+          ),
+          SizedBox(height: 16),
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Last words',
+            ),
+            style: TextStyle(
+              fontFamily: 'Signature',
+              color: Colors.white,
+              fontSize: 32
+            ),
+            //onChanged: (name) => setState(() => config.gameName = name),
+          ),
+          SizedBox(height: 16),
+          Row(
+            children: <Widget>[
+              Spacer(),
+              Button(
+                text: "I didn't get killed",
+                isRaised: false,
+                onPressed: () {},
+              ),
+              SizedBox(width: 8),
+              Button(
+                text: 'Confirm murder',
+                onPressed: () {
+                  return Bloc.of(context).confirmDeath(
+                    weapon: 'Some weapon',
+                    lastWords: 'Last words',
+                  );
+                },
+              ),
+            ],
+          ),
+          Spacer(),
+          Statistics(rank: 2, killedByUser: 2, alive: 5, total: 13),
+        ]
+      )
+    );
+  }
+}
+
+class Dead extends StatelessWidget {
+  Dead(this.game);
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text("You're dead.", style: MyTheme.of(context).headerText),
+    );
+  }
+}
 
 class Statistics extends StatelessWidget {
   Statistics({
