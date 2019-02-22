@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
 
+/// Screen with the logo. Is displayed when the app is openend.
+/// 
+/// Redirects to the next appropriate screen.
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();

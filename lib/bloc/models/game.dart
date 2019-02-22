@@ -28,9 +28,6 @@ GameState intToGameState(int i) {
 @JsonSerializable()
 @immutable
 class Game {
-  static const int CODE_LENGTH = 4;
-
-
   final bool isCreator; // Whether this user is the creator.
   final String code; // This game's code.
   final String name; // This game's name.

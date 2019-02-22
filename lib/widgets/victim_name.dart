@@ -2,10 +2,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import 'theme.dart';
+
+/// A widget that displays the victim's name.
+/// 
+/// In its natural state, this widget displays a message that encourages the
+/// user to press and hold. If he does this, the [name] appears.
 class VictimName extends StatefulWidget {
   VictimName({
     @required this.name,
-  });
+  }) :
+      assert(name != null);
 
   final String name;
 
@@ -35,7 +42,8 @@ class _VictimNameState extends State<VictimName>
   }
 
   void _setNameVisibility(double visibility) {
-    _animation = Tween(begin: _nameVisibility, end: visibility).animate(_controller);
+    _animation = Tween(begin: _nameVisibility, end: visibility)
+      .animate(_controller);
     _controller..value = 0.0..forward();
   }
   void _showName() => _setNameVisibility(1);
@@ -45,10 +53,13 @@ class _VictimNameState extends State<VictimName>
   double get _blurSigma => (1 - _nameVisibility) * 10.0;
   double get _nameOpacity => (5 * _nameVisibility).clamp(0.0, 1.0);
   double get _hintOpacity => (1 - 1.5 * _nameVisibility).clamp(0.0, 1.0);
+  Color get _backgroundColor => Color.lerp(
+    Color(0x19000000), Colors.transparent, _nameVisibility);
 
   @override
   Widget build(BuildContext context) {
-    //print('Show name is $_showName');
+    final theme = MyTheme.of(context);
+
     return Container(
       padding: EdgeInsets.all(16),
       alignment: Alignment.center,
@@ -65,9 +76,7 @@ class _VictimNameState extends State<VictimName>
                 alignment: Alignment.center,
                 child: Transform.scale(
                   scale: _nameScale,
-                  child: Text(widget.name,
-                    style: TextStyle(color: Colors.white, fontFamily: 'Signature', fontSize: 36)
-                  ),
+                  child: Text(widget.name, style: theme.headerText),
                 ),
               ),
             ),
@@ -75,9 +84,7 @@ class _VictimNameState extends State<VictimName>
               borderRadius: BorderRadius.circular(16),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: _blurSigma, sigmaY: _blurSigma),
-                child: Container(
-                  color: Color.lerp(Color(0x19000000), Colors.transparent, _nameVisibility),
-                ),
+                child: Container(color: _backgroundColor),
               ),
             ),
             Opacity(
@@ -86,10 +93,8 @@ class _VictimNameState extends State<VictimName>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(), // to fill the whole width
-                  Text('Tap & hold to reveal', style: TextStyle(color: Colors.white)),
-                  Text('your first victim',
-                    style: TextStyle(color: Colors.white, fontFamily: 'Signature', fontSize: 30)
-                  ),
+                  Text('Tap & hold to reveal', style: theme.bodyText),
+                  Text('your victim', style: theme.headerText),
                 ],
               ),
             ),

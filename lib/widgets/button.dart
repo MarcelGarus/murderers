@@ -9,10 +9,11 @@ import 'theme.dart';
 /// This button can be given a child or a text to display. The passed
 /// [onPressed] callback is called if the button is pressed. In contrast to the
 /// normal built-in button, this button morphs into a loading spinner if the
-/// passed callback is asynchronous (aka it returns a [Future]).
-/// You can also pass in an [onSuccess] and an [onError] listener to listen to
-/// the [onPressed]'s [then] and [catchError] events.
-/// If the Future fails, the button restores itself to the normal state.
+/// passed callback is asynchronous (if it returns a [Future]).
+/// You can also pass an [onSuccess] and an [onError] listener to listen to the
+/// [onPressed]'s [then] and [catchError] callbacks.
+/// If the Future fails, the button restores itself to the normal state so the
+/// user can tap it again. Otherwise, it just keeps spinning.
 class Button<T> extends StatefulWidget {
   Button({
     this.child,
@@ -40,11 +41,15 @@ class _ButtonState<T> extends State<Button>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
 
-  void onPressed() {
+  void _onPressed() {
     final result = widget.onPressed();
 
+    // If the callback is asynchronous, morph the button into a loading spinner.
     if (result is Future) {
       setState(() => _isLoading = true);
+
+      // If the widget has an [onSuccess] or [onError] callback, call it at
+      // appropriate times.
       result.then((res) {
         if (widget.onSuccess != null) widget.onSuccess(res);
       }).catchError((error) {
@@ -59,7 +64,8 @@ class _ButtonState<T> extends State<Button>
     final theme = MyTheme.of(context);
 
     return RawMaterialButton(
-      onPressed: _isLoading ? () {} : onPressed,
+      // Do not handle touch events if the button is already loading.
+      onPressed: _isLoading ? () {} : _onPressed,
       fillColor: widget.isRaised ? theme.raisedButtonFillColor : null,
       highlightColor: Colors.black.withOpacity(0.08),
       splashColor: _isLoading ? Colors.transparent
@@ -80,14 +86,16 @@ class _ButtonState<T> extends State<Button>
   }
 
   Widget buildLoadingContent(MyThemeData theme) {
+    final color = widget.isRaised
+      ? theme.raisedButtonTextColor
+      : theme.flatButtonColor;
+
     return Center(
       child: SizedBox(
         width: 24,
         height: 24,
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-            widget.isRaised ? theme.raisedButtonTextColor : theme.flatButtonColor
-          ),
+          valueColor: AlwaysStoppedAnimation(color),
         )
       )
     );

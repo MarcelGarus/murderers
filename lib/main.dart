@@ -16,19 +16,7 @@ class MurderersApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyTheme(
-      data: MyThemeData(
-        backgroundColor: Colors.white,
-        backgroundGradientColor: Colors.white,
-        headerText: TextStyle(
-          fontFamily: 'Signature',
-          color: Colors.red,
-          fontSize: 32
-        ),
-        bodyText: TextStyle(color: Colors.black, fontSize: 16),
-        raisedButtonFillColor: Colors.red,
-        raisedButtonTextColor: Colors.white,
-        flatButtonColor: Colors.red,
-      ),
+      data: kThemeLight,
       child: MaterialApp(
         title: 'The Murderer Game',
         theme: ThemeData(primarySwatch: Colors.red),

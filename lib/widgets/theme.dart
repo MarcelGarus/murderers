@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
+/// A custom theme widget that functions just like Flutter's Material ThemeData.
+/// Holds some theme data for other widgets.
 @immutable
 class MyThemeData {
-  MyThemeData({
-    this.backgroundColor,
-    this.backgroundGradientColor,
-    this.headerText,
-    this.bodyText,
-    this.raisedButtonFillColor,
-    this.raisedButtonTextColor,
-    this.flatButtonColor,
+  const MyThemeData({
+    @required this.backgroundColor,
+    @required this.backgroundGradientColor,
+    @required this.headerText,
+    @required this.bodyText,
+    @required this.raisedButtonFillColor,
+    @required this.raisedButtonTextColor,
+    @required this.flatButtonColor,
   });
 
   final Color backgroundColor;
@@ -21,7 +23,7 @@ class MyThemeData {
   final Color flatButtonColor;
 
   // Copies the data with the specified changes. If a textColor or buttonColor
-  // is given, the text / button colors are overridden.
+  // is given, the text/button colors are overwritten.
   MyThemeData copyWith({
     Color backgroundColor,
     Color backgroundGradientColor,
@@ -45,8 +47,9 @@ class MyThemeData {
   }
 }
 
+/// Widget that is used to propagate MyThemeData to a subtree.
 class MyTheme extends StatelessWidget {
-  MyTheme({
+  const MyTheme({
     Key key,
     @required this.data,
     @required this.child
@@ -62,10 +65,70 @@ class MyTheme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(
-        scaffoldBackgroundColor: data.backgroundColor,
-      ),
-      child: child
+      data: ThemeData(scaffoldBackgroundColor: data.backgroundColor),
+      child: child,
     );
   }
 }
+
+/// The red accent color.
+const Color kAccentColor = Colors.red;
+
+/// Some typical properties for text.
+const String kHeaderFontFamily = 'Signature';
+const double kHeaderFontSize = 32;
+const double kBodyFontSize = 16;
+
+/// A light theme.
+const MyThemeData kThemeLight = MyThemeData(
+  backgroundColor: Colors.white,
+  backgroundGradientColor: Color(0xFFFFDDFF),
+  headerText: TextStyle(
+    fontFamily: kHeaderFontFamily,
+    fontSize: kHeaderFontSize,
+    color: kAccentColor
+  ),
+  bodyText: TextStyle(
+    fontSize: kBodyFontSize,
+    color: Colors.black
+  ),
+  flatButtonColor: kAccentColor,
+  raisedButtonFillColor: kAccentColor,
+  raisedButtonTextColor: Colors.white,
+);
+
+/// A theme mainly based on the accent color.
+const MyThemeData kThemeAccent = MyThemeData(
+  backgroundColor: kAccentColor,
+  backgroundGradientColor: Colors.deepOrange,
+  headerText: TextStyle(
+    fontFamily: kHeaderFontFamily,
+    fontSize: kHeaderFontSize,
+    color: Colors.white,
+  ),
+  bodyText: TextStyle(
+    fontSize: kBodyFontSize,
+    color: Colors.white,
+  ),
+  flatButtonColor: Colors.white,
+  raisedButtonFillColor: Colors.white,
+  raisedButtonTextColor: kAccentColor,
+);
+
+/// A dark theme.
+const MyThemeData kThemeDark = MyThemeData(
+  backgroundColor: Color(0xFF222222),
+  backgroundGradientColor: Color(0xFF292431), // Slightly purple
+  headerText: TextStyle(
+    fontFamily: kHeaderFontFamily,
+    fontSize: kHeaderFontSize,
+    color: Colors.white,
+  ),
+  bodyText: TextStyle(
+    fontSize: kBodyFontSize,
+    color: Colors.white,
+  ),
+  flatButtonColor: Colors.white,
+  raisedButtonFillColor: Colors.white,
+  raisedButtonTextColor: Colors.black,
+);
