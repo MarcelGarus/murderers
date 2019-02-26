@@ -10,15 +10,15 @@ import 'package:rxdart/rxdart.dart';
 /// other classes can also retrieve a stream of the value.
 /// 
 /// ```dart
-/// StreamedProperty<GameState> _state = StreamedProperty(initial: GameState.RUNNING);
-/// GameState get state => _state.value;
-/// set state(GameState state) => _state.value = state;
-/// get stateStream => _state.stream;
+/// StreamedProperty<int> _number = StreamedProperty(initial: 0);
+/// int get number => _number.value;
+/// set number(int number) => _number.value = number;
+/// get numberStream => _number.stream;
 /// ```
 class StreamedProperty<T> {
   StreamedProperty({ T initial }) :
     _value = initial,
-    _subject = BehaviorSubject<T>(seedValue: initial);
+    _subject = BehaviorSubject<T>.seeded(initial);
 
   T _value;
   T get value => _value;

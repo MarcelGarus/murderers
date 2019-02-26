@@ -1,12 +1,13 @@
 //import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_villains/villain.dart';
 
 import 'bloc/bloc.dart';
 import 'bloc/bloc_provider.dart';
 import 'screens/game.dart';
 import 'screens/intro.dart';
 import 'screens/setup.dart';
-import 'screens/signin.dart';
+import 'screens/sign_in.dart';
 import 'screens/splash.dart';
 import 'widgets/theme.dart';
 
@@ -20,9 +21,10 @@ class MurderersApp extends StatelessWidget {
       child: MaterialApp(
         title: 'The Murderer Game',
         theme: ThemeData(primarySwatch: Colors.red),
-        /*navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: bloc.analytics),
-        ],*/
+        navigatorObservers: [
+          VillainTransitionObserver(),
+          //FirebaseAnalyticsObserver(analytics: bloc.analytics),
+        ],
         home: SplashScreen(),
         routes: {
           '/intro': (ctx) => IntroScreen(),

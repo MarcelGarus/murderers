@@ -30,7 +30,6 @@ class Bloc {
   List<Game> _games = <Game>[];
   final _currentGame = StreamedProperty<Game>();
 
-
   /// This methods allows subtree widgets to access this bloc.
   static Bloc of(BuildContext context) {
     final BlocProvider holder = context.ancestorWidgetOfExactType(BlocProvider);
@@ -66,7 +65,7 @@ class Bloc {
     _currentGame.dispose();
   }
 
-  Future<bool> signIn(account.SignInType type) => _account.signIn(type);
+  Future<void> signIn(account.SignInType type) => _account.signIn(type);
 
   Future<bool> signOut() => _account.signOut();
 
@@ -93,6 +92,7 @@ class Bloc {
     persistence.saveCurrentGame(game?.code ?? '');
   }
   get currentGameStream => _currentGame.stream;
+  bool get hasCurrentGame => currentGame != null;
   
   Future<Game> previewGame(String code) async {
     return await _network.getGame(

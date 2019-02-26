@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_villains/villain.dart';
 import 'package:intl/intl.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/setup.dart';
+import '../widgets/staggered_column.dart';
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
 
@@ -24,20 +26,19 @@ class SetupJourney extends StatefulWidget {
 }
 
 class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMixin {
-  final config = SetupConfiguration();
-  UserRole get role => config.role;
+  final _config = SetupConfiguration();
 
   void _selectRole(UserRole role) => setState(() {
-    config.role = role;
+    _config.role = role;
     final navigator = Navigator.of(context);
     Widget nextScreen;
     
     if (role == UserRole.player || role == UserRole.watcher) {
       // For joining a game, enter the code.
-      nextScreen = EnterCodeScreen(configuration: config);
+      nextScreen = EnterCodeScreen(configuration: _config);
     } else {
       // User wants to create a new game.
-      nextScreen = ConfigureGameScreen(configuration: config);
+      nextScreen = ConfigureGameScreen(configuration: _config);
     }
 
     navigator.push(SetupRoute(nextScreen));
@@ -48,26 +49,28 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: StaggeredColumn(
             children: <Widget>[
+              Spacer(),
               Container(width: 200, height: 300, child: Placeholder()),
               SizedBox(height: 32),
-              Button(
-                text: 'Join a game',
+              Button.text('Join a game',
                 onPressed: () { _selectRole(UserRole.player); },
               ),
               SizedBox(height: 16),
-              Button(
-                text: 'Watch a game',
+              Button.text('Watch a game',
                 isRaised: false,
                 onPressed: () { _selectRole(UserRole.watcher); },
               ),
               SizedBox(height: 4),
-              Button(
-                text: 'Create a new game',
+              Button.text('Create a new game',
                 isRaised: false,
                 onPressed: () { _selectRole(UserRole.creator); },
+              ),
+              Spacer(),
+              Button.text('Sign out',
+                isRaised: false,
+                onPressed: () => Bloc.of(context).signOut(),
               ),
             ],
           ),
@@ -106,9 +109,9 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: StaggeredColumn(
           children: <Widget>[
+            Spacer(),
             Container(width: 200, height: 200, child: Placeholder()),
             Padding(
               padding: EdgeInsets.all(32),
@@ -131,6 +134,12 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
                 },
               ),
             ),
+            SizedBox(height: 32),
+            Button.text('Cancel',
+              isRaised: false,
+              onPressed: () => Navigator.pop(context),
+            ),
+            Spacer(),
           ],
         ),
       ),
@@ -190,13 +199,11 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
 
   @override
   Widget build(BuildContext context) {
-    final theme = MyTheme.of(context);
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(32),
-          child: Column(
+          child: StaggeredColumn(
             children: <Widget>[
               Spacer(),
               TextField(
@@ -219,8 +226,7 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
                   fontSize: 20
                 ),
               ),
-              Button(
-                text: config.end == null ? 'Choose a date'
+              Button.text(config.end == null ? 'Choose a date'
                   : DateFormat('MMMM d, H:mm').format(config.end.toLocal()),
                 isRaised: false,
                 onPressed: () {
@@ -228,10 +234,13 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
                 },
               ),
               SizedBox(height: 16),
-              Button(
-                text: 'Create game',
-                isRaised: config.gameName != null && config.gameName != '' && config.end != null,
+              Button.text('Create game',
                 onPressed: _createGame,
+              ),
+              SizedBox(height: 16),
+              Button.text('Cancel',
+                isRaised: false,
+                onPressed: () => Navigator.pop(context),
               ),
               Spacer(),
             ],
@@ -258,6 +267,7 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
   SetupConfiguration get config => widget.configuration;
   UserRole get role => config.role;
   String get code => config.code;
+  bool isReady = false;
 
   Future<void> _onConfirmed() async {
     final config = widget.configuration;
@@ -294,6 +304,13 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
           child: FutureBuilder<Game>(
             future: Bloc.of(context).previewGame(config.code),
             builder: (context, snapshot) {
+              if (!isReady && snapshot.hasData) {
+                Future.delayed(Duration.zero, () {
+                  VillainController.playAllVillains(context);
+                });
+                isReady = true;
+              }
+
               return snapshot.hasData
                 ? buildPreview(snapshot.data)
                 : buildPlaceholder();
@@ -306,22 +323,30 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
 
   Widget buildPlaceholder() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        Spacer(flex: 2),
         CircularProgressIndicator(),
         SizedBox(height: 32),
         Text("Searching for game\nwith id ${config.code}",
           textAlign: TextAlign.center,
         ),
+        Spacer(),
+        Button.icon(
+          icon: Icon(Icons.close),
+          text: 'Cancel',
+          isRaised: false,
+          onPressed: () => Navigator.pop(context),
+        ),
+        Spacer(),
       ],
     );
   }
 
   Widget buildPreview(Game game) {
     MyThemeData theme = MyTheme.of(context);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return StaggeredColumn(
       children: <Widget>[
+        Spacer(),
         Text("You'll be ${config.role == UserRole.player ? "joining" : "watching"}",
           style: theme.bodyText,
         ),
@@ -332,10 +357,15 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
           style: theme.bodyText
         ),
         SizedBox(height: 32),
-        Button(
-          text: config.role == UserRole.player ? "Join" : "Watch",
+        Button.text(config.role == UserRole.player ? "Join" : "Watch",
           onPressed: _onConfirmed
         ),
+        SizedBox(height: 32),
+        Button.text('Cancel',
+          isRaised: false,
+          onPressed: () => Navigator.pop(context),
+        ),
+        Spacer(),
       ],
     );
   }

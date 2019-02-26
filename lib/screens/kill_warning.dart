@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/button.dart';
@@ -34,14 +35,12 @@ class KillWarning extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Spacer(),
-                  Button(
-                    text: "Cancel",
+                  Button.text("Cancel",
                     isRaised: false,
                     onPressed: () => Navigator.pop(context),
                   ),
                   SizedBox(width: 8),
-                  Button(
-                    text: "Yes, I killed xx",
+                  Button.text("Yes, I killed xx",
                     onPressed: () {
                       return Bloc.of(context).killPlayer();
                     },

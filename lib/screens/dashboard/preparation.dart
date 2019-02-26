@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../bloc/bloc.dart';
 import '../../widgets/button.dart';
+import '../../widgets/staggered_column.dart';
 import '../../widgets/theme.dart';
 
 class PreparationDashboard extends StatelessWidget {
@@ -40,8 +41,7 @@ class PreparationDashboard extends StatelessWidget {
     if (game.isCreator) {
       items.addAll([
         SizedBox(height: 16),
-        Button(
-          text: 'Start the game',
+        Button.text('Start the game',
           onPressed: () => _startGame(context),
           onSuccess: (result) {
             print(result);
@@ -53,14 +53,15 @@ class PreparationDashboard extends StatelessWidget {
     if (!game.isPlayer) {
       items.addAll([
         SizedBox(height: 16),
-        Button(
-          text: 'Join the game',
+        Button.text('Join the game',
           onPressed: () => _joinGame(context),
           onSuccess: (game) => print('Joined the game.'),
         ),
       ]);
     }
 
-    return Center(child: Column(children: items));
+    items.add(Spacer());
+
+    return Center(child: StaggeredColumn(children: items));
   }
 }

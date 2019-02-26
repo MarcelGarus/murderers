@@ -16,9 +16,18 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       final bloc = Bloc.of(context);
-      final targetRoute = (bloc.currentGame == null) ? '/intro' : '/game';
+      String targetRoute;
+
+      if (!bloc.hasAccount) {
+        targetRoute = '/intro';
+      } else if (bloc.hasCurrentGame) {
+        targetRoute = '/game';
+      } else {
+        targetRoute = '/setup';
+      }
+
       Navigator.pushReplacementNamed(context, targetRoute);
     });
   }

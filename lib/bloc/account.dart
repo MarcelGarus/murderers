@@ -34,31 +34,43 @@ class Handler {
     _user = await _auth.currentUser();
     _id = await persistence.loadId();
     _name = await persistence.loadName();
+    print('Initializing account. user: $_user, id: $_id, name: $_name');
   }
 
   /// Signs in the user.
-  Future<bool> signIn(SignInType type) async {
+  Future<void> signIn(SignInType type) async {
     switch (type) {
       case SignInType.anonymous:
         _user = await _auth.signInAnonymously();
         break;
       case SignInType.google:
         final googleUser = await _googleSignIn.signIn();
-        final googleAuth = await googleUser.authentication;
+        final googleAuth = await googleUser?.authentication;
+        if (googleAuth == null) {
+          throw StateError('Signing in failed due to aborting.');
+        }
         _user = await _auth.signInWithGoogle(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
         );
         break;
     }
-    print('Signed in: $_user');
-    return isSignedInWithFirebase;
+    if (!isSignedInWithFirebase) {
+      throw StateError('Signing in failed due to unknown reasons.');
+    }
   }
 
   /// Signs the user out.
   Future<bool> signOut() async {
     await _auth.signOut();
+
     _user = null;
+    _id = null;
+    _name = null;
+    
+    await persistence.saveId(_id);
+    await persistence.saveName(_name);
+    
     print('Signed out.');
     return !isSignedInWithFirebase;
   }

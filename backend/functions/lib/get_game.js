@@ -118,6 +118,7 @@ function handleRequest(req, res) {
                                 lastWords: death.lastWords,
                             };
                         }),
+                        kills: player.data.kills,
                     };
                 }
             })

@@ -16,8 +16,7 @@ class ActiveDashboard extends StatelessWidget {
     if (game.victim != null) {
       items.addAll([
         VictimName(name: game.victim?.name ?? 'some victim'),
-        Button(
-          text: 'Victim killed',
+        Button.text('Victim killed',
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (ctx) => KillWarning(game)
@@ -25,8 +24,7 @@ class ActiveDashboard extends StatelessWidget {
           },
         ),
         SizedBox(height: 8),
-        Button(
-          text: 'More actions',
+        Button.text('More actions',
           isRaised: false,
           onPressed: () {},
         ),

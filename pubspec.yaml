@@ -15,11 +15,12 @@ dependencies:
   firebase_auth: ^0.6.6
   firebase_messaging: ^2.0.3
   flutter_svg: ^0.10.3
+  flutter_villains: ^1.2.0
   google_sign_in: ^3.2.2
-  http: any # TODO make specific
+  http: ^0.12.0
   intl: ^0.15.7
   json_annotation: ^2.0.0
-  rxdart: any # TODO make specific
+  rxdart: ^0.21.0
   shared_preferences: ^0.4.3
 
 dev_dependencies:

@@ -48,14 +48,12 @@ class DyingDashboard extends StatelessWidget {
           Row(
             children: <Widget>[
               Spacer(),
-              Button(
-                text: "I didn't get killed",
+              Button.text("I didn't get killed",
                 isRaised: false,
                 onPressed: () {},
               ),
               SizedBox(width: 8),
-              Button(
-                text: 'Confirm murder',
+              Button.text('Confirm murder',
                 onPressed: () {
                   return Bloc.of(context).confirmDeath(
                     weapon: 'Some weapon',

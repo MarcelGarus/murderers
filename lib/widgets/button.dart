@@ -16,23 +16,60 @@ import 'theme.dart';
 /// user can tap it again. Otherwise, it just keeps spinning.
 class Button<T> extends StatefulWidget {
   Button({
-    this.child,
-    this.text,
+    @required this.child,
     this.isRaised = true,
     @required this.onPressed,
     this.onSuccess,
     this.onError,
   }) :
-      assert(child != null || text != null),
+      assert(child != null),
       assert(isRaised != null),
       assert(onPressed != null);
 
   final Widget child;
-  final String text;
   final bool isRaised;
   final Function() onPressed;
   final Function(T result) onSuccess;
   final Function(dynamic error) onError;
+
+  /// Creates a button that only displays some text.
+  Button.text(
+    String text, {
+    this.isRaised = true,
+    @required this.onPressed,
+    this.onSuccess,
+    this.onError,
+  }) :
+      assert(text != null),
+      assert(onPressed != null),
+      child = Padding(
+        padding: EdgeInsets.all(16),
+        child: _ButtonText(text, isRaised: isRaised),
+      );
+
+  /// Creates a button that displays text next to an icon.
+  Button.icon({
+    @required Widget icon,
+    @required String text,
+    this.isRaised = true,
+    @required this.onPressed,
+    this.onSuccess,
+    this.onError,
+  }) :
+      assert(icon != null),
+      assert(text != null),
+      assert(onPressed != null),
+      child = Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            icon,
+            SizedBox(width: 16),
+            _ButtonText(text, isRaised: isRaised),
+          ],
+        ),
+      );
 
   _ButtonState createState() => _ButtonState<T>();
 }
@@ -80,12 +117,12 @@ class _ButtonState<T> extends State<Button>
       child: Container(
         width: _isLoading ? 52 : null,
         height: _isLoading ? 52 : null,
-        child: _isLoading ? buildLoadingContent(theme) : buildIdleContent(theme)
+        child: _isLoading ? _buildLoadingContent(theme) : widget.child,
       ),
     );
   }
 
-  Widget buildLoadingContent(MyThemeData theme) {
+  Widget _buildLoadingContent(MyThemeData theme) {
     final color = widget.isRaised
       ? theme.raisedButtonTextColor
       : theme.flatButtonColor;
@@ -100,17 +137,24 @@ class _ButtonState<T> extends State<Button>
       )
     );
   }
+}
 
-  Widget buildIdleContent(MyThemeData theme) {
-    return widget.child ?? Padding(
-      padding: EdgeInsets.all(16),
-      child: Text(widget.text,
-        style: TextStyle(
-          color: widget.isRaised ? theme.raisedButtonTextColor : theme.flatButtonColor,
-          fontFamily: 'Signature',
-          fontSize: 16
-        )
-      )
+/// Text that uses the appropriate text color from MyTheme when rendered.
+class _ButtonText extends StatelessWidget {
+  _ButtonText(this.text, { this.isRaised = true });
+
+  final String text;
+  final bool isRaised;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = MyTheme.of(context);
+    return Text(text,
+      style: TextStyle(
+        color: isRaised ? theme.raisedButtonTextColor : theme.flatButtonColor,
+        fontFamily: 'Signature',
+        fontSize: 16,
+      ),
     );
   }
 }

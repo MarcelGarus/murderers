@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/button.dart';
@@ -13,19 +14,19 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMixin {
-  bool signingIn = false;
-
   Future<void> _signIn(SignInType type) async {
-    setState(() => signingIn = true);
-
     try {
       await Bloc.of(context).signIn(type);
-    } catch (e) { /* User aborted sign in or timeout (no internet). */ }
-    setState(() { signingIn = false; });
 
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => EnterNameScreen()
-    ));
+      // Signing in was successful.
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EnterNameScreen()
+      ));
+    } catch (e) {
+      // User aborted sign in or timeout (no internet).
+      print('An error occurred: $e');
+      rethrow;
+    }
   }
 
   Future<void> _signInWithGoogle() => _signIn(SignInType.google);
@@ -51,8 +52,7 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
           SizedBox(height: 16),
           _buildGoogleButton(context),
           SizedBox(height: 16),
-          Button(
-            text: 'Sign in anonymously',
+          Button.text('Sign in anonymously',
             isRaised: false,
             onPressed: _signInAnonymously,
           ),
@@ -68,27 +68,14 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
         primaryButtonBackgroundColor: Colors.white,
         primaryButtonTextColor: Colors.red,
       ),
-      child: Button(
+      child: Button.icon(
         onPressed: _signInWithGoogle,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SvgPicture.asset(
-                'images/google_icon.svg',
-                width: 36,
-                height: 36,
-                semanticsLabel: 'Google logo',
-              ),
-              SizedBox(width: 16),
-              Text('Sign in with Google',
-                textScaleFactor: 1.2,
-                style: TextStyle(fontFamily: 'Signature')
-              ),
-            ],
-          ),
+        icon: SvgPicture.asset('images/google_icon.svg',
+          width: 36,
+          height: 36,
+          semanticsLabel: 'Google logo',
         ),
+        text: 'Sign in with Google',
       ),
     );
   }
@@ -141,10 +128,7 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
                   ),
                 ),
               ),
-              Button(
-                text: "Continue",
-                onPressed: _onNameEntered,
-              ),
+              Button.text("Continue", onPressed: _onNameEntered),
               Spacer(),
               Padding(
                 padding: EdgeInsets.all(16),

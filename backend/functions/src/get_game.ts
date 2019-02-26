@@ -113,6 +113,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
               lastWords: death.lastWords,
             };
           }),
+          kills: player.data.kills,
         };
       }
     })

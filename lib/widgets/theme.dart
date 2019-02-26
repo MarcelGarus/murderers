@@ -82,7 +82,7 @@ const double kBodyFontSize = 16;
 /// A light theme.
 const MyThemeData kThemeLight = MyThemeData(
   backgroundColor: Colors.white,
-  backgroundGradientColor: Color(0xFFFFDDFF),
+  backgroundGradientColor: Color(0xFFFFEEFF),
   headerText: TextStyle(
     fontFamily: kHeaderFontFamily,
     fontSize: kHeaderFontSize,
