@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 
 import 'models.dart';
 
+part 'network_game_parser.dart';
+
 class NetworkError {}
 class NoConnectionError extends NetworkError {}
 class BadRequestError extends NetworkError {}
@@ -65,14 +67,19 @@ class _Request<T> {
     }
   }
 
-  /// Executes the requests scheduled.
+  /// Executes the scheduled requests.
   Future<T> _executeScheduled(
     List<_Request> requestsToWaitFor
   ) async {
     // Wait for the given requests.
     print("Before executing the query, let's first await all ${requestsToWaitFor.length} requests: $requestsToWaitFor");
     while (requestsToWaitFor.first != this) {
-      await requestsToWaitFor.first._executeScheduled(requestsToWaitFor);
+      try {
+        await requestsToWaitFor.first._executeScheduled(requestsToWaitFor);
+      } catch (e) {
+        // We don't need to actually do anything. The next request will be
+        // executed simply because this functions returns and doesn't throw.
+      }
     }
 
     if (_executor == null) {
@@ -143,9 +150,8 @@ class Handler {
         isCreator: true,
         code: data['code'],
         name: data['name'],
-        created: DateTime.fromMillisecondsSinceEpoch(data['created'] ?? 0), // TODO: make webhook return something
-        start: DateTime.fromMillisecondsSinceEpoch(data['start'] ?? 0), // TODO: make webhook return something
-        end: DateTime.fromMillisecondsSinceEpoch(data['end'] ?? 0), // TODO: make webhook return something
+        created: _parseTime(data['created']),
+        end: _parseTime(data['end']),
       );
     }
   ));
@@ -176,50 +182,11 @@ class Handler {
       'authToken': authToken,
       'code': code,
     },
-    parser: (body) {
-      final data = json.decode(body);
-      final playersData = data['players'] as List;
-      final players = <Player>[];
-      
-      for (final player in playersData) {
-        players.add(Player(
-          id: player['id'],
-          name: player['name'],
-          state: intToPlayerState(player['state']),
-          kills: player['kills'],
-          deaths: []
-        ));
-      }
-      for (final player in players) {
-        final deathsData = playersData
-          .singleWhere((p) => p['id'] == player.id)
-          ['deaths'] as List;
-        player.deaths.addAll(deathsData.map((death) => Death(
-          time: _parseTime(death['time']),
-          murderer: players
-            .singleWhere((p) => p.id == death['murderer'], orElse: () => null),
-          lastWords: death['lastWords'],
-          weapon: death['weapon']
-        )));
-      }
-
-      final myData = playersData
-        .singleWhere((p) => p['id'] == id, orElse: () => null);
-
-      return Game(
-        isCreator: (data['creator'] == id),
-        code: code,
-        name: data['name'],
-        state: intToGameState(data['state']),
-        created: data['created'] == null ? null : _parseTime(data['created']),
-        start: _parseTime(data['start']),
-        end: _parseTime(data['end']),
-        players: players,
-        me: players.singleWhere((p) => p.id == id, orElse: () => null),
-        victim: (myData == null) ? null : players
-          .singleWhere((p) => p.id == myData['victim'], orElse: () => null),
-      );
-    }
+    parser: (body) => _parseServerGame(
+      body: body,
+      code: code,
+      id: id
+    ),
   ));
 
   /// Starts a game on the server.

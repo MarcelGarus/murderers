@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function isUser(obj) {
-    return obj !== undefined // TODO: check authToken
+    return obj !== undefined
+        && typeof obj.authToken === "string"
         && typeof obj.messagingToken === "string"
         && typeof obj.name === "string";
 }
@@ -17,12 +18,13 @@ function isPlayer(obj) {
         && (obj.murderer === null || typeof obj.murderer === "string")
         && (obj.victim === null || typeof obj.victim === "string")
         && typeof obj.wasOutsmarted === "boolean"
-        && true // TODO: check all the deaths are deaths
+        && (obj.death === null || isDeath(obj.death))
         && typeof obj.kills === "number";
 }
 exports.isPlayer = isPlayer;
 function isDeath(obj) {
     return obj !== undefined
+        && obj != null
         && typeof obj.time === "number"
         && typeof obj.murderer === "string"
         && typeof obj.lastWords === "string"

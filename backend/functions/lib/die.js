@@ -87,12 +87,12 @@ function handleRequest(req, res) {
             state: models_1.PLAYER_DEAD,
             victim: null,
             wasOutsmarted: false,
-            deaths: victim.deaths.concat({
+            deaths: {
                 time: Date.now(),
                 murderer: victim.murderer,
                 weapon: weapon,
                 lastWords: lastWords
-            })
+            }
         });
         // Send response.
         res.send('You died.');

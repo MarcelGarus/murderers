@@ -86,12 +86,12 @@ export async function handleRequest(
     state: PLAYER_DEAD,
     victim: null,
     wasOutsmarted: false,
-    deaths: victim.deaths.concat({
+    deaths: {
       time: Date.now(),
       murderer: victim.murderer,
       weapon: weapon,
       lastWords: lastWords
-    })
+    }
   });
 
   // Send response.

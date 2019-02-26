@@ -33,7 +33,6 @@ class Game {
   final String name; // This game's name.
   final GameState state; // This game's state.
   final DateTime created; // The creation timestamp.
-  final DateTime start; // The estimated start timestamp. May change.
   final DateTime end; // The estimated end timestamp. May change.
   final List<Player> players; // All the players.
   final Player me; // This player. May be [null].
@@ -43,13 +42,12 @@ class Game {
 
   bool get isPlayer => me != null;
 
-  Game({
+  const Game({
     @required this.isCreator,
     @required this.code,
     @required this.name,
     this.state = GameState.notStartedYet,
     @required this.created,
-    @required this.start,
     @required this.end,
     this.players = const [],
     this.me,
@@ -81,7 +79,6 @@ class Game {
       name: name ?? this.name,
       state: state ?? this.state,
       created: created ?? this.created,
-      start: start ?? this.start,
       end: end ?? this.end,
       players: players ?? this.players,
       me: me ?? this.me,

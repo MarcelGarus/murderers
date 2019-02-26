@@ -26,7 +26,15 @@ Future<void> saveGames(List<Game> games) async {
 Future<List<Game>> loadGames() async {
   final encoded = (await sp).getStringList(_gamesStorageKey);
   print('Loaded games: $encoded');
-  return encoded.map(_decodeGame).toList();
+  final games = <Game>[];
+  for (String encodedGame in encoded) {
+    try {
+      games.add(_decodeGame(encodedGame));
+    } catch (e) {
+      // This game is corrupt, so skip it. TODO: log it
+    }
+  }
+  return games;
 }
 
 // Storing the id.

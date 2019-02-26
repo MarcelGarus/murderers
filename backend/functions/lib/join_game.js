@@ -52,7 +52,7 @@ function handleRequest(req, res) {
             murderer: null,
             victim: null,
             wasOutsmarted: false,
-            deaths: [],
+            death: null,
             kills: 0
         };
         yield utils_1.playerRef(firestore, code, id).set(player);

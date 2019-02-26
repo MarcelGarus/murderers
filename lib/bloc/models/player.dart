@@ -6,11 +6,11 @@ import 'death.dart';
 part 'player.g.dart';
 
 enum PlayerState {
-  idle,
-  waiting,
-  alive,
-  dying,
-  dead
+  idle, // The creator didn't accept the player yet.
+  waiting, // The player is waiting to get a victim (or the game to start).
+  alive, // The player is alive.
+  dying, // Someone else killed the player, but he still needs to confirm.
+  dead, // The player got killed by someone else.
 }
 
 PlayerState intToPlayerState(int i) {
@@ -32,13 +32,13 @@ PlayerState intToPlayerState(int i) {
 /// exist in the context and scope of games - if a user plays in two games, he
 /// is represented by two distinct players.
 @JsonSerializable()
-@immutable
 class Player {
   final String id; // A unique id.
   final String name; // A given name.
   final PlayerState state;
-  final List<Death> deaths; // All the player's deaths.
   final int kills; // How many other players this player killed.
+  int rank; // The player's rank.
+  Death death; // The player's deaths.
 
   bool get isAlive => state == PlayerState.alive || state == PlayerState.dying;
 
@@ -46,8 +46,9 @@ class Player {
     @required this.id,
     @required this.name,
     this.state = PlayerState.waiting,
-    this.deaths = const [],
-    this.kills = 0
+    this.death,
+    this.kills = 0,
+    this.rank,
   });
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);

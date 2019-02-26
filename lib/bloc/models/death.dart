@@ -14,8 +14,7 @@ class Death {
   final String weapon; // The weapon used to kill the victim.
   final String lastWords; // The victim's last words.
 
-
-  Death({
+  const Death({
     @required this.time,
     @required this.murderer,
     @required this.weapon,

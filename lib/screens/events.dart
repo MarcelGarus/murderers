@@ -37,7 +37,7 @@ class _EventsScreenState extends State<EventsScreen> {
         child: ListTile(
           leading: CircleAvatar(child: Text(player.id)),
           title: Text(player.name),
-          subtitle: Text('Is alive? ${player.isAlive} Deaths: ${player.deaths}'),
+          subtitle: Text('Is alive? ${player.isAlive} Death: ${player.death}'),
           trailing: Text('${player.kills ?? 0}'),
           onTap: () {},
         ),

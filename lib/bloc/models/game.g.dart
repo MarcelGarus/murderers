@@ -15,9 +15,6 @@ Game _$GameFromJson(Map<String, dynamic> json) {
       created: json['created'] == null
           ? null
           : DateTime.parse(json['created'] as String),
-      start: json['start'] == null
-          ? null
-          : DateTime.parse(json['start'] as String),
       end: json['end'] == null ? null : DateTime.parse(json['end'] as String),
       players: (json['players'] as List)
           ?.map((e) =>
@@ -41,7 +38,6 @@ Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
       'name': instance.name,
       'state': _$GameStateEnumMap[instance.state],
       'created': instance.created?.toIso8601String(),
-      'start': instance.start?.toIso8601String(),
       'end': instance.end?.toIso8601String(),
       'players': instance.players,
       'me': instance.me,

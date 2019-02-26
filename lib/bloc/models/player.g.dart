@@ -11,19 +11,20 @@ Player _$PlayerFromJson(Map<String, dynamic> json) {
       id: json['id'] as String,
       name: json['name'] as String,
       state: _$enumDecodeNullable(_$PlayerStateEnumMap, json['state']),
-      deaths: (json['deaths'] as List)
-          ?.map((e) =>
-              e == null ? null : Death.fromJson(e as Map<String, dynamic>))
-          ?.toList(),
-      kills: json['kills'] as int);
+      death: json['death'] == null
+          ? null
+          : Death.fromJson(json['death'] as Map<String, dynamic>),
+      kills: json['kills'] as int,
+      rank: json['rank'] as int);
 }
 
 Map<String, dynamic> _$PlayerToJson(Player instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'state': _$PlayerStateEnumMap[instance.state],
-      'deaths': instance.deaths,
-      'kills': instance.kills
+      'kills': instance.kills,
+      'rank': instance.rank,
+      'death': instance.death
     };
 
 T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
