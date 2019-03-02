@@ -63,7 +63,6 @@ function handleRequest(req, res) {
             },
             android: {
                 priority: 'high',
-                collapseKey: 'killed_' + code,
                 notification: {
                     color: '#ff0000',
                 },

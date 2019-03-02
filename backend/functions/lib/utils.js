@@ -11,25 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
 const util_1 = require("util");
-// Error codes.
-exports.CODE_BAD_REQUEST = 400;
-exports.CODE_USER_NOT_FOUND = 404;
-exports.CODE_USER_CORRUPT = 500;
-exports.CODE_AUTHENTIFICATION_FAILED = 403;
-exports.CODE_NO_PRIVILEGES = 403;
-exports.CODE_GAME_NOT_FOUND = 404;
-exports.CODE_GAME_CORRUPT = 500;
-exports.CODE_PLAYER_NOT_FOUND = 404;
-exports.CODE_PLAYER_CORRUPT = 500;
-// Error texts.
-exports.TEXT_USER_NOT_FOUND = 'User not found.';
-exports.TEXT_USER_CORRUPT = 'User corrupt.';
-exports.TEXT_AUTHENTIFICATION_FAILED = 'Authentification failed.';
-exports.TEXT_NO_PRIVILEGES = 'No privileges.';
-exports.TEXT_GAME_NOT_FOUND = 'Game not found.';
-exports.TEXT_GAME_CORRUPT = 'Game corrupt.';
-exports.TEXT_PLAYER_NOT_FOUND = 'Player not found.';
-exports.TEXT_PLAYER_CORRUPT = 'Player corrupt.';
+const constants_1 = require("./constants");
 /// Generates a length-long random string using the provided chars.
 function generateRandomString(chars, length) {
     let s = '';
@@ -57,7 +39,7 @@ function queryContains(query, parameters, res) {
     for (const arg of parameters) {
         if (query[arg] === undefined || typeof query[arg] !== 'string') {
             if (res !== null) {
-                res.status(exports.CODE_BAD_REQUEST)
+                res.status(constants_1.CODE_BAD_REQUEST)
                     .send('Bad request. ' + arg + ' parameter missing.');
             }
             return false;
@@ -78,13 +60,13 @@ function loadUser(firestore, id, res) {
             return null;
         const snapshot = yield userRef(firestore, id).get();
         if (!snapshot.exists && res !== null) {
-            res.status(exports.CODE_USER_NOT_FOUND).send(exports.TEXT_USER_NOT_FOUND);
+            res.status(constants_1.CODE_USER_NOT_FOUND).send(constants_1.TEXT_USER_NOT_FOUND);
             return null;
         }
         const data = snapshot.data();
         if (!models_1.isUser(data)) {
             if (res !== null) {
-                res.status(exports.CODE_USER_CORRUPT).send(exports.TEXT_USER_CORRUPT);
+                res.status(constants_1.CODE_USER_CORRUPT).send(constants_1.TEXT_USER_CORRUPT);
             }
             util_1.log('Corrupt user: ' + JSON.stringify(data));
             return null;
@@ -101,8 +83,8 @@ function loadAndVerifyUser(firestore, id, providedAuthToken, res) {
             return null;
         if (user.authToken !== providedAuthToken) {
             if (res !== null) {
-                res.status(exports.CODE_AUTHENTIFICATION_FAILED)
-                    .send(exports.TEXT_AUTHENTIFICATION_FAILED);
+                res.status(constants_1.CODE_AUTHENTIFICATION_FAILED)
+                    .send(constants_1.TEXT_AUTHENTIFICATION_FAILED);
             }
             return null;
         }
@@ -115,7 +97,7 @@ function verifyCreator(game, userId, res) {
     if (game.creator === userId) {
         return true;
     }
-    res.status(exports.CODE_NO_PRIVILEGES).send(exports.TEXT_NO_PRIVILEGES);
+    res.status(constants_1.CODE_NO_PRIVILEGES).send(constants_1.TEXT_NO_PRIVILEGES);
     return false;
 }
 exports.verifyCreator = verifyCreator;
@@ -130,12 +112,12 @@ function loadGame(res, firestore, code) {
     return __awaiter(this, void 0, void 0, function* () {
         const snapshot = yield gameRef(firestore, code).get();
         if (!snapshot.exists) {
-            res.status(exports.CODE_GAME_NOT_FOUND).send(exports.TEXT_GAME_NOT_FOUND);
+            res.status(constants_1.CODE_GAME_NOT_FOUND).send(constants_1.TEXT_GAME_NOT_FOUND);
             return null;
         }
         const data = snapshot.data();
         if (!models_1.isGame(data)) {
-            res.status(exports.CODE_GAME_CORRUPT).send(exports.TEXT_GAME_CORRUPT);
+            res.status(constants_1.CODE_GAME_CORRUPT).send(constants_1.TEXT_GAME_CORRUPT);
             util_1.log('Corrupt game: ' + JSON.stringify(data));
             return null;
         }
@@ -160,12 +142,12 @@ function loadPlayer(res, firestore, code, id) {
     return __awaiter(this, void 0, void 0, function* () {
         const snapshot = yield playerRef(firestore, code, id).get();
         if (!snapshot.exists) {
-            res.status(exports.CODE_PLAYER_CORRUPT).send(exports.TEXT_PLAYER_NOT_FOUND);
+            res.status(constants_1.CODE_PLAYER_CORRUPT).send(constants_1.TEXT_PLAYER_NOT_FOUND);
             return null;
         }
         const data = snapshot.data();
         if (!models_1.isPlayer(data)) {
-            res.status(exports.CODE_PLAYER_CORRUPT).send(exports.TEXT_PLAYER_CORRUPT);
+            res.status(constants_1.CODE_PLAYER_CORRUPT).send(constants_1.TEXT_PLAYER_CORRUPT);
             util_1.log('Corrupt player: ' + JSON.stringify(data));
             return null;
         }
@@ -189,7 +171,7 @@ function loadPlayersAndIds(res, snapshotPromise) {
                 });
             }
             else {
-                res.status(exports.CODE_PLAYER_CORRUPT).send(exports.TEXT_PLAYER_CORRUPT);
+                res.status(constants_1.CODE_PLAYER_CORRUPT).send(constants_1.TEXT_PLAYER_CORRUPT);
                 util_1.log('Corrupt player: ' + JSON.stringify(data));
                 success = false;
             }

@@ -62,7 +62,6 @@ export async function handleRequest(
     },
     android: {
       priority: 'high',
-      collapseKey: 'killed_' + code,
       notification: {
         color: '#ff0000',
       },

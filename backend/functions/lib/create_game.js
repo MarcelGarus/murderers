@@ -25,15 +25,14 @@ const admin = require("firebase-admin");
 const util_1 = require("util");
 const models_1 = require("./models");
 const utils_1 = require("./utils");
-const GAME_CODE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
-const GAME_CODE_LENGTH = 4;
+const constants_1 = require("./constants");
 /// Creates a new game code.
 function createGameCode(firestore) {
     return __awaiter(this, void 0, void 0, function* () {
         let code = '';
         let tries = 0;
         while (true) {
-            code = utils_1.generateRandomString(GAME_CODE_CHARS, GAME_CODE_LENGTH);
+            code = utils_1.generateRandomString(constants_1.GAME_CODE_CHARS, constants_1.GAME_CODE_LENGTH);
             tries++;
             const snapshot = yield utils_1.gameRef(firestore, code).get();
             if (!snapshot.exists)
