@@ -20,7 +20,7 @@ class _DeathsScreenState extends State<DeathsScreen> {
   Widget build(BuildContext context) {
     if (widget.game != _lastGame) {
       _lastGame = widget.game;
-      _deadPlayers = _lastGame.players.where((player) => !player.isAlive).toList();
+      _deadPlayers = _lastGame.players.where((player) => player.isDead).toList();
     }
 
     return Container(

@@ -22,8 +22,8 @@ class _CountdownState extends State<Countdown> {
   void initState() {
     super.initState();
     Future.doWhile(() async {
-      await Future.delayed(Duration(seconds: 1));
       setState(() {});
+      await Future.delayed(Duration(seconds: 1));
       return _running;
     });
   }

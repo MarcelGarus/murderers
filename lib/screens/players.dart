@@ -26,6 +26,11 @@ class _PlayersScreenState extends State<PlayersScreen> {
 
   Widget _buildList() {
     final players = widget.game.players;
+    players.sort((a, b) {
+      if (a.rank == null) return 1;
+      if (b.rank == null) return -1;
+      return a.rank.compareTo(b.rank);
+    });
 
     return ListView.builder(
       itemBuilder: (BuildContext context, int i) {
@@ -58,7 +63,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
             width: 48,
             height: 48,
             alignment: Alignment.center,
-            child: Text('#${player.rank}',
+            child: Text(player.rank == null ? '?' : '#${player.rank}',
               style: style.copyWith(color: isMe ? Colors.white : kAccentColor),
             ),
           ),

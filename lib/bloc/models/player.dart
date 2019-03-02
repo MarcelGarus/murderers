@@ -54,8 +54,6 @@ class Player {
       assert(id != null),
       assert(name != null),
       assert(state != null),
-      assert(!(state == PlayerState.dead && death == null),
-        'Dead players should have a death.'),
       assert(kills != null);
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
