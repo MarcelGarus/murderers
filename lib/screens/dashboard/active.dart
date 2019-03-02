@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../bloc/bloc.dart';
 import '../../widgets/button.dart';
+import '../../widgets/countdown.dart';
 import '../../widgets/staggered_column.dart';
+import '../../widgets/theme.dart';
 import '../../widgets/victim_name.dart';
 import '../kill_warning.dart';
 
@@ -16,6 +18,8 @@ class ActiveDashboard extends StatelessWidget {
 
     if (game.victim != null) {
       items.addAll([
+        Text('The game ends in', style: MyTheme.of(context).bodyText),
+        Countdown(target: game.end),
         VictimName(name: game.victim?.name ?? 'some victim'),
         Button.text('Victim killed',
           onPressed: () {
