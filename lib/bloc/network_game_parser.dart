@@ -64,7 +64,7 @@ List<Player> _ranked(List<Player> players) {
 
   // First, divide the players into alive and dead ones.
   final alive = players.where((p) => p.isAlive).toList();
-  final dead = players.where((p) => !p.isAlive).toList();
+  final dead = players.where((p) => p.isDead).toList();
   
   // Sort the alive players according to their kills and give them ranks.
   alive.sort((a, b) => a.kills.compareTo(b.kills));

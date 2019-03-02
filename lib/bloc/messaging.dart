@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+
+import 'models.dart';
 
 class Handler {
   /// The firebase cloud messaging service provider.
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
 
   /// Requests the notification permissions. Only really does something on iOS.
   void requestNotificationPermissions() {
@@ -15,17 +17,30 @@ class Handler {
   }
 
   /// Configures the firebase messaging service.
-  void configure() {
+  void configure({ @required VoidCallback onMessageReceived }) {
+    final onReceived = (Map<String, dynamic> msg) {
+      print('Message received: $msg');
+      onMessageReceived();
+    };
+
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) {
-        print('onMessage called: Message is $message.');
-      },
-      onResume: (msg) async => print('onResume called: Message is $msg.'),
-      onLaunch: (msg) async => print('onLaunch called: Message is $msg.'),
+      onMessage: onReceived,
+      onResume: onReceived,
+      onLaunch: onReceived,
     );
     _firebaseMessaging.getToken().then(print);
     print('Firebase messaging configured.');
   }
 
   Future<String> getToken() => _firebaseMessaging.getToken();
+
+  // Stuff for subscribing to / unsubscribing from different topics.
+  void _subscribe(String topic) => _firebaseMessaging.subscribeToTopic(topic);
+  void _unsubscribe(String topic) => _firebaseMessaging.unsubscribeFromTopic(topic);
+
+  void subscribeToGame(Game game) => _subscribe('game_${game.code}');
+  void unsubscribeFromGame(Game game) => _unsubscribe('game_${game.code}');
+
+  void subscribeToDeaths() => _subscribe('deaths');
+  void unsubscribeFromDeaths() => _unsubscribe('deaths');
 }

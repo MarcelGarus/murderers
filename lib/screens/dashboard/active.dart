@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../bloc/bloc.dart';
 import '../../widgets/button.dart';
+import '../../widgets/staggered_column.dart';
 import '../../widgets/victim_name.dart';
 import '../kill_warning.dart';
 
@@ -28,9 +29,10 @@ class ActiveDashboard extends StatelessWidget {
           isRaised: false,
           onPressed: () {},
         ),
+        Spacer(),
       ]);
     }
 
-    return Column(children: items);
+    return StaggeredColumn(children: items);
   }
 }

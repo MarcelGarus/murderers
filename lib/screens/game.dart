@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
-import 'events.dart';
+import 'deaths.dart';
 import 'dashboard.dart';
 import 'players.dart';
 
@@ -51,7 +51,7 @@ class _GameScreenState extends State<GameScreen>
               goToPlayersCallback: () => _controller.index = 0,
               goToEventsCallback: () => _controller.index = 2,
             ),
-            EventsScreen(game),
+            DeathsScreen(game),
           ],
         ),
       ),

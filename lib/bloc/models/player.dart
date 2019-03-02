@@ -41,6 +41,7 @@ class Player {
   Death death; // The player's deaths.
 
   bool get isAlive => state == PlayerState.alive || state == PlayerState.dying;
+  bool get isDead => death != null;
 
   Player({
     @required this.id,
@@ -49,8 +50,17 @@ class Player {
     this.death,
     this.kills = 0,
     this.rank,
-  });
+  }) :
+      assert(id != null),
+      assert(name != null),
+      assert(state != null),
+      assert(!(state == PlayerState.dead && death == null),
+        'Dead players should have a death.'),
+      assert(kills != null);
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
   Map<String, dynamic> toJson() => _$PlayerToJson(this);
+
+  @override
+  String toString() => name;
 }

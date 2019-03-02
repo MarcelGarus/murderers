@@ -24,7 +24,7 @@ function isPlayer(obj) {
 exports.isPlayer = isPlayer;
 function isDeath(obj) {
     return obj !== undefined
-        && obj != null
+        && obj !== null
         && typeof obj.time === "number"
         && typeof obj.murderer === "string"
         && typeof obj.lastWords === "string"

@@ -1,0 +1,102 @@
+[debug] [2019-02-27T14:40:08.815Z] ----------------------------------------------------------------------
+[debug] [2019-02-27T14:40:08.819Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy --only functions
+[debug] [2019-02-27T14:40:08.819Z] CLI Version:   6.3.1
+[debug] [2019-02-27T14:40:08.819Z] Platform:      linux
+[debug] [2019-02-27T14:40:08.819Z] Node Version:  v8.10.0
+[debug] [2019-02-27T14:40:08.819Z] Time:          Wed Feb 27 2019 15:40:08 GMT+0100 (CET)
+[debug] [2019-02-27T14:40:08.819Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-02-27T14:40:08.921Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-02-27T14:40:08.921Z] > authorizing via signed-in user
+[debug] [2019-02-27T14:40:08.921Z] [iam] checking project murderers-e67bb for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2019-02-27T14:40:08.923Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-02-27T14:40:08.924Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-02-27T14:40:09.256Z] <<< HTTP RESPONSE 200
+[debug] [2019-02-27T14:40:10.158Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/murderers-e67bb:testIamPermissions  
+
+[debug] [2019-02-27T14:40:11.058Z] <<< HTTP RESPONSE 200
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions.
+ Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+[info] 
+[info] === Deploying to 'murderers-e67bb'...
+[info] 
+[info] i  deploying functions
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script.
+[debug] [2019-02-27T14:40:35.072Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json",
+    "build": "tsc",
+    "serve": "npm run build && firebase serve --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "~5.12.0",
+    "firebase-functions": "^1.1.0",
+    "npm": "^6.4.1"
+  },
+  "devDependencies": {
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2019-02-27T14:40:35.074Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/murderers-e67bb?view=CONSUMER_VIEW  
+ 
+[debug] [2019-02-27T14:40:35.075Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/murderers-e67bb?view=CONSUMER_VIEW  
+ 
+[debug] [2019-02-27T14:40:36.469Z] <<< HTTP RESPONSE 200
+[debug] [2019-02-27T14:40:36.501Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2019-02-27T14:40:36.503Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/murderers-e67bb  
+ 
+[debug] [2019-02-27T14:40:37.336Z] <<< HTTP RESPONSE 200
+[debug] [2019-02-27T14:40:37.337Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/210764765651:getServerAppConfig  
+ 
+[debug] [2019-02-27T14:40:37.587Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2019-02-27T14:40:37.592Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/murderers-e67bb/configs  
+ 
+[debug] [2019-02-27T14:40:37.954Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (878.3 KB) for uploading
+[debug] [2019-02-27T14:40:39.275Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/murderers-e67bb/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2019-02-27T14:40:39.686Z] <<< HTTP RESPONSE 200
+[debug] [2019-02-27T14:40:39.686Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-042196e7-3801-45f2-9dee-74c7561c8894/ae0f0852-8f53-43c1-86b6-1e51baeba803.zip?GoogleAccessId=service-210764765651@gcf-admin-robot.iam.gserviceaccount.com&Expires=1551280239&Signature=6oyQ1R9YrBtP6OCZYKlUERbehb%2FxC%2Bude8%2FxDYuwcaJlTU3QrPXXnz6nP4mT0Qd03rwkczSQ6I0uACyCwaJUsZL1BSPYqGgzJUTtW%2BJ8h%2BFNHtiSqGPIm5wDcbq8IHZRJCDWgpYH8AxaKd7SC7%2BLGTQ1xR4lynXk75Kk3qawwq%2BVLVtvXbp0l53sI5lAGoax8TE2VJ6VBT64D4jYBTiekZkPQqQIwkxRjvWZ3posGqEqLhu1m46dkLLT292PPgz4ZXMNdvbs8whZ8YkTdAijRa2vU1i5URc6ZASw27Mtyv%2FgiSYj3d21sufpNPD1rf63MOXUXiWjGpprWU0s%2FmDYog%3D%3D  
+
+[debug] [2019-02-27T14:40:40.565Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[debug] [2019-02-27T14:40:40.569Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/murderers-e67bb/locations/-/functions  
+ 
+[debug] [2019-02-27T14:40:41.095Z] <<< HTTP RESPONSE 200
+[info] i  functions: updating Node.js 6 function create_user(us-central1)...
+[debug] [2019-02-27T14:40:41.098Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function create_game(us-central1)...
+[debug] [2019-02-27T14:40:41.099Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function join_game(us-central1)...
+[debug] [2019-02-27T14:40:41.099Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function get_game(us-central1)...
+[debug] [2019-02-27T14:40:41.099Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function start_game(us-central1)...
+[debug] [2019-02-27T14:40:41.099Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function kill_player(us-central1)...
+[debug] [2019-02-27T14:40:41.100Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function die(us-central1)...
+[debug] [2019-02-27T14:40:41.100Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 6 function shuffle_victims(us-central1)...
+[debug] [2019-02-27T14:40:41.100Z] Trigger is:  {"httpsTrigger":{}}
+[info] 
+The following functions are found in your project but do not exist in your local source code:
+	create(us-central1)
+	shuffleVictims(us-central1)
+
+If you are renaming a function or changing its region, it is recommended that you create the new function first before deleting the old one to prevent event loss. For more info, visit https://firebase.google.com/docs/functions/manage-functions#modify
+

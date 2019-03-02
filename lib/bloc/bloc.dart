@@ -44,6 +44,7 @@ class Bloc {
     _account.initialize().then((_) {
       persistence.loadGames().then((games) async {
         _games = games;
+        _games.forEach(_messaging.subscribeToGame);
         if (_games.isNotEmpty) {
           final current = await persistence.loadCurrentGame();
           currentGame = _games.singleWhere((g) => g.code == current);
@@ -57,7 +58,10 @@ class Bloc {
 
     // Configure the messaging synchronously.
     _messaging.requestNotificationPermissions();
-    _messaging.configure();
+    _messaging.configure(onMessageReceived: () async {
+      await refreshGame();
+    });
+    _messaging.subscribeToDeaths();
   }
 
   /// Disposes all the streams.

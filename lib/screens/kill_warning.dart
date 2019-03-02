@@ -6,12 +6,14 @@ import '../widgets/button.dart';
 import '../widgets/theme.dart';
 
 class KillWarning extends StatelessWidget {
-  KillWarning(this.game);
+  KillWarning(this.game) : assert(game.victim != null);
 
   final Game game;
 
   @override
   Widget build(BuildContext context) {
+    final victim = game.victim;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -23,12 +25,12 @@ class KillWarning extends StatelessWidget {
               Spacer(),
               Container(width: 250, height: 150, child: Placeholder()),
               SizedBox(height: 16),
-              Text('Did you kill xx?',
+              Text('Did you kill $victim?',
                 style: MyTheme.of(context).headerText,
               ),
               SizedBox(height: 8),
-              Text('xx will get notified. Make sure you gave him something in '
-                'the real world and that you told xx that he/she\'s dead.',
+              Text('$victim will get notified. Make sure you gave him/her something in '
+                'the real world and that you told $victim that he/she\'s dead.',
                 style: MyTheme.of(context).bodyText,  
               ),
               Spacer(),

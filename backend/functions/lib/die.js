@@ -87,7 +87,7 @@ function handleRequest(req, res) {
             state: models_1.PLAYER_DEAD,
             victim: null,
             wasOutsmarted: false,
-            deaths: {
+            death: {
                 time: Date.now(),
                 murderer: victim.murderer,
                 weapon: weapon,

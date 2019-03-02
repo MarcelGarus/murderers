@@ -182,6 +182,7 @@ class Statistics extends StatelessWidget {
   final VoidCallback goToPlayersCallback;
   final VoidCallback goToEventsCallback;
 
+  int get _myRank => game.me?.rank;
   int get _killedByMe => game.me?.kills ?? 0;
   int get _alive => game.players.where((p) => p.isAlive).length;
   int get _total => game.players.length;
@@ -191,7 +192,7 @@ class Statistics extends StatelessWidget {
     return Row(
       children: <Widget>[
         _buildItem(
-          number: '#2',
+          number: _myRank == null ? '-' : '#$_myRank',
           text: 'rank',
           onTap: goToPlayersCallback,
         ),

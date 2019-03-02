@@ -21,7 +21,6 @@ class PreparationDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building the preparation content.');
     final theme = MyTheme.of(context);
 
     final items = <Widget>[
