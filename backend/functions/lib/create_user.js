@@ -2,9 +2,9 @@
 /// Creates a new user.
 ///
 /// Needs:
+/// * user [name]
 /// * Firebase [authToken]
 /// * Firebase cloud [messagingToken]
-/// * user [name]
 ///
 /// Returns either:
 /// 200: { id: 'abcdef...' }.
@@ -22,15 +22,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const admin = require("firebase-admin");
 const util_1 = require("util");
 const utils_1 = require("./utils");
-const USER_ID_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-const USER_ID_LENGTH = 3;
+const constants_1 = require("./constants");
 /// Creates a new user id.
 function createUserId(firestore) {
     return __awaiter(this, void 0, void 0, function* () {
         let id = '';
         let tries = 0;
         while (true) {
-            id = utils_1.generateRandomString(USER_ID_CHARS, USER_ID_LENGTH);
+            id = utils_1.generateRandomString(constants_1.USER_ID_CHARS, constants_1.USER_ID_LENGTH);
             tries++;
             const snapshot = yield utils_1.userRef(firestore, id).get();
             if (!snapshot.exists)

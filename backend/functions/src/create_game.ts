@@ -17,9 +17,7 @@ import * as admin from 'firebase-admin';
 import { log } from 'util';
 import { Game, GameCode, GAME_NOT_STARTED_YET, FirebaseAuthToken, User } from './models';
 import { generateRandomString, gameRef, queryContains, loadAndVerifyUser } from './utils';
-
-const GAME_CODE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
-const GAME_CODE_LENGTH = 4;
+import { GAME_CODE_CHARS, GAME_CODE_LENGTH } from './constants';
 
 /// Creates a new game code.
 async function createGameCode(
@@ -63,6 +61,7 @@ export async function handleRequest(
   if (user === null) return;
 
   // Create the game.
+  // TODO: sanitize name, make sure start and end dates are valid
   const game: Game = {
     name: name,
     state: GAME_NOT_STARTED_YET,
@@ -81,5 +80,9 @@ export async function handleRequest(
   // Send back the code.
   res.set('application/json').send({
     code: code,
+    name: game.name,
+    created: game.created,
+    start: game.start,
+    end: game.end
   });
 }

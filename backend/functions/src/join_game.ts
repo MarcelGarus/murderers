@@ -49,7 +49,7 @@ export async function handleRequest(
     murderer: null,
     victim: null,
     wasOutsmarted: false,
-    deaths: [],
+    death: null,
     kills: 0
   };
 

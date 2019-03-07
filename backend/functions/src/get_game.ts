@@ -28,7 +28,7 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, Player, UserId, FirebaseAuthToken, User } from './models';
+import { Death, GameCode, Game, Player, UserId, FirebaseAuthToken, User } from './models';
 import { loadGame, loadPlayersAndIds, allPlayersRef, queryContains, loadAndVerifyUser, loadUser } from './utils';
 
 /// Returns a game's state.
@@ -75,45 +75,29 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     name: game.name,
     state: game.state,
     created: game.created,
+    creator: game.creator,
     end: game.end,
-    players: players.map((player, _, __) => {
-      if (player.id === id) {
-        // This is the player who requested the information.
-        // Provide detailed information.
-        return {
-          id: id,
-          name: user.name,
-          state: player.data.state,
-          murderer: player.data.murderer,
-          victim: player.data.victim,
-          wasOutsmarted: player.data.wasOutsmarted,
-          deaths: player.data.deaths.map((death, ___, ____) => {
-            return {
-              time: death.time,
-              murderer: death.murderer,
-              weapon: death.weapon,
-              lastWords: death.lastWords,
-            };
-          }),
-          kills: player.data.kills,
-        };
-      } else {
-        // This is some other player.
-        // Only provide superficial information.
-        const playerUser: User = playerUsers[player.id];
-        return {
-          id: player.id,
-          name: playerUser.name,
-          state: player.data.state,
-          deaths: player.data.deaths.map((death, ___, ____) => {
-            return {
-              time: death.time,
-              weapon: death.weapon,
-              lastWords: death.lastWords,
-            };
-          }),
-        };
-      }
+    players: players.map((playerAndId, _, __) => {
+      const playerId: UserId = playerAndId.id;
+      const player: Player = playerAndId.data;
+      const death: Death = player.death;
+      const isMe: boolean = (playerId === id);
+
+      return {
+        id: isMe ? id : playerId,
+        name: isMe ? user.name : playerUsers[playerId].name,
+        state: player.state,
+        murderer: isMe ? player.murderer : null,
+        victim: isMe ? player.victim : null,
+        wasOutsmarted: isMe ? player.wasOutsmarted : null,
+        death: death === null ? null : {
+          time: death.time,
+          murderer: isMe ? death.murderer : null,
+          weapon: death.weapon,
+          lastWords: death.lastWords,
+        },
+        kills: player.kills
+      };
     })
   });
 }

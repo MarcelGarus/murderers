@@ -30,11 +30,11 @@ const util_1 = require("util");
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!utils_1.queryContains(req.query, [
-            'user', 'authToken', 'code'
+            'id', 'authToken', 'code'
         ], res))
             return;
         const firestore = admin.app().firestore();
-        const id = req.query.user;
+        const id = req.query.id;
         const authToken = req.query.authToken;
         const code = req.query.code;
         util_1.log(code + ': ' + id + ' joins.');
@@ -52,7 +52,7 @@ function handleRequest(req, res) {
             murderer: null,
             victim: null,
             wasOutsmarted: false,
-            deaths: [],
+            death: null,
             kills: 0
         };
         yield utils_1.playerRef(firestore, code, id).set(player);

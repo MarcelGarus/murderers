@@ -19,6 +19,7 @@ import { GameCode, FirebaseAuthToken, PLAYER_DYING, PLAYER_DEAD, PLAYER_WAITING,
 import { loadPlayer, queryContains, playerRef, loadPlayersAndIds, loadAndVerifyUser, allPlayersRef } from './utils';
 import { shuffleVictims } from './shuffle_victims';
 import { log } from 'util';
+import { CODE_ILLEGAL_STATE, TEXT_ILLEGAL_STATE } from './constants';
 
 /// Offers webhook for dying.
 export async function handleRequest(
@@ -45,7 +46,10 @@ export async function handleRequest(
   // Verify the victim's dying.
   const victim: Player = await loadPlayer(res, firestore, code, id);
   if (victim === null) return;
-  if (victim.state !== PLAYER_DYING || victim.murderer === null) return;
+  if (victim.state !== PLAYER_DYING || victim.murderer === null) {
+    res.status(CODE_ILLEGAL_STATE).send(TEXT_ILLEGAL_STATE);
+    return;
+  }
 
   // Load the murderer.
   const murderer: Player = await loadPlayer(res, firestore, code, victim.murderer);
@@ -86,13 +90,14 @@ export async function handleRequest(
     state: PLAYER_DEAD,
     victim: null,
     wasOutsmarted: false,
-    deaths: victim.deaths.concat({
+    death: {
       time: Date.now(),
       murderer: victim.murderer,
       weapon: weapon,
       lastWords: lastWords
-    })
+    }
   });
+  log('Victim updated.');
 
   // Send response.
   res.send('You died.');

@@ -8,9 +8,11 @@
 .metadata
 
 build/
+backend/functions/lib/
 
 .flutter-plugins
 android/app/google-services.json
+android/app/key.properties
 
 *.lock
 

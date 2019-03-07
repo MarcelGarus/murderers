@@ -1,9 +1,9 @@
 /// Creates a new user.
 ///
 /// Needs:
+/// * user [name]
 /// * Firebase [authToken]
 /// * Firebase cloud [messagingToken]
-/// * user [name]
 ///
 /// Returns either:
 /// 200: { id: 'abcdef...' }.
@@ -15,9 +15,7 @@ import * as admin from 'firebase-admin';
 import { log } from 'util';
 import { FirebaseAuthToken, MessagingToken, UserId, User } from './models';
 import { generateRandomString, queryContains, userRef } from './utils';
-
-const USER_ID_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-const USER_ID_LENGTH = 3;
+import { USER_ID_CHARS, USER_ID_LENGTH } from './constants';
 
 /// Creates a new user id.
 async function createUserId(

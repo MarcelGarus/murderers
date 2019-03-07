@@ -27,6 +27,7 @@ const models_1 = require("./models");
 const utils_1 = require("./utils");
 const shuffle_victims_1 = require("./shuffle_victims");
 const util_1 = require("util");
+const constants_1 = require("./constants");
 /// Offers webhook for dying.
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -49,8 +50,10 @@ function handleRequest(req, res) {
         const victim = yield utils_1.loadPlayer(res, firestore, code, id);
         if (victim === null)
             return;
-        if (victim.state !== models_1.PLAYER_DYING || victim.murderer === null)
+        if (victim.state !== models_1.PLAYER_DYING || victim.murderer === null) {
+            res.status(constants_1.CODE_ILLEGAL_STATE).send(constants_1.TEXT_ILLEGAL_STATE);
             return;
+        }
         // Load the murderer.
         const murderer = yield utils_1.loadPlayer(res, firestore, code, victim.murderer);
         if (murderer === null)
@@ -87,13 +90,14 @@ function handleRequest(req, res) {
             state: models_1.PLAYER_DEAD,
             victim: null,
             wasOutsmarted: false,
-            deaths: victim.deaths.concat({
+            death: {
                 time: Date.now(),
-                murderer: id,
+                murderer: victim.murderer,
                 weapon: weapon,
                 lastWords: lastWords
-            })
+            }
         });
+        util_1.log('Victim updated.');
         // Send response.
         res.send('You died.');
         // Send a notification to _all_ subscribed users.

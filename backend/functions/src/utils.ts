@@ -3,27 +3,7 @@
 import * as functions from 'firebase-functions';
 import { Game, isGame, GameCode, UserId, Player, isPlayer, FirebaseAuthToken, User, isUser } from './models';
 import { log } from 'util';
-
-// Error codes.
-export const CODE_BAD_REQUEST: number = 400;
-export const CODE_USER_NOT_FOUND: number = 404;
-export const CODE_USER_CORRUPT: number = 500;
-export const CODE_AUTHENTIFICATION_FAILED: number = 403;
-export const CODE_NO_PRIVILEGES: number = 403;
-export const CODE_GAME_NOT_FOUND: number = 404;
-export const CODE_GAME_CORRUPT: number = 500;
-export const CODE_PLAYER_NOT_FOUND: number = 404;
-export const CODE_PLAYER_CORRUPT: number = 500;
-
-// Error texts.
-export const TEXT_USER_NOT_FOUND: string = 'User not found.';
-export const TEXT_USER_CORRUPT: string = 'User corrupt.';
-export const TEXT_AUTHENTIFICATION_FAILED: string = 'Authentification failed.';
-export const TEXT_NO_PRIVILEGES: string = 'No privileges.';
-export const TEXT_GAME_NOT_FOUND: string = 'Game not found.';
-export const TEXT_GAME_CORRUPT: string = 'Game corrupt.';
-export const TEXT_PLAYER_NOT_FOUND: string = 'Player not found.';
-export const TEXT_PLAYER_CORRUPT: string = 'Player corrupt.';
+import { CODE_BAD_REQUEST, CODE_USER_NOT_FOUND, TEXT_USER_NOT_FOUND, CODE_USER_CORRUPT, TEXT_USER_CORRUPT, CODE_AUTHENTIFICATION_FAILED, TEXT_AUTHENTIFICATION_FAILED, CODE_NO_PRIVILEGES, TEXT_NO_PRIVILEGES, CODE_GAME_NOT_FOUND, TEXT_GAME_NOT_FOUND, CODE_GAME_CORRUPT, TEXT_GAME_CORRUPT, CODE_PLAYER_CORRUPT, TEXT_PLAYER_NOT_FOUND, TEXT_PLAYER_CORRUPT } from './constants';
 
 /// Generates a length-long random string using the provided chars.
 export function generateRandomString(chars: string, length: number): string {
@@ -86,7 +66,7 @@ export async function loadUser(
 
   const snapshot = await userRef(firestore, id).get();
 
-  if (!snapshot.exists) {
+  if (!snapshot.exists && res !== null) {
     res.status(CODE_USER_NOT_FOUND).send(TEXT_USER_NOT_FOUND);
     return null;
   }
@@ -94,7 +74,9 @@ export async function loadUser(
   const data = snapshot.data();
 
   if (!isUser(data)) {
-    res.status(CODE_USER_CORRUPT).send(TEXT_USER_CORRUPT);
+    if (res !== null) {
+      res.status(CODE_USER_CORRUPT).send(TEXT_USER_CORRUPT);
+    }
     log('Corrupt user: ' + JSON.stringify(data));
     return null;
   }

@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function isUser(obj) {
-    return true // TODO: check authToken
+    return obj !== undefined
+        && typeof obj.authToken === "string"
         && typeof obj.messagingToken === "string"
         && typeof obj.name === "string";
 }
@@ -12,16 +13,19 @@ exports.PLAYER_ALIVE = 2;
 exports.PLAYER_DYING = 3;
 exports.PLAYER_DEAD = 4;
 function isPlayer(obj) {
-    return typeof obj.state === "number"
+    return obj !== undefined
+        && typeof obj.state === "number"
         && (obj.murderer === null || typeof obj.murderer === "string")
         && (obj.victim === null || typeof obj.victim === "string")
         && typeof obj.wasOutsmarted === "boolean"
-        && true // TODO: check all the deaths are deaths
+        && (obj.death === null || isDeath(obj.death))
         && typeof obj.kills === "number";
 }
 exports.isPlayer = isPlayer;
 function isDeath(obj) {
-    return typeof obj.time === "number"
+    return obj !== undefined
+        && obj !== null
+        && typeof obj.time === "number"
         && typeof obj.murderer === "string"
         && typeof obj.lastWords === "string"
         && typeof obj.weapon === "string";
@@ -32,7 +36,8 @@ exports.GAME_RUNNING = 1;
 exports.GAME_PAUSED = 2;
 exports.GAME_OVER = 3;
 function isGame(obj) {
-    return typeof obj.name === "string"
+    return obj !== undefined
+        && typeof obj.name === "string"
         && typeof obj.state === "number"
         && typeof obj.creator === "string"
         && typeof obj.created === "number"
