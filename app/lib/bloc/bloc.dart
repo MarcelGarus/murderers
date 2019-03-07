@@ -1,9 +1,10 @@
 import 'dart:async';
 
-//import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
+import 'package:firebase_analytics/observer.dart';
 
 import 'account.dart' as account;
+import 'analytics.dart' as analytics;
 import 'network.dart' as network;
 import 'messaging.dart' as messaging;
 import 'persistence.dart' as persistence;
@@ -15,15 +16,15 @@ import 'streamed_property.dart';
 export 'bloc_provider.dart';
 export 'function_status.dart';
 export 'models.dart';
+export 'analytics.dart' show AnalyticsEvent;
 export 'account.dart' show SignInType;
 export 'network.dart' show NetworkError, NoConnectionError, BadRequestError, ServerCorruptError, AuthenticationFailedError, ResourceNotFoundError;
 
 /// The BLoC.
 class Bloc {
-  //FirebaseAnalytics analytics = FirebaseAnalytics();
-
   // The handlers for all the specific tasks.
   final _account = account.Handler();
+  final _analytics = analytics.Handler();
   final _network = network.Handler();
   final _messaging = messaging.Handler();
 
@@ -54,7 +55,7 @@ class Bloc {
     });
 
     // Asynchronously log app open event.
-    //analytics.logAppOpen();
+    _analytics.initialize();
 
     // Configure the messaging synchronously.
     _messaging.requestNotificationPermissions();
@@ -69,16 +70,15 @@ class Bloc {
     _currentGame.dispose();
   }
 
+  // Handles the sign in status.
   Future<void> signIn(account.SignInType type) => _account.signIn(type);
-
   Future<bool> signOut() => _account.signOut();
-
   bool get isSignedIn => _account.isSignedInWithFirebase;
 
+  // Handles the account.
   Future<void> createAccount(String name) async {
     return await _account.createUser(_network, _messaging, name);
   }
-
   bool get hasAccount => _account.userWasCreated;
 
   String get name => _account.name;
@@ -88,6 +88,7 @@ class Bloc {
 
   List<Game> get allGames => _games;
 
+  // The current game.
   Game get currentGame => _currentGame.value;
   set currentGame(Game game) {
     assert(game == null || _games.contains(game));
@@ -98,6 +99,16 @@ class Bloc {
   get currentGameStream => _currentGame.stream;
   bool get hasCurrentGame => currentGame != null;
   
+  /// Logs an event.
+  void logEvent(
+    analytics.AnalyticsEvent event, [
+    Map<String, dynamic> parameters
+  ]) {
+    assert(event != null);
+    _analytics.logEvent(event, parameters);
+  }
+  FirebaseAnalyticsObserver get firebaseAnalyticsObserver => _analytics.observer;
+
   Future<Game> previewGame(String code) async {
     return await _network.getGame(
       id: _account.id,

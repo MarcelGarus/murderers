@@ -52,7 +52,7 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
           child: StaggeredColumn(
             children: <Widget>[
               Spacer(),
-              Container(width: 200, height: 300, child: Placeholder()),
+              Container(width: 200, height: 100, child: Placeholder()),
               SizedBox(height: 32),
               Button.text('Join a game',
                 onPressed: () { _selectRole(UserRole.player); },
@@ -128,7 +128,7 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
                 ),
                 autofocus: true,
                 onChanged: (code) {
-                  if (code.length >= 4) {
+                  if (code.length >= 5) {
                     _onCodeFinished(code);
                   }
                 },

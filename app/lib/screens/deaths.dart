@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/theme.dart';
@@ -20,31 +21,50 @@ class _DeathsScreenState extends State<DeathsScreen> {
   Widget build(BuildContext context) {
     if (widget.game != _lastGame) {
       _lastGame = widget.game;
-      _deadPlayers = _lastGame.players.where((player) => player.isDead).toList();
+      _deadPlayers = _lastGame.players
+        .where((player) => player.isDead).toList();
     }
 
     return Container(
       color: kThemeDark.backgroundColor,
-      child: SafeArea(
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int i) {
-            if (i == 0) {
-              return _buildHeader();
-            }
-            i--;
-            return i >= _deadPlayers.length ? null : _buildDeath(_deadPlayers[i]);
-          },
-        ),
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemBuilder: (BuildContext context, int i) {
+          if (i == 0) {
+            return _buildHeader();
+          }
+          i--;
+          return i >= _deadPlayers.length ? null : _buildDeath(_deadPlayers[i]);
+        },
       ),
     );
   }
 
   Widget _buildHeader() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Stack(
       children: <Widget>[
-        Container(height: 200, child: Placeholder(color: Colors.green)),
-        Text('Recent deaths'),
+        Container(
+          height: 250,
+          color: Colors.grey,
+          child: FlareActor('assets/deaths.flr',
+            fit: BoxFit.fitWidth,
+            color: kThemeDark.backgroundColor,
+            alignment: Alignment.bottomCenter,
+            animation: 'idle',
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + 16,
+            left: 16,
+            right: 16,
+          ),
+          child: Text('Recent deaths',
+            style: kThemeDark.headerText.copyWith(
+              color: kThemeDark.backgroundColor
+            ),
+          ),
+        ),
       ],
     );
   }

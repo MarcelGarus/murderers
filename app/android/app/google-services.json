@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "210764765651",
+    "firebase_url": "https://murderers-e67bb.firebaseio.com",
+    "project_id": "murderers-e67bb",
+    "storage_bucket": "murderers-e67bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210764765651:android:5fa1d27bb9f67d4a",
+        "android_client_info": {
+          "package_name": "de.marcelgarus.murderers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "210764765651-m2gs45kosvpfmdnk5vqgd4uhn9r7qe1j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.marcelgarus.murderers",
+            "certificate_hash": "1448f6d8bb1f7701e82b51e5bc1a27c8dedcce13"
+          }
+        },
+        {
+          "client_id": "210764765651-b3llf62aupdbaglibnfr7jif14f4imd7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8eVANg7PxlJs-M2bowNEqDeW8icjCs_g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210764765651-b3llf62aupdbaglibnfr7jif14f4imd7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

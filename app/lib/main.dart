@@ -1,4 +1,4 @@
-//import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
 
@@ -23,14 +23,14 @@ class MurderersApp extends StatelessWidget {
         theme: ThemeData(primarySwatch: Colors.red),
         navigatorObservers: [
           VillainTransitionObserver(),
-          //FirebaseAnalyticsObserver(analytics: bloc.analytics),
+          Bloc.of(context).firebaseAnalyticsObserver,
         ],
         home: SplashScreen(),
         routes: {
           '/intro': (ctx) => IntroScreen(),
           '/signin': (ctx) => SignInScreen(),
-          '/game': (ctx) => GameScreen(),
           '/setup': (ctx) => SetupJourney(),
+          '/game': (ctx) => GameScreen(),
         },
       ),
     );

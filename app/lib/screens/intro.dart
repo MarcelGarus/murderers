@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
 
+import '../bloc/bloc.dart';
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
 import 'sign_in.dart';
 
+/// The screen which introduces the user to the game concept. In the last step,
+/// the user is asked to sign in (using the [SignInScreen]).
 class IntroScreen extends StatefulWidget {
   @override
   _IntroScreenState createState() => _IntroScreenState();
 }
 
-class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin {
+class _IntroScreenState extends State<IntroScreen>
+    with TickerProviderStateMixin {
   TabController _controller;
 
   @override
   void initState() {
     super.initState();
+    Bloc.of(context).logEvent(AnalyticsEvent.intro_begin);
     _controller = TabController(length: 4, vsync: this);
+    _controller.animation.addListener(() {
+      if (_controller.indexIsChanging) {
+        Bloc.of(context).logEvent(AnalyticsEvent.intro_step, {
+          'step': _controller.index
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyTheme.of(context).backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Villain(
-          villainAnimation: VillainAnimation.fromTop(
-            offset: 1,
-            curve: Curves.easeOutCubic,
-          ),
-          child: Text('The Murderer Game', style: TextStyle(color: Colors.red)),
-        ),
-        centerTitle: true,
-      ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -62,21 +62,14 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
     );
   }
 
-  Padding _buildBottomBar() {
+  Widget _buildBottomBar() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(32, 8, 16, 16),
+      padding: EdgeInsets.fromLTRB(32, 8, 16, 8),
       child: Row(
         children: <Widget>[
           TabPageSelector(controller: _controller),
           Spacer(),
-          Button.text('Next',
-            isRaised: false,
-            onPressed: () {
-              if (_controller.index < _controller.length - 1) {
-                _controller.index++;
-              }
-            },
-          ),
+          _NextButton(controller: _controller),
         ],
       ),
     );
@@ -86,35 +79,38 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
     return TabBarView(
       controller: _controller,
       children: <Widget>[
-        IntroStep(
+        _IntroStep(
           image: null,
           title: "Welcome to\nThe Murderer Game.",
           content: 'A real world game for large groups of players '
             'hanging out for several days.',
         ),
-        IntroStep(
+        _IntroStep(
           image: null,
           title: 'Kill players',
           content: "This app tells you who's your victim. Kill it by "
             "giving it a phyiscal object. After you informed your "
             "victim about its death, mark the job as done in this app."
         ),
-        IntroStep(
+        _IntroStep(
           image: null,
           title: 'Be the greatest assassin.',
           content: "Once you killed your victim, you'll get a new "
             "one. Try to kill as many players without dying."
         ),
         SignInScreen(),
-      ].map(
-        (step) => Padding(padding: EdgeInsets.all(32), child: step)
-      ).toList(),
+      ].map((step) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: step
+      )).toList(),
     );
   }
 }
 
-class IntroStep extends StatelessWidget {
-  IntroStep({
+/// A single step in the introductory course. Has an [image], [title] and
+/// [content].
+class _IntroStep extends StatelessWidget {
+  _IntroStep({
     @required this.image,
     @required this.title,
     @required this.content,
@@ -137,6 +133,39 @@ class IntroStep extends StatelessWidget {
         SizedBox(height: 16),
         Text(content, style: theme.bodyText.copyWith(height: 1.1)),
       ],
+    );
+  }
+}
+
+/// The next button on the bottom of the screen. Adapts to a [TabController] and
+/// and automatically advances its index on click. If the controller already
+/// shows the last page, this button automatically disappears.
+class _NextButton extends StatelessWidget {
+  _NextButton({
+    @required this.controller,
+  }) : assert(controller != null);
+  
+  final TabController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: controller.animation,
+      builder: (context, child) {
+        return AnimatedOpacity(
+          opacity: (controller.index < controller.length - 1) ? 1 : 0,
+          duration: Duration(milliseconds: 200),
+          child: child,
+        );
+      },
+      child: Button.text('Next',
+        isRaised: false,
+        onPressed: () {
+          if (controller.index < controller.length - 1) {
+            controller.index++;
+          }
+        },
+      )
     );
   }
 }

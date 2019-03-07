@@ -13,18 +13,20 @@ class SignInScreen extends StatefulWidget {
   _SignInScreenState createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMixin {
+class _SignInScreenState extends State<SignInScreen> {
   Future<void> _signIn(SignInType type) async {
+    Bloc.of(context).logEvent(AnalyticsEvent.sign_in_attempt, { 'type': type });
     try {
       await Bloc.of(context).signIn(type);
 
       // Signing in was successful.
+      Bloc.of(context).logEvent(AnalyticsEvent.sign_in_success);
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => EnterNameScreen()
       ));
     } catch (e) {
       // User aborted sign in or timeout (no internet).
-      print('An error occurred: $e');
+      Bloc.of(context).logEvent(AnalyticsEvent.sign_in_failure, { 'error': e });
       rethrow;
     }
   }
@@ -37,22 +39,16 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
     return Center(
       child: Column(
         children: <Widget>[
-          Spacer(),
-          Container(
-            height: 300,
-            child: Placeholder(),
-          ),
-          SizedBox(height: 32),
+          Spacer(flex: 2),
           Text(
-            "If you sign in, your games will be synchronized across all "
-            "your devices.",
+            "Sign in to synchronize your games across all your devices.",
             textAlign: TextAlign.center,
             textScaleFactor: 1.2,
           ),
           SizedBox(height: 16),
           _buildGoogleButton(context),
           SizedBox(height: 16),
-          Button.text('Sign in anonymously',
+          Button.text('Sign in anonymously\n(erstmal nicht nehmen)',
             isRaised: false,
             onPressed: _signInAnonymously,
           ),
