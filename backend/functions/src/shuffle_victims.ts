@@ -45,7 +45,7 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code', 'onlyWhoseVictimsKnow'
+    'id', 'authToken', 'code', 'onlyOutsmarted'
   ], res)) return;
 
   const firestore = admin.app().firestore();

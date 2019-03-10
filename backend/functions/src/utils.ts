@@ -66,8 +66,10 @@ export async function loadUser(
 
   const snapshot = await userRef(firestore, id).get();
 
-  if (!snapshot.exists && res !== null) {
-    res.status(CODE_USER_NOT_FOUND).send(TEXT_USER_NOT_FOUND);
+  if (!snapshot.exists) {
+    if (res !== null) {
+      res.status(CODE_USER_NOT_FOUND).send(TEXT_USER_NOT_FOUND);
+    }
     return null;
   }
 

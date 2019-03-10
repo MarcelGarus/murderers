@@ -18,10 +18,3 @@ This document is divided into the following sub-documents:
 Firebase Auth is used to authenticate users.
 If users don't sign in, they connect using an anonymous account.
 
-### Firebase Cloud Messaging
-
-FCM is used for delivering notifications.
-There are several topics:
-
-* Each game has a topic named `game_<game code>`.
-* There's a `deaths` topic for deaths.

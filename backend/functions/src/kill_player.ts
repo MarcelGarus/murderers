@@ -16,6 +16,7 @@ import * as admin from 'firebase-admin';
 import { GameCode, FirebaseAuthToken, PLAYER_DYING, User, UserId } from './models';
 import { loadPlayer, queryContains, playerRef, loadAndVerifyUser, loadUser } from './utils';
 import { log } from 'util';
+import { CODE_ILLEGAL_STATE } from './constants';
 
 /// Offers webhook for killing the victim.
 export async function handleRequest(
@@ -23,15 +24,16 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code'
+    'id', 'authToken', 'code', 'victimId'
   ], res)) return;
 
   const firestore = admin.app().firestore();
   const id: UserId = req.query.id;
   const authToken: FirebaseAuthToken = req.query.authToken;
   const code: GameCode = req.query.code;
+  const victimId: UserId = req.query.victimId;
 
-  log(code + ': Player ' + id + ' kills his/her victim.');
+  log(code + ': Player ' + id + ' kills the victim ' + victimId + '.');
 
   // Load the user and verify Firebase Auth token.
   const user: User = await loadAndVerifyUser(firestore, id, authToken, res);
@@ -41,23 +43,32 @@ export async function handleRequest(
   const murderer = await loadPlayer(res, firestore, code, id);
   if (murderer === null) return;
 
+  // Confirm the expected victim is the right one.
+  if (murderer.victim !== victimId) {
+    const errText = victimId + ' is not your victim.';
+    res.status(CODE_ILLEGAL_STATE).send(errText);
+    log(errText);
+    return;
+  }
+
   // Kill the victim.
-  if (murderer.victim === null) return;
   await playerRef(firestore, code, murderer.victim).update({
     state: PLAYER_DYING,
     murderer: id,
   });
 
-  // Load the victim.
-  const victimUser = await loadUser(firestore, murderer.victim, res);
-
   // Send response.
   res.send('Kill request sent to victim.');
 
   // Send notification to the victim.
+  const victimUser = await loadUser(firestore, murderer.victim, null);
+  if (victimUser === null) {
+    log("This is strange, the victim doesn't exist.");
+    return;
+  }
   admin.messaging().send({
     notification: {
-      title: 'You are dying!',
+      title: 'You are dying',
       body: 'Did ' + user.name + ' just kill you?',
     },
     android: {
@@ -67,8 +78,6 @@ export async function handleRequest(
       },
     },
     token: victimUser.messagingToken,
-  }).then((response) => {
-    log('Successfully sent message. Message id: ' + response);
   }).catch((error) => {
     log('Error sending message: ' + error);
   });

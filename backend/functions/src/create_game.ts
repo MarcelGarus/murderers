@@ -44,14 +44,13 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'name', 'start', 'end'
+    'id', 'authToken', 'name', 'end'
   ], res)) return;
 
   const firestore = admin.app().firestore();
   const id = req.query.id;
   const authToken: FirebaseAuthToken = req.query.authToken;
   const name: string = req.query.name;
-  const start: number = parseInt(req.query.number);
   const end: number = parseInt(req.query.end);
 
   log(id + 'creates a game named ' + name + '.');
@@ -67,7 +66,6 @@ export async function handleRequest(
     state: GAME_NOT_STARTED_YET,
     creator: id,
     created: Date.now(),
-    start: start,
     end: end,
   };
 
@@ -82,7 +80,6 @@ export async function handleRequest(
     code: code,
     name: game.name,
     created: game.created,
-    start: game.start,
     end: game.end
   });
 }

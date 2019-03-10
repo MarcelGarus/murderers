@@ -33,28 +33,27 @@ export function isUser(obj): boolean {
 /// * [death]: Information about how the player died. If death is null, the
 ///   player lives.
 export type PlayerState = number;
-export const PLAYER_IDLE: PlayerState = 0;
-export const PLAYER_WAITING: PlayerState = 1;
-export const PLAYER_ALIVE: PlayerState = 2;
-export const PLAYER_DYING: PlayerState = 3;
-export const PLAYER_DEAD: PlayerState = 4;
+export const PLAYER_JOINING: PlayerState = 0;
+export const PLAYER_ALIVE: PlayerState = 1;
+export const PLAYER_DYING: PlayerState = 2;
+export const PLAYER_DEAD: PlayerState = 3;
 
 export interface Player {
   state: PlayerState,
+  kills: number,
   murderer: UserId,
   victim: UserId,
-  wasOutsmarted: boolean,
+  wantsNewVictim: boolean,
   death: Death,
-  kills: number,
 }
 export function isPlayer(obj): boolean {
   return obj !== undefined
     && typeof obj.state === "number"
+    && typeof obj.kills === "number"
     && (obj.murderer === null || typeof obj.murderer === "string")
     && (obj.victim === null || typeof obj.victim === "string")
-    && typeof obj.wasOutsmarted === "boolean"
-    && (obj.death === null || isDeath(obj.death))
-    && typeof obj.kills === "number";
+    && typeof obj.wantsNewVictim === "boolean"
+    && (obj.death === null || isDeath(obj.death));
 }
 
 /// A death.
@@ -63,6 +62,7 @@ export function isPlayer(obj): boolean {
 /// owned by the victim.
 ///
 /// This class holds:
+/// * [time]: The time of the murder.
 /// * [murderer]: The id of the murderer.
 /// * [lastWords]: The victim's last words.
 /// * [weapon]: The murderer's weapon.
@@ -98,15 +98,13 @@ export type GameCode = string;
 export type GameState = number;
 export const GAME_NOT_STARTED_YET: GameState = 0;
 export const GAME_RUNNING: GameState = 1;
-export const GAME_PAUSED: GameState = 2;
-export const GAME_OVER: GameState = 3;
+export const GAME_OVER: GameState = 2;
 
 export interface Game {
   name: string,
   state: GameState,
   creator: UserId,
   created: Timestamp,
-  start: Timestamp,
   end: Timestamp,
 }
 export function isGame(obj): boolean {
@@ -115,6 +113,5 @@ export function isGame(obj): boolean {
     && typeof obj.state === "number"
     && typeof obj.creator === "string"
     && typeof obj.created === "number"
-    && typeof obj.start === "number"
     && typeof obj.end === "number";
 }

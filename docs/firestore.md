@@ -21,17 +21,67 @@ Furthermore, each game has a sub-collection with the `players` (each player's id
 
 ### Users
 
+All users (documents in the `users` collection) have the following structure:
+
+```firestore
+id {
+  authToken: string,
+  messagingToken: string,
+  name: string
+}
+```
+
 ### Games
+
+All games (documents in the `games` collection) have the following structure:
+
+```firestore
+code {
+  name: string,
+  created: string,
+  creator: string,
+  state: int,
+  end: datetime,
+}
+```
+
+where the state is encoded as:
+
+```firestore
+0: game didn't start yet
+1: game is running
+2: game over
+```
+
+Also, games may have a sub-collection called `players`.
 
 ### Players
 
-The data model equals the one described above, with the exception of user ids and game codes.
-Those aren't explicitly saved, because they are represented by Firestore's document id.
+All players (documents in a `players` collection) have the following structure:
 
-The collection `games` holds all the games as documents.
-The games' codes equal the documents' ids.
-Each game holds information about the game itself, just like described in the data model.
+```firestore
+id {
+  state: int,
+  kills: int,
+  murderer: string?,
+  victim: string?,
+  isOutsmarted: bool,
+  death: {
+    murderer: string,
+    time: datetime,
+    lastWords: string,
+    weapon: string
+  }?
+}
+(a ? indicates that the value may be null)
+```
 
-Also, each game has a sub-collection of `players`.
-The players' ids equal the corresponding documents' ids.
-Each player holds information about him/herself, just like described in the data model.
+where the state is encoded as:
+
+```firestore
+0: player is joining
+1: player is waiting to be assigned to a victim
+2: player is alive (and on the hunt)
+3: player is dying
+4: player is dead
+```

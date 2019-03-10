@@ -15,11 +15,11 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, FirebaseAuthToken, PLAYER_DYING, PLAYER_DEAD, PLAYER_WAITING, PLAYER_ALIVE, UserId, User, Player } from './models';
+import { GameCode, FirebaseAuthToken, PLAYER_DYING, PLAYER_DEAD, PLAYER_ALIVE, UserId, User, Player, PLAYER_EXPECTING_VICTIM } from './models';
 import { loadPlayer, queryContains, playerRef, loadPlayersAndIds, loadAndVerifyUser, allPlayersRef } from './utils';
 import { shuffleVictims } from './shuffle_victims';
 import { log } from 'util';
-import { CODE_ILLEGAL_STATE, TEXT_ILLEGAL_STATE } from './constants';
+import { CODE_ILLEGAL_STATE } from './constants';
 
 /// Offers webhook for dying.
 export async function handleRequest(
@@ -47,7 +47,7 @@ export async function handleRequest(
   const victim: Player = await loadPlayer(res, firestore, code, id);
   if (victim === null) return;
   if (victim.state !== PLAYER_DYING || victim.murderer === null) {
-    res.status(CODE_ILLEGAL_STATE).send(TEXT_ILLEGAL_STATE);
+    res.status(CODE_ILLEGAL_STATE).send('You are not dying!');
     return;
   }
 
@@ -55,25 +55,25 @@ export async function handleRequest(
   const murderer: Player = await loadPlayer(res, firestore, code, victim.murderer);
   if (murderer === null) return;
 
-  // Load all waiting players.
-  const snapshotPromise = allPlayersRef(firestore, code)
-    .where('state', '==', PLAYER_WAITING)
+  // Load players who wait for a victim to be assigned to them.
+  const wantNewVictimsPromise = allPlayersRef(firestore, code)
+    .where('wantsNewVictim', '==', true)
     .get();
-  const waiting = await loadPlayersAndIds(res, snapshotPromise);
-  if (waiting === null) return;
+  const wantNewVictims = await loadPlayersAndIds(res, wantNewVictimsPromise);
+  if (wantNewVictims === null) return;
 
-  // All players that are waiting as well as the murderer get new victims.
-  shuffleVictims(waiting);
+  // All players who want new victims are shuffled.
+  shuffleVictims(wantNewVictims);
 
-  if (waiting.length > 0) {
-    murderer.victim = waiting[0].id;
-    waiting[0].data.victim = victim.victim;
+  if (wantNewVictims.length > 0) {
+    murderer.victim = wantNewVictims[0].id;
+    wantNewVictims[0].data.victim = victim.victim;
   } else {
     murderer.victim = victim.victim;
   }
 
   // Update waiting players.
-  for (const player of waiting) {
+  for (const player of wantNewVictims) {
     await playerRef(firestore, code, player.id).update(player.data);
   }
 
@@ -81,7 +81,7 @@ export async function handleRequest(
   await playerRef(firestore, code, victim.murderer).update({
     state: PLAYER_ALIVE,
     victim: murderer.victim,
-    wasOutsmarted: false,
+    isOutsmarted: false,
     kills: murderer.kills + 1,
   });
 
@@ -89,7 +89,7 @@ export async function handleRequest(
   await playerRef(firestore, code, id).update({
     state: PLAYER_DEAD,
     victim: null,
-    wasOutsmarted: false,
+    isOutsmarted: false,
     death: {
       time: Date.now(),
       murderer: victim.murderer,
@@ -97,10 +97,29 @@ export async function handleRequest(
       lastWords: lastWords
     }
   });
-  log('Victim updated.');
 
   // Send response.
   res.send('You died.');
+
+  // Send a notification to the murderer.
+  admin.messaging().send({
+    notification: {
+      title: user.name + ' just died!',
+      body: 'Killed with ' + weapon + '. Last words: "' + lastWords + '"',
+    },
+    android: {
+      priority: 'normal',
+      collapseKey: 'player_killed_' + code,
+      notification: {
+        color: '#ff0000',
+      },
+    },
+    condition: "'game_" + code + "' in topics && 'deaths' in topics",
+  }).then((response) => {
+    log('Successfully sent message. Message id: ' + response);
+  }).catch((error) => {
+    log('Error sending message: ' + error);
+  });
 
   // Send a notification to _all_ subscribed users.
   admin.messaging().send({
