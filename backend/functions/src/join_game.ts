@@ -21,7 +21,6 @@ import { log } from 'util';
 import { CODE_ILLEGAL_STATE } from './constants';
 
 /// Joins a player to a game.
-// TODO: Prevent player from joining twice.
 export async function handleRequest(
   req: functions.Request,
   res: functions.Response

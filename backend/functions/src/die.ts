@@ -15,7 +15,7 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, FirebaseAuthToken, PLAYER_DYING, PLAYER_DEAD, PLAYER_ALIVE, UserId, User, Player, PLAYER_EXPECTING_VICTIM } from './models';
+import { GameCode, FirebaseAuthToken, PLAYER_DYING, PLAYER_DEAD, PLAYER_ALIVE, UserId, User, Player } from './models';
 import { loadPlayer, queryContains, playerRef, loadPlayersAndIds, loadAndVerifyUser, allPlayersRef } from './utils';
 import { shuffleVictims } from './shuffle_victims';
 import { log } from 'util';
@@ -43,7 +43,7 @@ export async function handleRequest(
   const user: User = await loadAndVerifyUser(firestore, id, authToken, res);
   if (user === null) return;
 
-  // Verify the victim's dying.
+  // Verify that the victim is dying.
   const victim: Player = await loadPlayer(res, firestore, code, id);
   if (victim === null) return;
   if (victim.state !== PLAYER_DYING || victim.murderer === null) {
@@ -56,24 +56,25 @@ export async function handleRequest(
   if (murderer === null) return;
 
   // Load players who wait for a victim to be assigned to them.
-  const wantNewVictimsPromise = allPlayersRef(firestore, code)
-    .where('wantsNewVictim', '==', true)
+  const newPlayersPromise = allPlayersRef(firestore, code)
+    .where('state', '==', PLAYER_ALIVE)
+    .where('victim', '==', null)
     .get();
-  const wantNewVictims = await loadPlayersAndIds(res, wantNewVictimsPromise);
-  if (wantNewVictims === null) return;
+  const newPlayers = await loadPlayersAndIds(res, newPlayersPromise);
+  if (newPlayers === null) return;
 
   // All players who want new victims are shuffled.
-  shuffleVictims(wantNewVictims);
+  shuffleVictims(newPlayers);
 
-  if (wantNewVictims.length > 0) {
-    murderer.victim = wantNewVictims[0].id;
-    wantNewVictims[0].data.victim = victim.victim;
+  if (newPlayers.length > 0) {
+    murderer.victim = newPlayers[0].id;
+    newPlayers[0].data.victim = victim.victim;
   } else {
     murderer.victim = victim.victim;
   }
 
   // Update waiting players.
-  for (const player of wantNewVictims) {
+  for (const player of newPlayers) {
     await playerRef(firestore, code, player.id).update(player.data);
   }
 

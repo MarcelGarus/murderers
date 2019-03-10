@@ -43,7 +43,7 @@ Furthermore, each player can hold some additional, game-related information, suc
 * the number of **kills**,
 * the current **murderer** (if there is one),
 * the current **victim** (if there is one),
-* whether the player got **outsmarted** by the victim or not (outsmarted refers to the victim knowing its murderer),
+* whether the player **wants a new victim**,
 * information about the death (if the player is dead), including
   * **last words**,
   * the **murderer**,
@@ -53,10 +53,9 @@ Furthermore, each player can hold some additional, game-related information, suc
 A few things to notice about when these attributes are set (aka how the state relates to the attributes):
 
 * If the state is **"joining"**, the kills are 0. There is no murderer, victim nor death and the player is not outsmarted.
-* If the state is **"waiting for victim"**, the kills are 0. There is no murderer nor victim nor death and the player is not outsmarted.
-* If the state is **"alive"**, there is no current murderer nor death, but there is a victim.
+* If the state is **"alive"**, there is no current murderer nor death.
 * If the state is **"dying"**, there is a murderer but no death (yet).
-* If the state is **"dead"**, there is no victim anymore and the player is not outsmarted. A murderer and a death do exist.
+* If the state is **"dead"**, there is no victim anymore and the player doesn't want a new victim. A murderer and a death do exist.
 
 ## Further references
 

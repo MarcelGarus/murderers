@@ -71,7 +71,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
   // Send a response.
   res.send('Game started.');
 
-  // Notify all the players that the game started
+  // Notify everyone that the game started.
   admin.messaging().send({
     notification: {
       title: 'The game just started',
