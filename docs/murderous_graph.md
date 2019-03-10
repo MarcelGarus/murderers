@@ -17,26 +17,57 @@ The order of the players is selected randomly.
 
 ![start](images/murderous_graph_start.svg)
 
-**Insight: The players graph should always be one big cycle.**
+**Insight: The graph should always be one big cycle.**
 
 ## Shuffling players who want a new victim
 
 Some players may be clumsy and make it obvious to their victims that they are their murderer.
 That's why they can request a new victim.
 
+To give them new victims, we'll first have to split the graph into multiple graphs by deleting every connection after the players who requested new victims.
+Then, our task is to put the graph back together.
+
 ### One player wants a new victim
 
 If only one player requests a new victim, there's not much we can do.
-If we split up the graph and then melt it back together, the result is the same graph we started with.
+If we split up the graph, there's only one option to put it back together:
+The graph we started with.
+
+![murderous graph where one player wants a new victim](images/murderous_graph_new_victim_1.svg)
 
 ### Two players want new victims
 
-### Three players want new victims
+If two players request a new victim, there's also not much we can do.
+If we split up the graph, we only got two options to put it back together:
+
+* The graph we started it.
+* A graph with two cycles, which we don't want for the reasons above.
+
+![murderous graph where two players want new victims](images/murderous_graph_new_victim_2.svg)
+
+### Three or more players want new victims
+
+Finally!
+This is where things get interesting.
+After splitting up the graph, we can reverse the order in which the sub-graphs are connected, thereby making sure that every murderer who wanted a new victim gets one.
+
+![murderous graph where three players want new victims](images/murderous_graph_new_victim_3.svg)
+
+Obviously, this also works with more than three players.
 
 ## Joining a running game
 
-If players join into a running game, they need to be inserted into the cycle.
+If players join into a running game, they need to be inserted into the graph.
+
+If there's someone who wants a new victim, we can simply insert the new player between that someone and its victim.
+
+If there's no one who wants a new victim, we'll have to wait until the next murder occurs and then insert the new player between the murderer and its next victim.
 
 ## Killing a player
 
+If a player gets killed, the victim's victim becomes the new target of the murderer.
 
+If some players are waiting for a victim, they are randomly inserted between the murderer and the victim's victim.
+
+If there are two players who want another victim, the murderer get the victim described like above but is then treated as if he wanted a new victim.
+That makes it possible to apply the rule described above in "Three or more players want new victims".
