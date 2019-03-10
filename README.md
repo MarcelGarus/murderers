@@ -3,6 +3,9 @@
 A simple real-world game.
 Especially useful for larger groups.
 
+Interested in how everything works under the hood?
+Read the ["Getting started"](getting_started.md) guide!
+
 ## How it works: The basics
 
 First, a **user** *creates* a game. He's called the **creator** of the game and receives a **game code** that uniquely identifies the game among all games.
@@ -50,8 +53,6 @@ The creator can resurrect players, joining them to the set of players who want t
 
 ## Interesting aspects of the game (from a programmer's point of view)
 
-It's a fun, social game.
-
-It's highly asynchronous (many independent actors).
-
-It's all about information management.
+* It's a fun, social game.
+* It's highly asynchronous (many independent actors).
+* It's all about information management.

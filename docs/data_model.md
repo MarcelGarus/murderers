@@ -60,4 +60,5 @@ A few things to notice about when these attributes are set (aka how the state re
 
 ## Further references
 
-* How this data model is implemented in [Firestore](firestore.md)
+* See ["Firestore"](firestore.md) for information about how the data model is actually stored.
+* See ["Murderous graph"](murderous_graph.md) for information about how the data change over time.
