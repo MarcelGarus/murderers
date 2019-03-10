@@ -4,7 +4,7 @@ A simple real-world game.
 Especially useful for larger groups.
 
 Interested in how everything works under the hood?
-Read the ["Getting started"](getting_started.md) guide!
+Read the ["Getting started"](docs/getting_started.md) guide!
 
 ## How it works: The basics
 
