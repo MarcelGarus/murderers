@@ -2,9 +2,9 @@
 /// A player dies by confirming his/her death.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [code]
+/// * [game]
 /// * [weapon]
 /// * [lastWords]
 ///
@@ -32,13 +32,13 @@ const constants_1 = require("./constants");
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!utils_1.queryContains(req.query, [
-            'id', 'authToken', 'code', 'weapon', 'lastWords'
+            'me', 'authToken', 'game', 'weapon', 'lastWords'
         ], res))
             return;
         const firestore = admin.app().firestore();
         const authToken = req.query.authToken;
-        const code = req.query.code;
-        const id = req.query.id;
+        const code = req.query.game;
+        const id = req.query.me;
         const weapon = req.query.weapon;
         const lastWords = req.query.lastWords;
         util_1.log(code + ': Player ' + id + ' dies with honor.');
@@ -46,50 +46,51 @@ function handleRequest(req, res) {
         const user = yield utils_1.loadAndVerifyUser(firestore, id, authToken, res);
         if (user === null)
             return;
-        // Verify the victim's dying.
+        // Verify that the victim is dying.
         const victim = yield utils_1.loadPlayer(res, firestore, code, id);
         if (victim === null)
             return;
         if (victim.state !== models_1.PLAYER_DYING || victim.murderer === null) {
-            res.status(constants_1.CODE_ILLEGAL_STATE).send(constants_1.TEXT_ILLEGAL_STATE);
+            res.status(constants_1.CODE_ILLEGAL_STATE).send('You are not dying!');
             return;
         }
         // Load the murderer.
         const murderer = yield utils_1.loadPlayer(res, firestore, code, victim.murderer);
         if (murderer === null)
             return;
-        // Load all waiting players.
-        const snapshotPromise = utils_1.allPlayersRef(firestore, code)
-            .where('state', '==', models_1.PLAYER_WAITING)
+        // Load players who wait for a victim to be assigned to them.
+        const newPlayersPromise = utils_1.allPlayersRef(firestore, code)
+            .where('state', '==', models_1.PLAYER_ALIVE)
+            .where('victim', '==', null)
             .get();
-        const waiting = yield utils_1.loadPlayersAndIds(res, snapshotPromise);
-        if (waiting === null)
+        const newPlayers = yield utils_1.loadPlayersAndIds(res, newPlayersPromise);
+        if (newPlayers === null)
             return;
-        // All players that are waiting as well as the murderer get new victims.
-        shuffle_victims_1.shuffleVictims(waiting);
-        if (waiting.length > 0) {
-            murderer.victim = waiting[0].id;
-            waiting[0].data.victim = victim.victim;
+        // All players who want new victims are shuffled.
+        shuffle_victims_1.shuffleVictims(newPlayers);
+        if (newPlayers.length > 0) {
+            murderer.victim = newPlayers[0].id;
+            newPlayers[0].data.victim = victim.victim;
         }
         else {
             murderer.victim = victim.victim;
         }
         // Update waiting players.
-        for (const player of waiting) {
+        for (const player of newPlayers) {
             yield utils_1.playerRef(firestore, code, player.id).update(player.data);
         }
         // Update the murderer.
         yield utils_1.playerRef(firestore, code, victim.murderer).update({
             state: models_1.PLAYER_ALIVE,
             victim: murderer.victim,
-            wasOutsmarted: false,
+            isOutsmarted: false,
             kills: murderer.kills + 1,
         });
         // Update the victim.
         yield utils_1.playerRef(firestore, code, id).update({
             state: models_1.PLAYER_DEAD,
             victim: null,
-            wasOutsmarted: false,
+            isOutsmarted: false,
             death: {
                 time: Date.now(),
                 murderer: victim.murderer,
@@ -97,9 +98,27 @@ function handleRequest(req, res) {
                 lastWords: lastWords
             }
         });
-        util_1.log('Victim updated.');
         // Send response.
         res.send('You died.');
+        // Send a notification to the murderer.
+        admin.messaging().send({
+            notification: {
+                title: user.name + ' just died!',
+                body: 'Killed with ' + weapon + '. Last words: "' + lastWords + '"',
+            },
+            android: {
+                priority: 'normal',
+                collapseKey: 'player_killed_' + code,
+                notification: {
+                    color: '#ff0000',
+                },
+            },
+            condition: "'game_" + code + "' in topics && 'deaths' in topics",
+        }).then((response) => {
+            util_1.log('Successfully sent message. Message id: ' + response);
+        }).catch((error) => {
+            util_1.log('Error sending message: ' + error);
+        });
         // Send a notification to _all_ subscribed users.
         admin.messaging().send({
             notification: {

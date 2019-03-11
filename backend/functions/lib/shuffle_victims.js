@@ -2,7 +2,7 @@
 /// Shuffle all the players of a game.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
 /// * game [code]
 /// * whether to shuffle [onlyOutsmartedPlayers]
@@ -44,11 +44,11 @@ exports.shuffleVictims = shuffleVictims;
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!utils_1.queryContains(req.query, [
-            'id', 'authToken', 'code', 'onlyWhoseVictimsKnow'
+            'id', 'authToken', 'code', 'onlyOutsmarted'
         ], res))
             return;
         const firestore = admin.app().firestore();
-        const id = req.query.id;
+        const id = req.query.me;
         const authToken = req.query.authToken;
         const code = req.query.code;
         const onlyOutsmartedPlayers = (req.query.onlyOutsmartedPlayers === 'true');

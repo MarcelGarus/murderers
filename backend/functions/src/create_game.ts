@@ -1,11 +1,9 @@
 /// Creates a new game.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [name]
-/// * (preliminary) [start] time
-/// * (preliminary) [end] time
+/// * [end] time
 ///
 /// Returns either:
 /// 200: { code: 'abcd' }
@@ -44,11 +42,11 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'name', 'end'
+    'me', 'authToken', 'name', 'end'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id = req.query.id;
+  const id = req.query.me;
   const authToken: FirebaseAuthToken = req.query.authToken;
   const name: string = req.query.name;
   const end: number = parseInt(req.query.end);

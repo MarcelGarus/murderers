@@ -59,8 +59,10 @@ function loadUser(firestore, id, res) {
         if (id === null || id === undefined)
             return null;
         const snapshot = yield userRef(firestore, id).get();
-        if (!snapshot.exists && res !== null) {
-            res.status(constants_1.CODE_USER_NOT_FOUND).send(constants_1.TEXT_USER_NOT_FOUND);
+        if (!snapshot.exists) {
+            if (res !== null) {
+                res.status(constants_1.CODE_USER_NOT_FOUND).send(constants_1.TEXT_USER_NOT_FOUND);
+            }
             return null;
         }
         const data = snapshot.data();
@@ -142,7 +144,8 @@ function loadPlayer(res, firestore, code, id) {
     return __awaiter(this, void 0, void 0, function* () {
         const snapshot = yield playerRef(firestore, code, id).get();
         if (!snapshot.exists) {
-            res.status(constants_1.CODE_PLAYER_CORRUPT).send(constants_1.TEXT_PLAYER_NOT_FOUND);
+            res.status(constants_1.CODE_PLAYER_NOT_FOUND).send(constants_1.TEXT_PLAYER_NOT_FOUND);
+            util_1.log('Player with id ' + id + ' not found in game ' + code + '.');
             return null;
         }
         const data = snapshot.data();

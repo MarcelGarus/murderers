@@ -2,9 +2,9 @@
 /// new player for the joining to have any effect.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [code]
+/// * [game]
 ///
 /// Returns either:
 /// 200: Joined.
@@ -15,8 +15,8 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, UserId, Player, FirebaseAuthToken, User, PLAYER_JOINING } from './models';
-import { loadGame, playerRef, queryContains, loadAndVerifyUser, loadPlayer, loadUser } from './utils';
+import { GameCode, Game, UserId, Player, FirebaseAuthToken, User, PLAYER_JOINING, PLAYER_ALIVE } from './models';
+import { loadGame, playerRef, queryContains, loadAndVerifyUser, loadUser } from './utils';
 import { log } from 'util';
 import { CODE_ILLEGAL_STATE } from './constants';
 
@@ -26,13 +26,13 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code'
+    'me', 'authToken', 'game'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id: UserId = req.query.id;
+  const id: UserId = req.query.me;
   const authToken: FirebaseAuthToken = req.query.authToken;
-  const code: GameCode = req.query.code;
+  const code: GameCode = req.query.game;
 
   log(code + ': ' + id + ' joins.');
 
@@ -53,12 +53,13 @@ export async function handleRequest(
   }
 
   // Create the player.
+  const isCreator: boolean = (id === game.creator);
   const player: Player = {
-    state: PLAYER_JOINING,
+    state: isCreator ? PLAYER_ALIVE : PLAYER_JOINING,
     kills: 0,
     murderer: null,
     victim: null,
-    wantsNewVictim: false,
+    wantsNewVictim: isCreator,
     death: null
   };
 

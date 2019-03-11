@@ -1,9 +1,9 @@
 /// A player dies by confirming his/her death.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [code]
+/// * [game]
 /// * [weapon]
 /// * [lastWords]
 ///
@@ -27,13 +27,13 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code', 'weapon', 'lastWords'
+    'me', 'authToken', 'game', 'weapon', 'lastWords'
   ], res)) return;
 
   const firestore = admin.app().firestore();
   const authToken: FirebaseAuthToken = req.query.authToken;
-  const code: GameCode = req.query.code;
-  const id: UserId = req.query.id;
+  const code: GameCode = req.query.game;
+  const id: UserId = req.query.me;
   const weapon: string = req.query.weapon;
   const lastWords: string = req.query.lastWords;
 
@@ -90,7 +90,7 @@ export async function handleRequest(
   await playerRef(firestore, code, id).update({
     state: PLAYER_DEAD,
     victim: null,
-    isOutsmarted: false,
+    wantsNewVictim: false,
     death: {
       time: Date.now(),
       murderer: victim.murderer,

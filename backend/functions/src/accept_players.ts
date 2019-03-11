@@ -1,10 +1,10 @@
 /// Accepts one or multiple newly joined players into a game.
 ///
 /// Needs:
-/// * creator [id]
+/// * [me]
 /// * [authToken]
-/// * game [code]
-/// * a "_"-separated list of ids of players that should be [accept]ed
+/// * [game]
+/// * [playersToAccept] as a "_"-separated list of ids
 ///
 /// Returns either:
 /// 200: Joined.
@@ -15,23 +15,24 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, UserId, FirebaseAuthToken, User, PLAYER_ALIVE, Player, PLAYER_JOINING } from './models';
-import { loadGame, playerRef, queryContains, loadAndVerifyUser, loadUser, verifyCreator, loadPlayersAndIds, allPlayersRef, loadPlayer } from './utils';
+import { GameCode, Game, UserId, FirebaseAuthToken, User, PLAYER_ALIVE, Player, PLAYER_JOINING, GAME_OVER } from './models';
+import { loadGame, playerRef, queryContains, loadAndVerifyUser, loadUser, verifyCreator, loadPlayer } from './utils';
 import { log } from 'util';
 import { CODE_ILLEGAL_STATE, CODE_BAD_REQUEST } from './constants';
 
 export async function handleRequest(req: functions.Request, res: functions.Response) {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code', 'accept'
+    'me', 'authToken', 'game', 'playersToAccept'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id: UserId = req.query.id;
+  const id: UserId = req.query.me;
   const authToken: FirebaseAuthToken = req.query.authToken;
-  const code: GameCode = req.query.code;
-  const accept: string[] = req.query.accept.split('_').filter(s => s != "");
+  const code: GameCode = req.query.game;
+  const accept: string[] = req.query.playersToAccept
+    .split('_').filter(s => s !== "");
 
-  log(code + ': Accepting all these players: ' + accept);
+  log(code + ': Accepting all these ' + accept.length + ' players: ' + accept);
 
   // Make sure there are players to accept.
   if (accept.length === 0) {
@@ -42,6 +43,9 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
   // Load the game.
   const game: Game = await loadGame(res, firestore, code);
   if (game === null) return;
+  if (game.state === GAME_OVER) {
+    res.status(CODE_ILLEGAL_STATE).send('Game already over.');
+  }
 
   // Verify the creator.
   if (!verifyCreator(game, id, res)) return;
@@ -50,8 +54,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
 
   // Make sure all those users are actually players in the game and they weren't
   // accepted yet.
-  const usersToAccept: User[] = [];
-  for (const acceptId in accept) {
+  for (const acceptId of accept) {
     const player: Player = await loadPlayer(res, firestore, code, acceptId);
     if (player === null) return;
     if (player.state !== PLAYER_JOINING) {
@@ -63,7 +66,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
 
   // Accept all the players by changing their state.
   const batch = firestore.batch();
-  for (const acceptId in accept) {
+  for (const acceptId of accept) {
     batch.update(playerRef(firestore, code, acceptId), {
       state: PLAYER_ALIVE,
       wantsNewVictim: true,
@@ -75,7 +78,7 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
   res.send('Players accepted.');
 
   // Send notifications.
-  for (const acceptId in accept) {
+  for (const acceptId of accept) {
     const acceptUser: User = await loadUser(firestore, acceptId, null);
     if (acceptUser === null) {
       log('Accepted user ' + acceptId + ' not found.');
@@ -86,12 +89,12 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     admin.messaging().send({
       notification: {
         title: 'You got accepted',
-        body: 'You just joined the game "' + game.name + '".',
+        body: 'You just joined the game "' + game.name + '".'
       },
       android: {
         priority: 'high',
         collapseKey: 'game_' + code,
-        notification: { color: '#ff0000' },
+        notification: { color: '#ff0000' }
       },
       token: acceptUser.messagingToken
     }).catch((error) => {
@@ -103,12 +106,12 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
     admin.messaging().send({
       notification: {
         title: acceptUser.name + ' just joined the game',
-        body: '',
+        body: ''
       },
       android: {
         priority: 'normal',
         collapseKey: 'game_' + code,
-        notification: { color: '#ff0000' },
+        notification: { color: '#ff0000' }
       },
       token: "'game_" + code + "' in topics && 'player_joined' in topics"
     }).catch((error) => {

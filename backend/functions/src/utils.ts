@@ -3,7 +3,7 @@
 import * as functions from 'firebase-functions';
 import { Game, isGame, GameCode, UserId, Player, isPlayer, FirebaseAuthToken, User, isUser } from './models';
 import { log } from 'util';
-import { CODE_BAD_REQUEST, CODE_USER_NOT_FOUND, TEXT_USER_NOT_FOUND, CODE_USER_CORRUPT, TEXT_USER_CORRUPT, CODE_AUTHENTIFICATION_FAILED, TEXT_AUTHENTIFICATION_FAILED, CODE_NO_PRIVILEGES, TEXT_NO_PRIVILEGES, CODE_GAME_NOT_FOUND, TEXT_GAME_NOT_FOUND, CODE_GAME_CORRUPT, TEXT_GAME_CORRUPT, CODE_PLAYER_CORRUPT, TEXT_PLAYER_NOT_FOUND, TEXT_PLAYER_CORRUPT } from './constants';
+import { CODE_BAD_REQUEST, CODE_USER_NOT_FOUND, TEXT_USER_NOT_FOUND, CODE_USER_CORRUPT, TEXT_USER_CORRUPT, CODE_AUTHENTIFICATION_FAILED, TEXT_AUTHENTIFICATION_FAILED, CODE_NO_PRIVILEGES, TEXT_NO_PRIVILEGES, CODE_GAME_NOT_FOUND, TEXT_GAME_NOT_FOUND, CODE_GAME_CORRUPT, TEXT_GAME_CORRUPT, CODE_PLAYER_CORRUPT, TEXT_PLAYER_NOT_FOUND, TEXT_PLAYER_CORRUPT, CODE_PLAYER_NOT_FOUND } from './constants';
 
 /// Generates a length-long random string using the provided chars.
 export function generateRandomString(chars: string, length: number): string {
@@ -182,7 +182,8 @@ export async function loadPlayer(
   const snapshot = await playerRef(firestore, code, id).get();
 
   if (!snapshot.exists) {
-    res.status(CODE_PLAYER_CORRUPT).send(TEXT_PLAYER_NOT_FOUND);
+    res.status(CODE_PLAYER_NOT_FOUND).send(TEXT_PLAYER_NOT_FOUND);
+    log('Player with id ' + id + ' not found in game ' + code + '.');
     return null;
   }
 

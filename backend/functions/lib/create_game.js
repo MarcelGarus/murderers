@@ -2,11 +2,9 @@
 /// Creates a new game.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [name]
-/// * (preliminary) [start] time
-/// * (preliminary) [end] time
+/// * [end] time
 ///
 /// Returns either:
 /// 200: { code: 'abcd' }
@@ -46,14 +44,13 @@ function createGameCode(firestore) {
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!utils_1.queryContains(req.query, [
-            'id', 'authToken', 'name', 'start', 'end'
+            'me', 'authToken', 'name', 'end'
         ], res))
             return;
         const firestore = admin.app().firestore();
-        const id = req.query.id;
+        const id = req.query.me;
         const authToken = req.query.authToken;
         const name = req.query.name;
-        const start = parseInt(req.query.number);
         const end = parseInt(req.query.end);
         util_1.log(id + 'creates a game named ' + name + '.');
         // Load and verify the user.
@@ -67,7 +64,6 @@ function handleRequest(req, res) {
             state: models_1.GAME_NOT_STARTED_YET,
             creator: id,
             created: Date.now(),
-            start: start,
             end: end,
         };
         const code = yield createGameCode(firestore);
@@ -78,7 +74,6 @@ function handleRequest(req, res) {
             code: code,
             name: game.name,
             created: game.created,
-            start: game.start,
             end: game.end
         });
     });

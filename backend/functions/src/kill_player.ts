@@ -1,9 +1,10 @@
 /// Kills a player. The victim still needs to confirm its death.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [code]
+/// * [game]
+/// * [victim]'s id
 ///
 /// Returns either:
 /// 200: Kill request sent to victim.
@@ -24,14 +25,14 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code', 'victimId'
+    'me', 'authToken', 'game', 'victim'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id: UserId = req.query.id;
+  const id: UserId = req.query.me;
   const authToken: FirebaseAuthToken = req.query.authToken;
-  const code: GameCode = req.query.code;
-  const victimId: UserId = req.query.victimId;
+  const code: GameCode = req.query.game;
+  const victimId: UserId = req.query.victim;
 
   log(code + ': Player ' + id + ' kills the victim ' + victimId + '.');
 

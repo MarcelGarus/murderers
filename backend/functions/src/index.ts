@@ -1,7 +1,7 @@
 /// The webhook entry point for the back-end.
 
 import * as functions from 'firebase-functions';
-import * as acceptPlayer from './accept_player';
+import * as acceptPlayer from './accept_players';
 import * as createUser from './create_user';
 import * as createGame from './create_game';
 import * as getGame from './get_game';
@@ -26,7 +26,7 @@ exports.create_game = functions.https.onRequest(createGame.handleRequest);
 exports.join_game = functions.https.onRequest(joinGame.handleRequest);
 
 /// Accepts a player who wants to join the game.
-exports.accept_player = functions.https.onRequest(acceptPlayer.handleRequest);
+exports.accept_players = functions.https.onRequest(acceptPlayer.handleRequest);
 
 /// Gets the game state.
 exports.get_game = functions.https.onRequest(getGame.handleRequest);

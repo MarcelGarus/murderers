@@ -1,9 +1,9 @@
 /// Returns a game's state.
 ///
 /// Needs:
-/// * game [code]
+/// * [game]
 /// Optional:
-/// * user [id]
+/// * [me]
 /// * [authToken]
 ///
 /// Returns either:
@@ -35,13 +35,13 @@ import { loadGame, loadPlayersAndIds, allPlayersRef, queryContains, loadAndVerif
 // TODO: handle no id and code given
 export async function handleRequest(req: functions.Request, res: functions.Response) {
   if (!queryContains(req.query, [
-    'code'
+    'game'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  let id: UserId = req.query.id;
+  let id: UserId = req.query.me;
   let authToken: FirebaseAuthToken = req.query.authToken;
-  const code: GameCode = req.query.code + '';
+  const code: GameCode = req.query.game + '';
 
   // Load the game.
   const game: Game = await loadGame(res, firestore, code);
@@ -83,21 +83,35 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
       const death: Death = player.death;
       const isMe: boolean = (playerId === id);
 
-      return {
-        id: isMe ? id : playerId,
-        name: isMe ? user.name : playerUsers[playerId].name,
-        state: player.state,
-        murderer: isMe ? player.murderer : null,
-        victim: isMe ? player.victim : null,
-        wasOutsmarted: isMe ? player.wasOutsmarted : null,
-        death: death === null ? null : {
-          time: death.time,
-          murderer: isMe ? death.murderer : null,
-          weapon: death.weapon,
-          lastWords: death.lastWords,
-        },
-        kills: player.kills
-      };
+      if (isMe) {
+        return {
+          id: id,
+          name: user.name,
+          state: player.state,
+          murderer: player.murderer,
+          victim: player.victim,
+          kills: player.kills,
+          wantsNewVictim: player.wantsNewVictim,
+          death: death === null ? null : {
+            time: death.time,
+            murderer: death.murderer,
+            weapon: death.weapon,
+            lastWords: death.lastWords
+          }
+        };
+      } else {
+        return {
+          id: playerId,
+          name: playerUsers[playerId].name,
+          state: player.state,
+          kills: player.kills,
+          death: death === null ? null : {
+            time: death.time,
+            weapon: death.weapon,
+            lastWords: death.lastWords
+          }
+        };
+      }
     })
   });
 }

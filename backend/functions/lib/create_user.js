@@ -52,7 +52,17 @@ function handleRequest(req, res) {
         const name = req.query.name;
         util_1.log('Creating a user named ' + name + '. Auth token: ' + authToken + ' Messaging token: ' + messagingToken);
         // TODO: Confirm Firebase Auth token.
-        // TODO: Make sure user doesn't already exist.
+        // If the user already exists, just return the existing user id.
+        const existingUser = yield firestore
+            .collection('users')
+            .where('authToken', '==', authToken)
+            .limit(1).get();
+        if (existingUser.size > 0) {
+            res.set('application/json').send({
+                id: existingUser.docs[0].id,
+            });
+            return;
+        }
         // Create the user.
         const user = {
             authToken: authToken,
