@@ -10,7 +10,7 @@ import 'messaging.dart' as messaging;
 import 'persistence.dart' as persistence;
 
 import 'bloc_provider.dart';
-import 'models/game.dart';
+import 'models.dart';
 import 'streamed_property.dart';
 
 export 'bloc_provider.dart';
@@ -107,7 +107,7 @@ class Bloc {
     assert(event != null);
     _analytics.logEvent(event, parameters);
   }
-  FirebaseAnalyticsObserver get firebaseAnalyticsObserver => _analytics.observer;
+  FirebaseAnalyticsObserver get analyticsObserver => _analytics.observer;
 
   Future<Game> previewGame(String code) async {
     return await _network.getGame(
@@ -195,13 +195,23 @@ class Bloc {
     return game;
   }
 
+  Future<void> acceptPlayers({ @required List<Player> players }) async {
+    await _network.acceptPlayer(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: currentGame.code,
+      players: players,
+    );
+    await refreshGame();
+  }
+
   Future<void> startGame() async {
     await _network.startGame(
       id: _account.id,
       authToken: _account.authToken,
-      code: currentGame.code
+      code: currentGame.code,
     );
-    return await refreshGame();
+    await refreshGame();
   }
 
   Future<void> killPlayer() async {
@@ -210,7 +220,7 @@ class Bloc {
       authToken: _account.authToken,
       code: currentGame.code
     );
-    return await refreshGame();
+    await refreshGame();
   }
 
   Future<void> confirmDeath({
@@ -224,7 +234,7 @@ class Bloc {
       weapon: weapon,
       lastWords: lastWords,
     );
-    return await refreshGame();
+    await refreshGame();
   }
 
   Future<void> shuffleVictims(bool onlyOutsmartedPlayers) async {
@@ -233,6 +243,6 @@ class Bloc {
       code: currentGame.code,
       onlyOutsmartedPlayers: onlyOutsmartedPlayers,
     );
-    return await refreshGame();
+    await refreshGame();
   }
 }

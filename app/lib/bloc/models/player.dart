@@ -6,8 +6,7 @@ import 'death.dart';
 part 'player.g.dart';
 
 enum PlayerState {
-  idle, // The creator didn't accept the player yet.
-  waiting, // The player is waiting to get a victim (or the game to start).
+  joining, // The creator didn't accept the player yet.
   alive, // The player is alive.
   dying, // Someone else killed the player, but he still needs to confirm.
   dead, // The player got killed by someone else.
@@ -15,11 +14,10 @@ enum PlayerState {
 
 PlayerState intToPlayerState(int i) {
   switch (i) {
-    case 0: return PlayerState.idle;
-    case 1: return PlayerState.waiting;
-    case 2: return PlayerState.alive;
-    case 3: return PlayerState.dying;
-    case 4: return PlayerState.dead;
+    case 0: return PlayerState.joining;
+    case 1: return PlayerState.alive;
+    case 2: return PlayerState.dying;
+    case 3: return PlayerState.dead;
     default:
       print("Error: Unknown player state $i.");
       throw ArgumentError();
@@ -46,7 +44,7 @@ class Player {
   Player({
     @required this.id,
     @required this.name,
-    this.state = PlayerState.waiting,
+    @required this.state,
     this.death,
     this.kills = 0,
     this.rank,

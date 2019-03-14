@@ -58,9 +58,7 @@ List<Player> _ranked(List<Player> players) {
   int rank = 0; // The current rank.
 
   // Filter players who actually participate in the game.
-  players = players.where((p) =>
-    p.state != PlayerState.idle && p.state != PlayerState.waiting
-  ).toList();
+  players = players.where((p) => p.state != PlayerState.joining).toList();
 
   // First, divide the players into alive and dead ones.
   final alive = players.where((p) => p.isAlive).toList();

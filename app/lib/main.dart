@@ -23,7 +23,7 @@ class MurderersApp extends StatelessWidget {
         theme: ThemeData(primarySwatch: Colors.red),
         navigatorObservers: [
           VillainTransitionObserver(),
-          Bloc.of(context).firebaseAnalyticsObserver,
+          Bloc.of(context).analyticsObserver,
         ],
         home: SplashScreen(),
         routes: {

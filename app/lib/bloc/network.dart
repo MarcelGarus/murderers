@@ -117,7 +117,7 @@ class Handler {
   Future<String> createUser({
     @required String name,
     @required String authToken,
-    String messagingToken
+    String messagingToken,
   }) => _makeRequest(_Request(
     functionName: 'create_user',
     parameters: {
@@ -138,7 +138,7 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'create_game',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
       'name': name,
       'start': start.millisecondsSinceEpoch.toString(),
@@ -164,9 +164,25 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'join_game',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
+    }
+  ));
+
+  /// Accepts some players.
+  Future<void> acceptPlayer({
+    @required String id,
+    @required String authToken,
+    @required String code,
+    @required List<Player> players,
+  }) => _makeRequest(_Request(
+    functionName: 'accept_players',
+    parameters: {
+      'me': id,
+      'authToken': authToken,
+      'game': code,
+      'accept': players.map((p) => p.id).join('_'),
     }
   ));
 
@@ -178,9 +194,9 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'get_game',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
     },
     parser: (body) => _parseServerGame(
       body: body,
@@ -197,9 +213,9 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'start_game',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
     },
   ));
 
@@ -208,12 +224,14 @@ class Handler {
     @required String id,
     @required String authToken,
     @required String code,
+    @required String victim,
   }) => _makeRequest(_Request(
     functionName: 'kill_player',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
+      'victim': victim,
     },
   ));
 
@@ -227,9 +245,9 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'die',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
       'weapon': weapon,
       'lastWords': lastWords
     },
@@ -244,7 +262,7 @@ class Handler {
     functionName: 'shuffle_victims',
     parameters: {
       'authToken': authToken,
-      'code': code,
+      'game': code,
       'onlyOutsmartedPlayers': onlyOutsmartedPlayers ? 'true' : 'false',
     },
   ));

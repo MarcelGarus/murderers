@@ -6,6 +6,7 @@ import 'package:flutter_villains/villain.dart';
 import '../bloc/bloc.dart';
 import '../widgets/gradient_background.dart';
 import '../widgets/theme.dart';
+import 'creator.dart';
 import 'dashboard/active.dart';
 import 'dashboard/dead.dart';
 import 'dashboard/dying.dart';
@@ -13,13 +14,14 @@ import 'dashboard/preparation.dart';
 import 'dashboard/waiting_for_victims_death.dart';
 
 enum _DashboardContent {
+  joining,
   preparation,
-  admin,
   watcher,
-  active,
+  alive,
   dying,
   dead,
   waitingForVictim,
+  gameOver,
 }
 
 class DashboardScreen extends StatefulWidget {
@@ -50,20 +52,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Select the right content to display.
     _DashboardContent content;
 
-    // Select the right content to display.
-    if (game.state == GameState.notStartedYet) {
-      content = _DashboardContent.preparation;
-    } else if (game.me?.state == PlayerState.dying) {
-      content = _DashboardContent.dying;
-    } else if (game.victim?.state == PlayerState.alive) {
-      content = _DashboardContent.active;
-    } else if (game.me?.state == PlayerState.dead) {
-      content =_DashboardContent.dead;
-    } else {
-      content =_DashboardContent.waitingForVictim;
+    switch (game.state) {
+      case GameState.notStartedYet:
+        content = _DashboardContent.preparation;
+        break;
+      case GameState.over:
+        content =_DashboardContent.gameOver;
+        break;
+      case GameState.running:
+        if (game.me == null) {
+          // User is not a player, but a creator or a watcher.
+          // TODO: handle this case
+          break;
+        }
+        switch (game.me.state) {
+          case PlayerState.joining:
+            content = _DashboardContent.joining;
+            break;
+          case PlayerState.dying:
+            content = _DashboardContent.dying;
+            break;
+          case PlayerState.dead:
+            content = _DashboardContent.dead;
+            break;
+          case PlayerState.alive:
+            switch (game.victim?.state) {
+              case PlayerState.joining:
+              case PlayerState.dead:
+                assert(false, "The victim can never be joining or dead.");
+                break;
+              case PlayerState.alive:
+                content = _DashboardContent.alive;
+                break;
+              case PlayerState.dying:
+                content = _DashboardContent.gameOver;
+                break;
+            }
+        }
     }
+
+    assert(content != null);
 
     // Actually choose a body and a theme to display.
     MyThemeData theme;
@@ -74,9 +105,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         theme = kThemeLight;
         body = PreparationDashboard(game);
         break;
-      case _DashboardContent.admin:
       case _DashboardContent.watcher:
-      case _DashboardContent.active:
+      case _DashboardContent.alive:
         theme = kThemeAccent;
         body = ActiveDashboard(game);
         break;
@@ -95,6 +125,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       default:
         print('Unknown content: $content');
     }
+
+    assert(body != null);
+    assert(theme != null);
 
     // If the content changed since the last frame, animate all villains.
     if (content != _lastContent) {
@@ -126,6 +159,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(Icons.account_circle),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (ctx) => CreatorScreen(),
+                    ));
+                  },
+                ),
               ],
             ),
             body: SafeArea(

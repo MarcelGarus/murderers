@@ -48,8 +48,7 @@ T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
 }
 
 const _$PlayerStateEnumMap = <PlayerState, dynamic>{
-  PlayerState.idle: 'idle',
-  PlayerState.waiting: 'waiting',
+  PlayerState.joining: 'joining',
   PlayerState.alive: 'alive',
   PlayerState.dying: 'dying',
   PlayerState.dead: 'dead'

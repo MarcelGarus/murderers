@@ -8,7 +8,6 @@ part 'game.g.dart';
 enum GameState {
   notStartedYet,
   running,
-  paused,
   over
 }
 
@@ -16,8 +15,7 @@ GameState intToGameState(int i) {
   switch (i) {
     case 0: return GameState.notStartedYet;
     case 1: return GameState.running;
-    case 2: return GameState.paused;
-    case 3: return GameState.over;
+    case 2: return GameState.over;
     default:
       print("Error: Unknown player state $i.");
       throw ArgumentError();
@@ -38,7 +36,7 @@ class Game {
   final Player me; // This player. May be [null].
   final Player murderer; // This player's murderer. May be [null].
   final Player victim; // This player's victim. May be [null].
-  final bool wasOutsmarted; // Whether this player's victim outsmarted this player.
+  final bool wantsNewVictim; // Whether this player's victim outsmarted this player.
 
   bool get isPlayer => me != null;
 
@@ -53,7 +51,7 @@ class Game {
     this.me,
     this.murderer,
     this.victim,
-    this.wasOutsmarted,
+    this.wantsNewVictim,
   });
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
@@ -84,7 +82,7 @@ class Game {
       me: me ?? this.me,
       murderer: murderer ?? this.murderer,
       victim: victim ?? this.victim,
-      wasOutsmarted: wasOutsmarted ?? this.wasOutsmarted
+      wantsNewVictim: wasOutsmarted ?? this.wantsNewVictim
     );
   }
 }

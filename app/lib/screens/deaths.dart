@@ -46,7 +46,7 @@ class _DeathsScreenState extends State<DeathsScreen> {
         Container(
           height: 250,
           color: Colors.grey,
-          child: FlareActor('assets/deaths.flr',
+          child: FlareActor('images/deaths.flr',
             fit: BoxFit.fitWidth,
             color: kThemeDark.backgroundColor,
             alignment: Alignment.bottomCenter,

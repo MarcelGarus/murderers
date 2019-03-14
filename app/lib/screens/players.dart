@@ -25,7 +25,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
   }
 
   Widget _buildList() {
-    final players = widget.game.players;
+    final players = List.from(widget.game.players);
     players.sort((a, b) {
       if (a.rank == null) return 1;
       if (b.rank == null) return -1;
