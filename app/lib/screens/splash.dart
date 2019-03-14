@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 5000), () {
+    Future.delayed(Duration(milliseconds: 600), () {
       final bloc = Bloc.of(context);
       String targetRoute;
 
