@@ -27,6 +27,7 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.0
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
 
@@ -51,3 +52,8 @@ flutter:
     - family: Mono
       fonts:
         - asset: fonts/RobotoMono-Bold.ttf
+
+flutter_icons:
+  image_path: "images/logo.png"
+  android: true
+  ios: false

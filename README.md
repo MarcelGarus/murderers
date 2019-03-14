@@ -1,7 +1,6 @@
 # Murderers
 
-A simple real-world game.
-Especially useful for larger groups.
+A dead-simple multi-player real-world game lasting several days.
 
 Interested in how everything works under the hood?
 Read the ["Getting started"](docs/getting_started.md) guide!
