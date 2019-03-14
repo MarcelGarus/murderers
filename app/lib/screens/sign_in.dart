@@ -93,10 +93,15 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
 
   Future<void> _onNameEntered() async {
     final name = controller.text;
-    await Bloc.of(context).createAccount(name);
+    final bloc = Bloc.of(context);
 
-    if (Bloc.of(context).isSignedIn) {
+    bloc.logEvent(AnalyticsEvent.name_entered);
+    try {
+      await bloc.createAccount(name);
+      bloc.logEvent(AnalyticsEvent.signed_up);
       await Navigator.of(context).pushNamedAndRemoveUntil('/setup', (route) => false);
+    } catch (e) {
+      print('Something went wrong: $e');
     }
   }
 

@@ -27,6 +27,9 @@ class _IntroScreenState extends State<IntroScreen>
         Bloc.of(context).logEvent(AnalyticsEvent.intro_step, {
           'step': _controller.index
         });
+        if (_controller.index == 3) {
+          Bloc.of(context).logEvent(AnalyticsEvent.intro_completed);
+        }
       }
     });
   }

@@ -104,23 +104,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case _DashboardContent.preparation:
         theme = kThemeLight;
         body = PreparationDashboard(game);
+        Bloc.of(context).logEvent(AnalyticsEvent.dashboard_not_started_yet);
         break;
       case _DashboardContent.watcher:
       case _DashboardContent.alive:
         theme = kThemeAccent;
         body = ActiveDashboard(game);
+        Bloc.of(context).logEvent(AnalyticsEvent.dashboard_active);
         break;
       case _DashboardContent.dying:
         theme = kThemeDark;
         body = DyingDashboard(game);
+        Bloc.of(context).logEvent(AnalyticsEvent.dashboard_dying);
         break;
       case _DashboardContent.dead:
         theme = kThemeDark;
         body = DeadDashboard(game);
+        Bloc.of(context).logEvent(AnalyticsEvent.dashboard_dead);
         break;
       case _DashboardContent.waitingForVictim:
         theme = kThemeAccent;
         body = WaitingForVictimsDeathDashboard(game);
+        Bloc.of(context).logEvent(AnalyticsEvent.dashboard_waiting_for_victim);
         break;
       default:
         print('Unknown content: $content');

@@ -38,8 +38,9 @@ class Player {
   int rank; // The player's rank.
   Death death; // The player's deaths.
 
+  bool get isJoining => state == PlayerState.joining;
   bool get isAlive => state == PlayerState.alive || state == PlayerState.dying;
-  bool get isDead => death != null;
+  bool get isDead => state == PlayerState.dead;
 
   Player({
     @required this.id,

@@ -39,9 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
       color: Colors.white,
       alignment: Alignment.center,
       child: Center(
-        child: SizedBox(
-          width: 92,
-          height: 92,
+        child: SizedBox.fromSize(
+          size: Size.square(128),
           child: FlareActor('images/logo.flr', animation: 'intro'),
         ),
       ),

@@ -35,9 +35,11 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
     
     if (role == UserRole.player || role == UserRole.watcher) {
       // For joining a game, enter the code.
+      Bloc.of(context).logEvent(AnalyticsEvent.join_game_begin);
       nextScreen = EnterCodeScreen(configuration: _config);
     } else {
       // User wants to create a new game.
+      Bloc.of(context).logEvent(AnalyticsEvent.create_game_begin);
       nextScreen = ConfigureGameScreen(configuration: _config);
     }
 
@@ -95,6 +97,11 @@ class EnterCodeScreen extends StatefulWidget {
 class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderStateMixin {
   String get code => widget.configuration.code;
   set code(String code) => widget.configuration.code = code;
+
+  void initState() {
+    super.initState();
+    Bloc.of(context).logEvent(AnalyticsEvent.join_game_enter_code);
+  }
 
   void _onCodeFinished(String code) {
     print('Code finished. Bloc is ${Bloc.of(context)}');
@@ -162,6 +169,11 @@ class ConfigureGameScreen extends StatefulWidget {
 class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerProviderStateMixin {
   SetupConfiguration get config => widget.configuration;
 
+  void initState() {
+    super.initState();
+    Bloc.of(context).logEvent(AnalyticsEvent.create_game_enter_details);
+  }
+
   Future<void> _chooseEndDate() async {
     final pickedDate = await showDatePicker(
       context: context,
@@ -193,6 +205,7 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
       start: DateTime.now(),
       end: config.end,
     );
+    Bloc.of(context).logEvent(AnalyticsEvent.create_game_completed);
     await Navigator.of(context)
       .pushNamedAndRemoveUntil('/game', (route) => false);
   }
@@ -269,10 +282,16 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
   String get code => config.code;
   bool isReady = false;
 
+  void initState() {
+    super.initState();
+    Bloc.of(context).logEvent(AnalyticsEvent.join_game_preview);
+  }
+
   Future<void> _onConfirmed() async {
     final config = widget.configuration;
     final bloc = Bloc.of(context);
 
+    Bloc.of(context).logEvent(AnalyticsEvent.join_game_completed);
     print('Setting up a game.');
 
     switch (config.role) {

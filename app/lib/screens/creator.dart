@@ -92,6 +92,13 @@ class _AcceptPlayersCard extends StatelessWidget {
               color: Colors.white,
               child: ListTile(title: Text(player.name)),
             ),
+            onDismissed: (direction) {
+              if (direction == DismissDirection.endToStart) {
+                onAccept([ player ]);
+              } else {
+                onDeny([ player ]);
+              }
+            },
           );
         })).followedBy([
           SizedBox(height: 16),

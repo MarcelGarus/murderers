@@ -85,4 +85,9 @@ class Game {
       wantsNewVictim: wasOutsmarted ?? this.wantsNewVictim
     );
   }
+
+  String toString() {
+    return 'Game $code with state $state and '
+      + (players.isEmpty ? 'no players.' : 'players ${players.join(', ')}.');
+  }
 }

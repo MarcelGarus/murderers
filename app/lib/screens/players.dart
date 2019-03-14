@@ -14,6 +14,11 @@ class PlayersScreen extends StatefulWidget {
 }
 
 class _PlayersScreenState extends State<PlayersScreen> {
+  void initState() {
+    super.initState();
+    Bloc.of(context).logEvent(AnalyticsEvent.leaderboard);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -59,6 +59,7 @@ class _Request<T> {
 
     // Parse response.
     try {
+      print('Parsing the response.');
       return (parser == null) ? null : parser(res.body);
     } catch (e, stacktrace) {
       print('Seems like the server output is corrupt: $e');
@@ -72,8 +73,10 @@ class _Request<T> {
     List<_Request> requestsToWaitFor
   ) async {
     // Wait for the given requests.
-    print("Before executing the query, let's first await all ${requestsToWaitFor.length} requests: $requestsToWaitFor");
+    print("The following ${requestsToWaitFor.length} requests are scheduled: $requestsToWaitFor");
     while (requestsToWaitFor.first != this) {
+      if (!requestsToWaitFor.contains(this)) return null;
+
       try {
         await requestsToWaitFor.first._executeScheduled(requestsToWaitFor);
       } catch (e) {
@@ -108,9 +111,11 @@ class Handler {
   // TODO: merge multiple requests that do effectively the same
   Future<T> _makeRequest<T>(_Request<T> request) async {
     queue.add(request);
-    final result = await request._executeScheduled(queue);
-    queue.remove(request);
-    return result;
+    try {
+      return await request._executeScheduled(queue);
+    } finally {
+      queue.remove(request);
+    }
   }
 
   /// Creates a user on the server.
@@ -182,7 +187,7 @@ class Handler {
       'me': id,
       'authToken': authToken,
       'game': code,
-      'accept': players.map((p) => p.id).join('_'),
+      'playersToAccept': players.map((p) => p.id).join('_'),
     }
   ));
 

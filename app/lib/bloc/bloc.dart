@@ -191,6 +191,7 @@ class Bloc {
       authToken: _account.authToken,
       code: currentGame.code
     );
+    logEvent(analytics.AnalyticsEvent.game_loaded, { 'code': game.code });
     _updateCurrentGame(game);
     return game;
   }
