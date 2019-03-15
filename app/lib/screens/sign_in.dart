@@ -14,6 +14,13 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  bool _isSignedIn;
+
+  void initState() {
+    super.initState();
+    _isSignedIn = Bloc.of(context).isSignedIn;
+  }
+
   Future<void> _signIn(SignInType type) async {
     Bloc.of(context).logEvent(AnalyticsEvent.sign_in_attempt, { 'type': type });
     try {
@@ -21,9 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       // Signing in was successful.
       Bloc.of(context).logEvent(AnalyticsEvent.sign_in_success);
-      await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => EnterNameScreen()
-      ));
+      setState(() => _isSignedIn = true);
     } catch (e) {
       // User aborted sign in or timeout (no internet).
       Bloc.of(context).logEvent(AnalyticsEvent.sign_in_failure, { 'error': e });
@@ -36,6 +41,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isSignedIn) {
+      return _buildSignInScreen();
+    } else {
+      return EnterNameScreen();
+    }
+  }
+
+  Widget _buildSignInScreen() {
     return Center(
       child: Column(
         children: <Widget>[
@@ -107,43 +120,34 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Spacer(),
-              Container(
-                width: 200,
-                height: 150,
-                child: Placeholder(),
-              ),
-              Padding(
-                padding: EdgeInsets.all(32),
-                child: TextField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Enter first and last name",
-                  ),
-                ),
-              ),
-              Button.text("Continue", onPressed: _onNameEntered),
-              Spacer(),
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  "Other players will be able to see it. To counter confusion "
-                  "in large groups, it's recommended to enter both your first "
-                  "and last name.",
-                  textAlign: TextAlign.center,
-                  textScaleFactor: 0.9,
-                ),
-              ),
-            ],
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Spacer(),
+          Container(
+            width: 200,
+            height: 150,
+            child: Placeholder(),
           ),
-        ),
+          SizedBox(height: 16),
+          TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Enter first and last name",
+            ),
+          ),
+          SizedBox(height: 16),
+          Button.text("Continue", onPressed: _onNameEntered),
+          Spacer(),
+          Text(
+            "Other players will be able to see it. To counter confusion "
+            "in large groups, it's recommended to enter both your first "
+            "and last name.",
+            textAlign: TextAlign.center,
+            style: MyTheme.of(context).bodyText.copyWith(fontSize: 12),
+          ),
+        ],
       ),
     );
   }

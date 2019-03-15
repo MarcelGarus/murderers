@@ -49,7 +49,7 @@ class Bloc {
         if (_games.isNotEmpty) {
           final current = await persistence.loadCurrentGame();
           currentGame = _games.singleWhere((g) => g.code == current);
-          await refreshGame();
+          await _refreshGame();
         }
       });
     });
@@ -60,7 +60,7 @@ class Bloc {
     // Configure the messaging synchronously.
     _messaging.requestNotificationPermissions();
     _messaging.configure(onMessageReceived: () async {
-      await refreshGame();
+      await _refreshGame();
     });
     _messaging.subscribeToDeaths();
   }
@@ -185,7 +185,7 @@ class Bloc {
     await persistence.saveGames(_games);
   }
 
-  Future<Game> refreshGame() async {
+  Future<Game> _refreshGame() async {
     final game = await _network.getGame(
       id: _account.id,
       authToken: _account.authToken,
@@ -203,7 +203,7 @@ class Bloc {
       code: currentGame.code,
       players: players,
     );
-    await refreshGame();
+    await _refreshGame();
   }
 
   Future<void> startGame() async {
@@ -212,7 +212,7 @@ class Bloc {
       authToken: _account.authToken,
       code: currentGame.code,
     );
-    await refreshGame();
+    await _refreshGame();
   }
 
   Future<void> killPlayer() async {
@@ -221,7 +221,7 @@ class Bloc {
       authToken: _account.authToken,
       code: currentGame.code
     );
-    await refreshGame();
+    await _refreshGame();
   }
 
   Future<void> confirmDeath({
@@ -235,7 +235,7 @@ class Bloc {
       weapon: weapon,
       lastWords: lastWords,
     );
-    await refreshGame();
+    await _refreshGame();
   }
 
   Future<void> shuffleVictims(bool onlyOutsmartedPlayers) async {
@@ -244,6 +244,6 @@ class Bloc {
       code: currentGame.code,
       onlyOutsmartedPlayers: onlyOutsmartedPlayers,
     );
-    await refreshGame();
+    await _refreshGame();
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:intl/intl.dart';
 
 import '../bloc/bloc.dart';
@@ -49,12 +50,16 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: StaggeredColumn(
             children: <Widget>[
               Spacer(),
-              Container(width: 200, height: 100, child: Placeholder()),
+              SizedBox.fromSize(
+                size: Size.square(128),
+                child: FlareActor('images/logo.flr', animation: 'intro'),
+              ),
               SizedBox(height: 32),
               Button.text('Join a game',
                 onPressed: () { _selectRole(UserRole.player); },
@@ -296,7 +301,6 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
 
     switch (config.role) {
       case UserRole.player:
-        print('Awaiting joining the game.');
         await bloc.joinGame(code: config.code);
         break;
       case UserRole.watcher:
