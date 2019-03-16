@@ -295,10 +295,10 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
 
     switch (config.role) {
       case UserRole.player:
-        await bloc.joinGame(code: config.code);
+        await bloc.joinGame(config.code);
         break;
       case UserRole.watcher:
-        await bloc.watchGame(code: config.code);
+        await bloc.watchGame(config.code);
         break;
       case UserRole.creator:
         await bloc.createGame(

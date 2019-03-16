@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:pedantic/pedantic.dart';
 
+import 'persistence.dart';
+
 enum AnalyticsEvent {
   app_open,
-  intro_begin,
-  intro_step,
-  intro_completed,
   sign_in_attempt,
   sign_in_success,
   sign_in_failure,
@@ -16,12 +16,11 @@ enum AnalyticsEvent {
   signed_up,
   join_game_begin,
   join_game_enter_code,
-  game_preview,
   join_game_completed,
   watch_game_begin,
   watch_game_enter_code,
-  watch_game_preview,
   watch_game_completed,
+  game_preview,
   create_game_begin,
   create_game_enter_details,
   create_game_completed,
@@ -38,24 +37,41 @@ enum AnalyticsEvent {
 String _stringifyEvent(AnalyticsEvent event) {
   switch (event) {
     case AnalyticsEvent.app_open: return 'app_open';
-    case AnalyticsEvent.intro_begin: return 'tutorial_begin';
-    case AnalyticsEvent.intro_step: return 'tutorial_step';
-    case AnalyticsEvent.intro_completed: return 'tutorial_completed';
     default: return 'unknown_event';
   }
 }
 
 class Handler {
   FirebaseAnalytics _analytics;
-  FirebaseAnalyticsObserver get observer => FirebaseAnalyticsObserver(
-    analytics: _analytics
+  bool get isEnabled => _analytics != null;
+  FirebaseAnalyticsObserver _observer;
+
+  RouteObserverProxy get observer => RouteObserverProxy(
+    onDidPush: (route, previousRoute) => _observer?.didPush(route, previousRoute),
+    onDidPop: (route, previousRoute) => _observer?.didPop(route, previousRoute),
   );
 
   /// Initializes the analytics handler.
   Future<void> initialize() async {
-    // TODO: only do this if the user opted in
+    var isEnabled = await loadAnalyticsEnabled();
+    if (isEnabled) {
+      enable();
+      unawaited(logEvent(AnalyticsEvent.app_open));
+    }
+  }
+
+  /// Enables analytics.
+  void enable() {
     _analytics = FirebaseAnalytics();
-    unawaited(logEvent(AnalyticsEvent.app_open));
+    _observer = FirebaseAnalyticsObserver(analytics: _analytics);
+    saveAnalyticsEnabled(true);
+  }
+
+  /// Disables analytics.
+  void disable() {
+    _analytics = null;
+    _observer = null;
+    saveAnalyticsEnabled(false);
   }
 
   /// Logs the given event.
@@ -67,5 +83,28 @@ class Handler {
       name: _stringifyEvent(event),
       parameters: parameters
     );
+  }
+}
+
+class RouteObserverProxy extends RouteObserver<PageRoute<dynamic>> {
+  RouteObserverProxy({
+    @required this.onDidPush,
+    @required this.onDidPop,
+  }) :
+      assert(onDidPush != null),
+      assert(onDidPop != null);
+
+  final void Function(Route roue, Route previousRoute) onDidPush, onDidPop;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
+    super.didPush(route, previousRoute);
+    onDidPush(route, previousRoute);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
+    super.didPop(route, previousRoute);
+    onDidPop(route, previousRoute);
   }
 }

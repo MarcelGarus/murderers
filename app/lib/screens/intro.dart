@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
 
-import '../bloc/bloc.dart';
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
 import 'sign_in.dart';
+import 'privacy.dart';
 
 /// The screen which introduces the user to the game concept. In the last step,
 /// the user is asked to sign in (using the [SignInScreen]).
@@ -22,18 +22,7 @@ class _IntroScreenState extends State<IntroScreen>
   @override
   void initState() {
     super.initState();
-    Bloc.of(context).logEvent(AnalyticsEvent.intro_begin);
     _controller = TabController(length: 4, vsync: this);
-    _controller.animation.addListener(() {
-      if (_controller.indexIsChanging) {
-        Bloc.of(context).logEvent(AnalyticsEvent.intro_step, {
-          'step': _controller.index
-        });
-        if (_controller.index == 3) {
-          Bloc.of(context).logEvent(AnalyticsEvent.intro_completed);
-        }
-      }
-    });
   }
 
   Future<bool> _onWillPop() async {
@@ -114,7 +103,7 @@ class _IntroScreenState extends State<IntroScreen>
           content: "Once you killed your victim, you'll get a new "
             "one. Try to kill as many players without dying."
         ),
-        SignInScreen(),
+        PrivacyScreen(),
       ].map((step) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: step
@@ -168,10 +157,18 @@ class _NextButton extends StatelessWidget {
     return AnimatedBuilder(
       animation: controller.animation,
       builder: (context, child) {
-        return AnimatedOpacity(
-          opacity: (controller.index < controller.length - 1) ? 1 : 0,
-          duration: Duration(milliseconds: 200),
-          child: child,
+        return Button.text(
+          (controller.index < controller.length - 1) ? 'Next' : 'I agree',
+          isRaised: false,
+          onPressed: () {
+            if (controller.index < controller.length - 1) {
+              controller.index++;
+            } else {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (ctx) => SignInScreen(),
+              ));
+            }
+          },
         );
       },
       child: Button.text('Next',

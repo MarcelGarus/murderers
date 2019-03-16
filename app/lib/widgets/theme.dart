@@ -66,7 +66,10 @@ class MyTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(scaffoldBackgroundColor: data.backgroundColor),
-      child: child,
+      child: DefaultTextStyle(
+        style: data.bodyText.copyWith(color: Colors.green),
+        child: child,
+      ),
     );
   }
 }

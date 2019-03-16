@@ -16,7 +16,7 @@ class PreparationDashboard extends StatelessWidget {
   }
 
   Future<Game> _joinGame(BuildContext context) {
-    return Bloc.of(context).joinGame(code: game.code);
+    return Bloc.of(context).joinGame(game.code);
   }
 
   @override

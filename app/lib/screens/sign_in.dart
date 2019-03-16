@@ -29,38 +29,40 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     final theme = MyTheme.of(context);
 
-    return MyTheme(
-      data: theme.copyWith(
-        primaryButtonBackgroundColor: Colors.white,
-        primaryButtonTextColor: Colors.black,
-      ),
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            Spacer(flex: 2),
-            Text("Sign in to synchronize your games across all your devices.",
-              textAlign: TextAlign.center,
-              style: theme.bodyText,
-            ),
-            SizedBox(height: 16),
-            Button<void>.icon(
-              onPressed: () => Bloc.of(context).signIn(SignInType.google),
-              onSuccess: (_) => _onSignInSuccess(),
-              onError: _onSignInError,
-              icon: SvgPicture.asset('images/google_icon.svg',
-                width: 36,
-                height: 36,
-                semanticsLabel: 'Google logo',
+    return Scaffold(
+      body: MyTheme(
+        data: theme.copyWith(
+          primaryButtonBackgroundColor: Colors.white,
+          primaryButtonTextColor: Colors.black,
+        ),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Spacer(flex: 2),
+              Text("Sign in to synchronize your games across all your devices.",
+                textAlign: TextAlign.center,
+                style: theme.bodyText,
               ),
-              text: 'Sign in with Google',
-            ),
-            SizedBox(height: 16),
-            Button.text('Sign in anonymously\n(erstmal nicht nehmen)',
-              isRaised: false,
-              onPressed: () => Bloc.of(context).signIn(SignInType.anonymous),
-            ),
-            Spacer(),
-          ],
+              SizedBox(height: 16),
+              Button<void>.icon(
+                onPressed: () => Bloc.of(context).signIn(SignInType.google),
+                onSuccess: (_) => _onSignInSuccess(),
+                onError: _onSignInError,
+                icon: SvgPicture.asset('images/google_icon.svg',
+                  width: 36,
+                  height: 36,
+                  semanticsLabel: 'Google logo',
+                ),
+                text: 'Sign in with Google',
+              ),
+              SizedBox(height: 16),
+              Button.text('Sign in anonymously\n(erstmal nicht nehmen)',
+                isRaised: false,
+                onPressed: () => Bloc.of(context).signIn(SignInType.anonymous),
+              ),
+              Spacer(),
+            ],
+          ),
         ),
       ),
     );

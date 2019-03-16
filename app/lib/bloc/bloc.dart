@@ -31,7 +31,7 @@ class Bloc {
   List<Game> _games = <Game>[];
   final _currentGame = StreamedProperty<Game>();
 
-  /// This methods allows subtree widgets to access this bloc.
+  /// This method allows subtree widgets to access this bloc.
   static Bloc of(BuildContext context) {
     final BlocProvider holder = context.ancestorWidgetOfExactType(BlocProvider);
     return holder?.bloc;
@@ -65,12 +65,37 @@ class Bloc {
     _messaging.subscribeToDeaths();
   }
 
-  /// Disposes all the streams.
   void dispose() {
     _currentGame.dispose();
   }
 
-  // Handles the sign in status.
+  get analyticsEnabled => _analytics.isEnabled;
+
+  set analyticsEnabled(bool isEnabled) {
+    if (isEnabled) {
+      _analytics.enable();
+    } else {
+      _analytics.disable();
+    }
+  }
+
+  void logEvent(
+    analytics.AnalyticsEvent event, [
+    Map<String, dynamic> parameters
+  ]) {
+    assert(event != null);
+    _analytics.logEvent(event, parameters);
+  }
+  analytics.RouteObserverProxy get analyticsObserver => _analytics.observer;
+
+  Future<Game> previewGame(String code) async {
+    return await _network.getGame(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: code,
+    );
+  }
+
   Future<void> signIn(account.SignInType type) async {
     logEvent(analytics.AnalyticsEvent.sign_in_attempt, { 'type': type });
 
@@ -82,57 +107,46 @@ class Bloc {
       rethrow;
     }
   }
+
   Future<bool> signOut() => _account.signOut();
+
   bool get isSignedIn => _account.isSignedInWithFirebase;
 
-  // Handles the account.
   Future<void> createAccount(String name) async {
     return await _account.createUser(_network, _messaging, name);
   }
+
+  // TODO: removes an account.
+
   bool get hasAccount => _account.userWasCreated;
 
   String get name => _account.name;
+
   set name(String name) => _account.rename(_network, name); // TODO: handle result
 
   String get accountPhotoUrl => _account.photoUrl;
 
-  List<Game> get allGames => _games;
+  List<Game> get allGames => List.unmodifiable(_games);
 
-  // The current game.
   Game get currentGame => _currentGame.value;
+
   set currentGame(Game game) {
     assert(game == null || _games.contains(game));
     print("Setting current game to $game");
     _currentGame.value = game;
     persistence.saveCurrentGame(game?.code ?? '');
   }
-  get currentGameStream => _currentGame.stream;
+
   bool get hasCurrentGame => currentGame != null;
-  
-  /// Logs an event.
-  void logEvent(
-    analytics.AnalyticsEvent event, [
-    Map<String, dynamic> parameters
-  ]) {
-    assert(event != null);
-    _analytics.logEvent(event, parameters);
-  }
-  FirebaseAnalyticsObserver get analyticsObserver => _analytics.observer;
 
-  Future<Game> previewGame(String code) async {
-    return await _network.getGame(
-      id: _account.id,
-      authToken: _account.authToken,
-      code: code
-    );
-  }
+  get currentGameStream => _currentGame.stream;
 
-  Future<Game> watchGame({ @required String code }) async {
+  Future<Game> watchGame(String code) async {
     // TODO: implement
     return null;
   }
 
-  Future<Game> joinGame({ @required String code }) async {
+  Future<Game> joinGame(String code) async {
     assert(_account.userWasCreated);
     
     final existingGame = _games.singleWhere((game) => game.code == code);
@@ -157,7 +171,7 @@ class Bloc {
     @required DateTime start,
     @required DateTime end,
   }) async {
-    assert(_account.userWasCreated);
+    assert(hasAccount);
 
     return await _network.createGame(
       id: _account.id,
@@ -168,6 +182,7 @@ class Bloc {
     ).then(_addGame);
   }
 
+  // Adds a game to the list of games.
   Future<Game> _addGame(Game game) async {
     assert(game != null);
 
@@ -179,7 +194,7 @@ class Bloc {
     return game;
   }
 
-  // TODO: if we're a player or creator, disallow or notify server
+  // TODO: if we're a player or creator, deny or notify server.
   void removeGame(Game game) async {
     _games.remove(game);
     if (!_games.contains(currentGame)) {
@@ -188,6 +203,7 @@ class Bloc {
     await persistence.saveGames(_games);
   }
 
+  // Updates the current game to the new game.
   void _updateCurrentGame(Game game) async {
     _games.remove(currentGame);
     _games.add(game);
@@ -195,6 +211,7 @@ class Bloc {
     await persistence.saveGames(_games);
   }
 
+  // Refreshes the current game.
   Future<Game> _refreshGame() async {
     final game = await _network.getGame(
       id: _account.id,
