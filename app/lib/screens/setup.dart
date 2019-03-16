@@ -37,11 +37,11 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
     if (role == UserRole.player || role == UserRole.watcher) {
       // For joining a game, enter the code.
       Bloc.of(context).logEvent(AnalyticsEvent.join_game_begin);
-      nextScreen = EnterCodeScreen(configuration: _config);
+      nextScreen = _EnterCodeScreen(configuration: _config);
     } else {
       // User wants to create a new game.
       Bloc.of(context).logEvent(AnalyticsEvent.create_game_begin);
-      nextScreen = ConfigureGameScreen(configuration: _config);
+      nextScreen = _ConfigureGameScreen(configuration: _config);
     }
 
     navigator.push(SetupRoute(nextScreen));
@@ -88,8 +88,8 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
 }
 
 /// Enter code.
-class EnterCodeScreen extends StatefulWidget {
-  EnterCodeScreen({
+class _EnterCodeScreen extends StatefulWidget {
+  _EnterCodeScreen({
     @required this.configuration,
   });
 
@@ -99,7 +99,9 @@ class EnterCodeScreen extends StatefulWidget {
   _EnterCodeScreenState createState() => _EnterCodeScreenState();
 }
 
-class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderStateMixin {
+class _EnterCodeScreenState extends State<_EnterCodeScreen> with TickerProviderStateMixin {
+  final _controller = TextEditingController();
+
   String get code => widget.configuration.code;
   set code(String code) => widget.configuration.code = code;
 
@@ -111,7 +113,7 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
   void _onCodeFinished(String code) {
     print('Code finished. Bloc is ${Bloc.of(context)}');
     this.code = code;
-    Navigator.of(context).push(SetupRoute(ConfirmGameScreen(
+    Navigator.of(context).push(SetupRoute(_PreviewGameScreen(
       configuration: widget.configuration
     )));
   }
@@ -124,10 +126,10 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
         child: StaggeredColumn(
           children: <Widget>[
             Spacer(),
-            Container(width: 200, height: 200, child: Placeholder()),
             Padding(
-              padding: EdgeInsets.all(32),
+              padding: EdgeInsets.all(16),
               child: TextField(
+                controller: _controller,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Enter the code',
@@ -139,14 +141,12 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
                   fontSize: 32
                 ),
                 autofocus: true,
-                onChanged: (code) {
-                  if (code.length >= 5) {
-                    _onCodeFinished(code);
-                  }
-                },
               ),
             ),
-            SizedBox(height: 32),
+            Button.text('Continue',
+              onPressed: () => _onCodeFinished(_controller.text),
+            ),
+            SizedBox(height: 8),
             Button.text('Cancel',
               isRaised: false,
               onPressed: () => Navigator.pop(context),
@@ -160,8 +160,8 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> with TickerProviderSt
 }
 
 /// Configure the game.
-class ConfigureGameScreen extends StatefulWidget {
-  ConfigureGameScreen({
+class _ConfigureGameScreen extends StatefulWidget {
+  _ConfigureGameScreen({
     @required this.configuration,
   });
 
@@ -171,7 +171,7 @@ class ConfigureGameScreen extends StatefulWidget {
   _ConfigureGameScreenState createState() => _ConfigureGameScreenState();
 }
 
-class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerProviderStateMixin {
+class _ConfigureGameScreenState extends State<_ConfigureGameScreen> with TickerProviderStateMixin {
   SetupConfiguration get config => widget.configuration;
 
   void initState() {
@@ -201,18 +201,6 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
       pickedTime.minute,
     );
     setState(() => config.end = picked);
-  }
-
-  Future<void> _createGame() async {
-    print('Creating a game.');
-    await Bloc.of(context).createGame(
-      name: config.gameName,
-      start: DateTime.now(),
-      end: config.end,
-    );
-    Bloc.of(context).logEvent(AnalyticsEvent.create_game_completed);
-    await Navigator.of(context)
-      .pushNamedAndRemoveUntil('/game', (route) => false);
   }
 
   @override
@@ -253,7 +241,16 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
               ),
               SizedBox(height: 16),
               Button.text('Create game',
-                onPressed: _createGame,
+                onPressed: () => Bloc.of(context).createGame(
+                  name: config.gameName,
+                  start: DateTime.now(),
+                  end: config.end,
+                ),
+                onSuccess: (_) {
+                  Bloc.of(context).logEvent(AnalyticsEvent.create_game_completed);
+                  Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/game', (route) => false);
+                },
               ),
               SizedBox(height: 16),
               Button.text('Cancel',
@@ -270,26 +267,23 @@ class _ConfigureGameScreenState extends State<ConfigureGameScreen> with TickerPr
 }
 
 /// Confirm game.
-class ConfirmGameScreen extends StatefulWidget {
-  ConfirmGameScreen({
+class _PreviewGameScreen extends StatefulWidget {
+  _PreviewGameScreen({
     @required this.configuration,
   });
 
   final SetupConfiguration configuration;
 
   @override
-  _ConfirmGameScreenState createState() => _ConfirmGameScreenState();
+  _PreviewGameScreenState createState() => _PreviewGameScreenState();
 }
 
-class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProviderStateMixin {
-  SetupConfiguration get config => widget.configuration;
-  UserRole get role => config.role;
-  String get code => config.code;
+class _PreviewGameScreenState extends State<_PreviewGameScreen> {
   bool isReady = false;
 
   void initState() {
     super.initState();
-    Bloc.of(context).logEvent(AnalyticsEvent.join_game_preview);
+    Bloc.of(context).logEvent(AnalyticsEvent.game_preview);
   }
 
   Future<void> _onConfirmed() async {
@@ -325,18 +319,22 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
       body: SafeArea(
         child: Center(
           child: FutureBuilder<Game>(
-            future: Bloc.of(context).previewGame(config.code),
+            future: Bloc.of(context).previewGame(widget.configuration.code),
             builder: (context, snapshot) {
-              if (!isReady && snapshot.hasData) {
+              if (!isReady && snapshot.connectionState == ConnectionState.done) {
                 Future.delayed(Duration.zero, () {
                   VillainController.playAllVillains(context);
                 });
                 isReady = true;
               }
 
-              return snapshot.hasData
-                ? buildPreview(snapshot.data)
-                : buildPlaceholder();
+              if (snapshot.hasError) {
+                return _buildError(snapshot.error);
+              } else if (snapshot.hasData) {
+                return _buildPreview(snapshot.data);
+              } else {
+                return _buildPlaceholder();
+              }
             }
           ),
         ),
@@ -344,19 +342,17 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
     );
   }
 
-  Widget buildPlaceholder() {
+  Widget _buildPlaceholder() {
     return Column(
       children: <Widget>[
         Spacer(flex: 2),
         CircularProgressIndicator(),
         SizedBox(height: 32),
-        Text("Searching for game\nwith id ${config.code}",
+        Text("Searching for game\nwith id ${widget.configuration.code}",
           textAlign: TextAlign.center,
         ),
         Spacer(),
-        Button.icon(
-          icon: Icon(Icons.close),
-          text: 'Cancel',
+        Button.text('Cancel',
           isRaised: false,
           onPressed: () => Navigator.pop(context),
         ),
@@ -365,8 +361,31 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
     );
   }
 
-  Widget buildPreview(Game game) {
-    MyThemeData theme = MyTheme.of(context);
+  Widget _buildError(dynamic error) {
+    String message = '$error';
+
+    if (error is ResourceNotFoundError) {
+      message = "There's no game with the code ${widget.configuration.code}.";
+    }
+
+    return StaggeredColumn(
+      children: <Widget>[
+        Spacer(),
+        Text(message),
+        SizedBox(height: 16),
+        Button.text('Back',
+          isRaised: false,
+          onPressed: () => Navigator.pop(context),
+        ),
+        Spacer(),
+      ],
+    );
+  }
+
+  Widget _buildPreview(Game game) {
+    var theme = MyTheme.of(context);
+    var config = widget.configuration;
+
     return StaggeredColumn(
       children: <Widget>[
         Spacer(),
@@ -381,7 +400,8 @@ class _ConfirmGameScreenState extends State<ConfirmGameScreen> with TickerProvid
         ),
         SizedBox(height: 32),
         Button.text(config.role == UserRole.player ? "Join" : "Watch",
-          onPressed: _onConfirmed
+          onPressed: _onConfirmed,
+          onError: (error) {}, // TODO: display error
         ),
         SizedBox(height: 32),
         Button.text('Cancel',

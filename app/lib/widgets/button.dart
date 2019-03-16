@@ -10,10 +10,12 @@ import 'theme.dart';
 /// [onPressed] callback is called if the button is pressed. In contrast to the
 /// normal built-in button, this button morphs into a loading spinner if the
 /// passed callback is asynchronous (if it returns a [Future]).
-/// You can also pass an [onSuccess] and an [onError] listener to listen to the
-/// [onPressed]'s [then] and [catchError] callbacks.
-/// If the Future fails, the button restores itself to the normal state so the
-/// user can tap it again. Otherwise, it just keeps spinning.
+/// If the future throws an error, the button stops spinning (so the user can
+/// try again) and the [onError] callback is called with the caught error.
+/// Otherwise the [onSuccess] callback is called with the result. The callback
+/// might return a [Future<bool>], causing the button to await that future and
+/// stop spinning if it evaluates to [false]. Otherwise, it just continues to
+/// spin endlessly.
 class Button<T> extends StatefulWidget {
   Button({
     @required this.child,
@@ -28,9 +30,9 @@ class Button<T> extends StatefulWidget {
 
   final Widget child;
   final bool isRaised;
-  final Function() onPressed;
-  final Function(T result) onSuccess;
-  final Function(dynamic error) onError;
+  final FutureOr<T> Function() onPressed;
+  final dynamic Function(T result) onSuccess;
+  final void Function(dynamic error) onError;
 
   /// Creates a button that only displays some text.
   Button.text(
@@ -87,12 +89,20 @@ class _ButtonState<T> extends State<Button>
 
       // If the widget has an [onSuccess] or [onError] callback, call it at
       // appropriate times.
-      result.then((res) {
-        if (widget.onSuccess != null) widget.onSuccess(res);
-      }).catchError((error) {
+      result.then(_onSuccess).catchError((error) {
         setState(() => _isLoading = false);
         if (widget.onError != null) widget.onError(error);
       });
+    }
+  }
+
+  void _onSuccess(T result) async {
+    if (widget.onSuccess == null) return;
+
+    final successResult = widget.onSuccess(result);
+    if (successResult is Future<bool>) {
+      final bool keepSpinning = await successResult;
+      _isLoading = keepSpinning;
     }
   }
 

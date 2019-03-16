@@ -37,7 +37,7 @@ export function queryContains(
   res?: functions.Response
 ): boolean {
   for (const arg of parameters) {
-    if (query[arg] === undefined || typeof query[arg] !== 'string') {
+    if (query[arg] === undefined || typeof query[arg] !== 'string' || query[arg] === '') {
       if (res !== null) {
         res.status(CODE_BAD_REQUEST)
           .send('Bad request. ' + arg + ' parameter missing.');
@@ -62,7 +62,12 @@ export async function loadUser(
   id: UserId,
   res: functions.Response
 ): Promise<User> {
-  if (id === null || id === undefined) return null;
+  if (id === null || id === undefined || id === '') {
+    if (res !== null) {
+      res.status(CODE_BAD_REQUEST).send('No user id provided.');
+    }
+    return null;
+  }
 
   const snapshot = await userRef(firestore, id).get();
 
@@ -135,6 +140,13 @@ export async function loadGame(
   firestore: FirebaseFirestore.Firestore,
   code: GameCode
 ): Promise<Game> {
+  if (code === null || code === undefined || code === '') {
+    if (res !== null) {
+      res.status(CODE_BAD_REQUEST).send('You need to provide a game code.');
+    }
+    return null;
+  }
+  
   const snapshot = await gameRef(firestore, code).get();
 
   if (!snapshot.exists) {
@@ -179,6 +191,13 @@ export async function loadPlayer(
   code: GameCode,
   id: UserId
 ): Promise<Player> {
+  if (id === null || id === undefined || id === '') {
+    if (res !== null) {
+      res.status(CODE_BAD_REQUEST).send('No player id provided.');
+    }
+    return null;
+  }
+
   const snapshot = await playerRef(firestore, code, id).get();
 
   if (!snapshot.exists) {

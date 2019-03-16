@@ -14,98 +14,73 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  bool _isSignedIn;
-
-  void initState() {
-    super.initState();
-    _isSignedIn = Bloc.of(context).isSignedIn;
+  Future<bool> _onSignInSuccess() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (ctx) => _EnterNameScreen()
+    ));
+    return false; // Make the button stop spinning.
   }
 
-  Future<void> _signIn(SignInType type) async {
-    Bloc.of(context).logEvent(AnalyticsEvent.sign_in_attempt, { 'type': type });
-    try {
-      await Bloc.of(context).signIn(type);
-
-      // Signing in was successful.
-      Bloc.of(context).logEvent(AnalyticsEvent.sign_in_success);
-      setState(() => _isSignedIn = true);
-    } catch (e) {
-      // User aborted sign in or timeout (no internet).
-      Bloc.of(context).logEvent(AnalyticsEvent.sign_in_failure, { 'error': e });
-      rethrow;
-    }
+  void _onSignInError(dynamic error) {
+    // TODO: display an image or error
   }
-
-  Future<void> _signInWithGoogle() => _signIn(SignInType.google);
-  Future<void> _signInAnonymously() => _signIn(SignInType.anonymous);
 
   @override
   Widget build(BuildContext context) {
-    if (!_isSignedIn) {
-      return _buildSignInScreen();
-    } else {
-      return EnterNameScreen();
-    }
-  }
+    final theme = MyTheme.of(context);
 
-  Widget _buildSignInScreen() {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          Spacer(flex: 2),
-          Text(
-            "Sign in to synchronize your games across all your devices.",
-            textAlign: TextAlign.center,
-            textScaleFactor: 1.2,
-          ),
-          SizedBox(height: 16),
-          _buildGoogleButton(context),
-          SizedBox(height: 16),
-          Button.text('Sign in anonymously\n(erstmal nicht nehmen)',
-            isRaised: false,
-            onPressed: _signInAnonymously,
-          ),
-          Spacer(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGoogleButton(BuildContext context) {
     return MyTheme(
-      data: MyTheme.of(context).copyWith(
+      data: theme.copyWith(
         primaryButtonBackgroundColor: Colors.white,
-        primaryButtonTextColor: Colors.red,
+        primaryButtonTextColor: Colors.black,
       ),
-      child: Button.icon(
-        onPressed: _signInWithGoogle,
-        icon: SvgPicture.asset('images/google_icon.svg',
-          width: 36,
-          height: 36,
-          semanticsLabel: 'Google logo',
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Spacer(flex: 2),
+            Text("Sign in to synchronize your games across all your devices.",
+              textAlign: TextAlign.center,
+              style: theme.bodyText,
+            ),
+            SizedBox(height: 16),
+            Button<void>.icon(
+              onPressed: () => Bloc.of(context).signIn(SignInType.google),
+              onSuccess: (_) => _onSignInSuccess(),
+              onError: _onSignInError,
+              icon: SvgPicture.asset('images/google_icon.svg',
+                width: 36,
+                height: 36,
+                semanticsLabel: 'Google logo',
+              ),
+              text: 'Sign in with Google',
+            ),
+            SizedBox(height: 16),
+            Button.text('Sign in anonymously\n(erstmal nicht nehmen)',
+              isRaised: false,
+              onPressed: () => Bloc.of(context).signIn(SignInType.anonymous),
+            ),
+            Spacer(),
+          ],
         ),
-        text: 'Sign in with Google',
       ),
     );
   }
 }
 
-class EnterNameScreen extends StatefulWidget {
-  @override
+class _EnterNameScreen extends StatefulWidget {
   _EnterNameScreenState createState() => _EnterNameScreenState();
 }
 
-class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderStateMixin {
-  final controller = TextEditingController();
+class _EnterNameScreenState extends State<_EnterNameScreen> {
+  final _controller = TextEditingController();
 
-  @override
   void initState() {
     super.initState();
-    controller.text = Bloc.of(context).name;
+    _controller.text = Bloc.of(context).name;
   }
 
   Future<void> _onNameEntered() async {
-    final name = controller.text;
+    final name = _controller.text;
     final bloc = Bloc.of(context);
 
     bloc.logEvent(AnalyticsEvent.name_entered);
@@ -118,36 +93,41 @@ class _EnterNameScreenState extends State<EnterNameScreen> with TickerProviderSt
     }
   }
 
-  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          Spacer(),
-          Container(
-            width: 200,
-            height: 150,
-            child: Placeholder(),
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          alignment: Alignment.center,
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              Container(
+                width: 200,
+                height: 150,
+                child: Placeholder(),
+              ),
+              SizedBox(height: 16),
+              TextField(
+                controller: _controller,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Enter first and last name",
+                ),
+              ),
+              SizedBox(height: 16),
+              Button.text("Continue", onPressed: _onNameEntered),
+              Spacer(),
+              Text(
+                "Other players will be able to see it. To counter confusion "
+                "in large groups, it's recommended to enter both your first "
+                "and last name.",
+                textAlign: TextAlign.center,
+                style: MyTheme.of(context).bodyText.copyWith(fontSize: 12),
+              ),
+            ],
           ),
-          SizedBox(height: 16),
-          TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Enter first and last name",
-            ),
-          ),
-          SizedBox(height: 16),
-          Button.text("Continue", onPressed: _onNameEntered),
-          Spacer(),
-          Text(
-            "Other players will be able to see it. To counter confusion "
-            "in large groups, it's recommended to enter both your first "
-            "and last name.",
-            textAlign: TextAlign.center,
-            style: MyTheme.of(context).bodyText.copyWith(fontSize: 12),
-          ),
-        ],
+        )
       ),
     );
   }

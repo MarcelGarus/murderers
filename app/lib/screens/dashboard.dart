@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
+import '../widgets/dashboard_app_bar.dart';
 import '../widgets/gradient_background.dart';
+import '../widgets/statistics.dart';
 import '../widgets/theme.dart';
 import 'creator.dart';
 import 'dashboard/active.dart';
@@ -43,12 +45,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Game get game => widget.game;
 
   _DashboardContent _lastContent;
-
-  void _showGames(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (ctx) => GamesSelector()
-    ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,41 +146,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
           GradientBackground(),
           Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              actions: <Widget>[
-                Align(
-                  child: InkWell(
-                    onTap: () => _showGames(context),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(Bloc.of(context).accountPhotoUrl),
-                      radius: 24,
+            body: CustomScrollView(
+              slivers: [
+                SliverPersistentHeader(
+                  delegate: DashboardSliverDelegate(
+                    maxExtent: MediaQuery.of(context).size.height,
+                    child: body,
+                    bottom: Statistics(
+                      goToPlayersCallback: widget.goToPlayersCallback,
+                      goToEventsCallback: widget.goToEventsCallback,
+                      color: theme.bodyText.color,
                     ),
+                    showSwipeUpIndicator: Bloc.of(context).currentGame.isCreator,
                   ),
                 ),
-                SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(Icons.account_circle),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (ctx) => CreatorScreen(),
-                    ));
-                  },
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    CreatorScreen(),
+                  ]),
                 ),
               ],
-            ),
-            body: SafeArea(
-              child: Column(
-                children: <Widget>[
-                  Expanded(child: body),
-                  Statistics(
-                    game: widget.game,
-                    goToPlayersCallback: widget.goToPlayersCallback,
-                    goToEventsCallback: widget.goToEventsCallback,
-                  ),
-                ],
-              ),
             ),
           ),
         ],
@@ -193,91 +174,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-class GamesSelector extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: Bloc.of(context).allGames.map((game) {
-          return ListTile(
-            leading: CircleAvatar(child: Text(game.code)),
-            title: Text(game.name),
-            subtitle: Text(game.code),
-            onTap: () {
-              Bloc.of(context).currentGame = game;
-            },
-            trailing: IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () => Bloc.of(context).removeGame(game),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
+class DashboardSliverDelegate extends SliverPersistentHeaderDelegate {
+  DashboardSliverDelegate({
+    @required this.maxExtent,
+    @required this.child,
+    @required this.bottom,
+    @required this.showSwipeUpIndicator,
+  });
 
-class Statistics extends StatelessWidget {
-  Statistics({
-    @required this.game,
-    this.goToPlayersCallback,
-    this.goToEventsCallback,
-  }) : assert(game != null);
+  final double maxExtent;
+  final Widget child;
+  final Widget bottom;
+  final bool showSwipeUpIndicator;
 
-  final Game game;
-  final VoidCallback goToPlayersCallback;
-  final VoidCallback goToEventsCallback;
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    var items = <Widget>[
+      DashboardAppBar(),
+      Expanded(child: child),
+      bottom,
+    ];
 
-  int get _myRank => game.me?.rank;
-  int get _killedByMe => game.me?.kills ?? 0;
-  int get _alive => game.players.where((p) => p.isAlive).length;
-  int get _total => game.players.length;
+    if (showSwipeUpIndicator) {
+      items.add(Text(
+        'Scroll down to see creator actions which are only visible to you.',
+        style: MyTheme.of(context).bodyText,
+        textAlign: TextAlign.center,
+      ));
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        _buildItem(
-          number: _myRank == null ? '-' : '#$_myRank',
-          text: 'rank',
-          onTap: goToPlayersCallback,
-        ),
-        _buildItem(
-          number: '$_killedByMe',
-          text: 'killed by you',
-        ),
-        _buildItem(
-          number: '$_alive/$_total',
-          text: 'still alive',
-          onTap: goToEventsCallback,
-        ),
-      ],
-    );
+    return Column(children: items);
   }
 
-  Widget _buildItem({ String number, String text, VoidCallback onTap }) {
-    return Expanded(
-      child: InkResponse(
-        highlightShape: BoxShape.rectangle,
-        containedInkWell: true,
-        onTap: onTap,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            SizedBox(height: 16),
-            Text(number,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(text, style: TextStyle(color: Colors.white)),
-            SizedBox(height: 16),
-          ],
-        )
-      ),
-    );
-  }
+  double get minExtent => 0;
+
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true; // TODO: optimize
 }

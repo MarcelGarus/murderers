@@ -71,7 +71,17 @@ class Bloc {
   }
 
   // Handles the sign in status.
-  Future<void> signIn(account.SignInType type) => _account.signIn(type);
+  Future<void> signIn(account.SignInType type) async {
+    logEvent(analytics.AnalyticsEvent.sign_in_attempt, { 'type': type });
+
+    try {
+      await _account.signIn(type);
+      logEvent(analytics.AnalyticsEvent.sign_in_success);
+    } catch (e) {
+      logEvent(analytics.AnalyticsEvent.sign_in_failure, { 'error': e });
+      rethrow;
+    }
+  }
   Future<bool> signOut() => _account.signOut();
   bool get isSignedIn => _account.isSignedInWithFirebase;
 

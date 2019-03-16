@@ -16,7 +16,7 @@ enum AnalyticsEvent {
   signed_up,
   join_game_begin,
   join_game_enter_code,
-  join_game_preview,
+  game_preview,
   join_game_completed,
   watch_game_begin,
   watch_game_enter_code,

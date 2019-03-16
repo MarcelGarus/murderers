@@ -19,24 +19,18 @@ class CreatorScreen extends StatelessWidget {
     final joiningPlayers = game.players
       .where((p) => p.state == PlayerState.joining).toList();
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text('Creator screen', style: TextStyle(color: Colors.black)),
-      ),
-      body: ListView(
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: _AcceptPlayersCard(
-              players: joiningPlayers.followedBy([
-                Player(state: PlayerState.alive, name: 'Test player', id: '_'),
-              ]).toList(),
-              onAccept: (p) => _acceptPlayers(context, p),
-              onDeny: (p) => _denyPlayers(context, p),
-            ),
-          )
+          _AcceptPlayersCard(
+            players: joiningPlayers.followedBy([
+              Player(state: PlayerState.alive, name: 'Test player', id: '_'),
+            ]).toList(),
+            onAccept: (p) => _acceptPlayers(context, p),
+            onDeny: (p) => _denyPlayers(context, p),
+          ),
         ],
       ),
     );

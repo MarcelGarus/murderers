@@ -206,7 +206,7 @@ class Handler {
     parser: (body) => _parseServerGame(
       body: body,
       code: code,
-      id: id
+      id: id,
     ),
   ));
 
