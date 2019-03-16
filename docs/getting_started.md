@@ -8,20 +8,11 @@ Also, it gives reasons about *why* everything exists the way it does (or at leas
 
 This document is divided into the following sub-documents:
 
-* [**Architecture**](architecture.md): Covers the upper-level file architecture as well as the architecture of Murderers itself (which services and frameworks are used, what's the front-end, back-end, who talks to whom etc.).
+* The theoretical part
+  * [**Data model**](data_model.md): Covers which entities exist in the context of a game.
+  * [**A murderous graph**](murderous_graph.md): Covers how the data change over time and how the operations affect it.
+* The practical part / [**Architecture**](architecture.md): Covers the upper-level file architecture as well as the architecture of Murderers itself (which services and frameworks are used, what's the front-end, back-end, who talks to whom etc.).
   * [**Firestore**](firestore.md): Covers how the [data model](data_model.md) is mapped into Firestore's collections and documents.
   * [**Cloud Functions**](cloud_functions.md): Covers which Cloud Functions exist and what they do.
-* [**Data model**](data_model.md): Covers which entities exist in the context of a game and which 
-
-### Firebase Auth
-
-Firebase Auth is used to authenticate users.
-If users don't sign in, they connect using an anonymous account.
-
-### Firebase Cloud Messaging
-
-FCM is used for delivering notifications.
-There are several topics:
-
-* Each game has a topic named `game_<game code>`.
-* There's a `deaths` topic for deaths.
+  * [**Authentication**](authentication.md): Covers the whole authentication process.
+  * [**Cloud Messaging**](cloud_messaging.md): Covers how the different aspects of the Firebase Cloud Messaging platform are leveraged for notifying users.

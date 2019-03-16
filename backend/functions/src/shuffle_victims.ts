@@ -1,7 +1,7 @@
 /// Shuffle all the players of a game.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
 /// * game [code]
 /// * whether to shuffle [onlyOutsmartedPlayers]
@@ -45,11 +45,11 @@ export async function handleRequest(
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code', 'onlyWhoseVictimsKnow'
+    'id', 'authToken', 'code', 'onlyOutsmarted'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id: UserId = req.query.id;
+  const id: UserId = req.query.me;
   const authToken: FirebaseAuthToken = req.query.authToken;
   const code: GameCode = req.query.code;
   const onlyOutsmartedPlayers: boolean = (req.query.onlyOutsmartedPlayers === 'true');

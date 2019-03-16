@@ -59,6 +59,7 @@ class _Request<T> {
 
     // Parse response.
     try {
+      print('Parsing the response.');
       return (parser == null) ? null : parser(res.body);
     } catch (e, stacktrace) {
       print('Seems like the server output is corrupt: $e');
@@ -72,8 +73,10 @@ class _Request<T> {
     List<_Request> requestsToWaitFor
   ) async {
     // Wait for the given requests.
-    print("Before executing the query, let's first await all ${requestsToWaitFor.length} requests: $requestsToWaitFor");
+    print("The following ${requestsToWaitFor.length} requests are scheduled: $requestsToWaitFor");
     while (requestsToWaitFor.first != this) {
+      if (!requestsToWaitFor.contains(this)) return null;
+
       try {
         await requestsToWaitFor.first._executeScheduled(requestsToWaitFor);
       } catch (e) {
@@ -108,16 +111,18 @@ class Handler {
   // TODO: merge multiple requests that do effectively the same
   Future<T> _makeRequest<T>(_Request<T> request) async {
     queue.add(request);
-    final result = await request._executeScheduled(queue);
-    queue.remove(request);
-    return result;
+    try {
+      return await request._executeScheduled(queue);
+    } finally {
+      queue.remove(request);
+    }
   }
 
   /// Creates a user on the server.
   Future<String> createUser({
     @required String name,
     @required String authToken,
-    String messagingToken
+    String messagingToken,
   }) => _makeRequest(_Request(
     functionName: 'create_user',
     parameters: {
@@ -138,7 +143,7 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'create_game',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
       'name': name,
       'start': start.millisecondsSinceEpoch.toString(),
@@ -164,9 +169,25 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'join_game',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
+    }
+  ));
+
+  /// Accepts some players.
+  Future<void> acceptPlayer({
+    @required String id,
+    @required String authToken,
+    @required String code,
+    @required List<Player> players,
+  }) => _makeRequest(_Request(
+    functionName: 'accept_players',
+    parameters: {
+      'me': id,
+      'authToken': authToken,
+      'game': code,
+      'playersToAccept': players.map((p) => p.id).join('_'),
     }
   ));
 
@@ -178,14 +199,14 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'get_game',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
     },
     parser: (body) => _parseServerGame(
       body: body,
       code: code,
-      id: id
+      id: id,
     ),
   ));
 
@@ -197,9 +218,9 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'start_game',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
     },
   ));
 
@@ -208,12 +229,14 @@ class Handler {
     @required String id,
     @required String authToken,
     @required String code,
+    @required String victim,
   }) => _makeRequest(_Request(
     functionName: 'kill_player',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
+      'victim': victim,
     },
   ));
 
@@ -227,9 +250,9 @@ class Handler {
   }) => _makeRequest(_Request(
     functionName: 'die',
     parameters: {
-      'id': id,
+      'me': id,
       'authToken': authToken,
-      'code': code,
+      'game': code,
       'weapon': weapon,
       'lastWords': lastWords
     },
@@ -244,7 +267,7 @@ class Handler {
     functionName: 'shuffle_victims',
     parameters: {
       'authToken': authToken,
-      'code': code,
+      'game': code,
       'onlyOutsmartedPlayers': onlyOutsmartedPlayers ? 'true' : 'false',
     },
   ));

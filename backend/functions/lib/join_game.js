@@ -1,10 +1,11 @@
 "use strict";
-/// Joins a player to a game.
+/// Joins a player to a game. The game creator will still need to approve of the
+/// new player for the joining to have any effect.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [code]
+/// * [game]
 ///
 /// Returns either:
 /// 200: Joined.
@@ -25,18 +26,18 @@ const admin = require("firebase-admin");
 const models_1 = require("./models");
 const utils_1 = require("./utils");
 const util_1 = require("util");
+const constants_1 = require("./constants");
 /// Joins a player to a game.
-// TODO: Prevent player from joining twice.
 function handleRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!utils_1.queryContains(req.query, [
-            'id', 'authToken', 'code'
+            'me', 'authToken', 'game'
         ], res))
             return;
         const firestore = admin.app().firestore();
-        const id = req.query.id;
+        const id = req.query.me;
         const authToken = req.query.authToken;
-        const code = req.query.code;
+        const code = req.query.game;
         util_1.log(code + ': ' + id + ' joins.');
         // Load and verify the user.
         const user = yield utils_1.loadAndVerifyUser(firestore, id, authToken, res);
@@ -46,36 +47,48 @@ function handleRequest(req, res) {
         const game = yield utils_1.loadGame(res, firestore, code);
         if (game === null)
             return;
+        // Make sure user didn't already join.
+        const existingPlayer = yield utils_1.playerRef(firestore, code, id).get();
+        if (existingPlayer.exists) {
+            const errText = 'You already joined this game.';
+            res.status(constants_1.CODE_ILLEGAL_STATE).send(errText);
+            return;
+        }
         // Create the player.
+        const isCreator = (id === game.creator);
         const player = {
-            state: models_1.PLAYER_WAITING,
+            state: isCreator ? models_1.PLAYER_ALIVE : models_1.PLAYER_JOINING,
+            kills: 0,
             murderer: null,
             victim: null,
-            wasOutsmarted: false,
-            death: null,
-            kills: 0
+            wantsNewVictim: isCreator,
+            death: null
         };
         yield utils_1.playerRef(firestore, code, id).set(player);
-        // Send back the id.
+        // Send response.
         res.set('application/json').send('Joined.');
-        // TODO: Also send a notification to _all_ members of the game that opted in for notifications about new players.
+        // Get the creator.
+        const creator = yield utils_1.loadUser(firestore, game.creator, res);
+        if (creator === null) {
+            util_1.log("Creator couldn't be found and notified.");
+            return;
+        }
+        // Send a notification to the creator.
         admin.messaging().send({
             notification: {
-                title: 'Someone just joined the game ' + code,
-                body: 'Say hi by killing ' + id + '!',
+                title: user.name + ' wants to join the game',
+                body: 'Tap to go to the admin panel.',
             },
             android: {
-                priority: 'normal',
-                collapseKey: 'someone_joins_' + code,
+                priority: 'high',
+                collapseKey: 'game_' + code + '_admin',
                 notification: {
                     color: '#ff0000',
                 },
             },
-            token: 'emd1IxAjbQg:APA91bF7MNO65rvy3Pg_XGEkJPHNdCSLpmahmreQYYRVEAzsIXaeg2XQNdRUHphERXzAX8WTRXnEEdisiMNsWoTQF-ee5HHDN8Gn1TIfF0MVxDbWso21JxDJt5-9-QtVUc2Jfe6EJYq7'
-        }).then((response) => {
-            util_1.log('Successfully sent message. Message id: ' + response);
+            token: creator.messagingToken
         }).catch((error) => {
-            util_1.log('Error sending message: ' + error);
+            util_1.log('Error sending message to creator: ' + error);
         });
     });
 }

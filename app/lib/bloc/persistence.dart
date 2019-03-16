@@ -27,7 +27,7 @@ Future<List<Game>> loadGames() async {
   final encoded = (await sp).getStringList(_gamesStorageKey);
   print('Loaded games: $encoded');
   final games = <Game>[];
-  for (String encodedGame in encoded) {
+  for (String encodedGame in encoded ?? []) {
     try {
       games.add(_decodeGame(encodedGame));
     } catch (e) {

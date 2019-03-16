@@ -37,20 +37,9 @@ class PreparationDashboard extends StatelessWidget {
       ),
     ];
 
-    if (game.isCreator) {
-      items.addAll([
-        SizedBox(height: 16),
-        Button.text('Start the game',
-          onPressed: () => _startGame(context),
-          onSuccess: (result) {
-            print(result);
-          },
-        )
-      ]);
-    }
-
     if (!game.isPlayer) {
       items.addAll([
+        Text('You can also join the game yourself.', style: theme.bodyText),
         SizedBox(height: 16),
         Button.text('Join the game',
           onPressed: () => _joinGame(context),
@@ -59,8 +48,23 @@ class PreparationDashboard extends StatelessWidget {
       ]);
     }
 
+    if (game.isCreator && game.players.length >= 4) { // TODO: don't hardcode
+      items.addAll([
+        SizedBox(height: 16),
+        Button.text('Start the game',
+          onPressed: () => _startGame(context),
+          onSuccess: (result) {
+            print(result);
+          },
+          onError: (error) {
+            // TOOD: handle the error
+          },
+        ),
+      ]);
+    }
+
     items.add(Spacer());
 
-    return Center(child: StaggeredColumn(children: items));
+    return StaggeredColumn(children: items);
   }
 }

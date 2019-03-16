@@ -29,7 +29,7 @@ Game _$GameFromJson(Map<String, dynamic> json) {
       victim: json['victim'] == null
           ? null
           : Player.fromJson(json['victim'] as Map<String, dynamic>),
-      wasOutsmarted: json['wasOutsmarted'] as bool);
+      wantsNewVictim: json['wantsNewVictim'] as bool);
 }
 
 Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
@@ -43,7 +43,7 @@ Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
       'me': instance.me,
       'murderer': instance.murderer,
       'victim': instance.victim,
-      'wasOutsmarted': instance.wasOutsmarted
+      'wantsNewVictim': instance.wantsNewVictim
     };
 
 T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
@@ -69,6 +69,5 @@ T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
 const _$GameStateEnumMap = <GameState, dynamic>{
   GameState.notStartedYet: 'notStartedYet',
   GameState.running: 'running',
-  GameState.paused: 'paused',
   GameState.over: 'over'
 };

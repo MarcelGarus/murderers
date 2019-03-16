@@ -54,7 +54,18 @@ export async function handleRequest(
 
   // TODO: Confirm Firebase Auth token.
 
-  // TODO: Make sure user doesn't already exist.
+  // If the user already exists, just return the existing user id.
+  const existingUser: FirebaseFirestore.QuerySnapshot = await firestore
+    .collection('users')
+    .where('authToken', '==', authToken)
+    .limit(1).get();
+
+  if (existingUser.size > 0) {
+    res.set('application/json').send({
+      id: existingUser.docs[0].id,
+    });
+    return;
+  }
 
   // Create the user.
   const user: User = {

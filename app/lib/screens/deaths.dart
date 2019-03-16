@@ -17,6 +17,11 @@ class _DeathsScreenState extends State<DeathsScreen> {
   Game _lastGame;
   List<Player> _deadPlayers;
 
+  void initState() {
+    super.initState();
+    Bloc.of(context).logEvent(AnalyticsEvent.deaths);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.game != _lastGame) {
@@ -46,7 +51,7 @@ class _DeathsScreenState extends State<DeathsScreen> {
         Container(
           height: 250,
           color: Colors.grey,
-          child: FlareActor('assets/deaths.flr',
+          child: FlareActor('images/deaths.flr',
             fit: BoxFit.fitWidth,
             color: kThemeDark.backgroundColor,
             alignment: Alignment.bottomCenter,

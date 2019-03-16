@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
 
@@ -27,37 +29,51 @@ class _IntroScreenState extends State<IntroScreen>
         Bloc.of(context).logEvent(AnalyticsEvent.intro_step, {
           'step': _controller.index
         });
+        if (_controller.index == 3) {
+          Bloc.of(context).logEvent(AnalyticsEvent.intro_completed);
+        }
       }
     });
+  }
+
+  Future<bool> _onWillPop() async {
+    if (_controller.index > 0) {
+      _controller.index--;
+      return false;
+    }
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyTheme.of(context).backgroundColor,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Villain(
-                villainAnimation: VillainAnimation.transformTranslate(
-                  fromOffset: Offset(0, 30),
-                  curve: Curves.easeOutCubic,
-                  to: Duration(milliseconds: 200),
+      body: WillPopScope(
+        onWillPop: _onWillPop,
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Villain(
+                  villainAnimation: VillainAnimation.transformTranslate(
+                    fromOffset: Offset(0, 30),
+                    curve: Curves.easeOutCubic,
+                    to: Duration(milliseconds: 200),
+                  ),
+                  secondaryVillainAnimation: VillainAnimation.fade(),
+                  child: _buildContent(),
                 ),
-                secondaryVillainAnimation: VillainAnimation.fade(),
-                child: _buildContent(),
               ),
-            ),
-            Villain(
-              villainAnimation: VillainAnimation.fromBottom(
-                relativeOffset: 1,
-                curve: Curves.easeOutCubic,
+              Villain(
+                villainAnimation: VillainAnimation.fromBottom(
+                  relativeOffset: 1,
+                  curve: Curves.easeOutCubic,
+                ),
+                child: _buildBottomBar(),
               ),
-              child: _buildBottomBar(),
-            ),
-          ],
-        )
+            ],
+          )
+        ),
       ),
     );
   }

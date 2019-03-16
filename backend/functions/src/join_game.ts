@@ -1,9 +1,10 @@
-/// Joins a player to a game.
+/// Joins a player to a game. The game creator will still need to approve of the
+/// new player for the joining to have any effect.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [code]
+/// * [game]
 ///
 /// Returns either:
 /// 200: Joined.
@@ -14,24 +15,24 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, UserId, Player, FirebaseAuthToken, PLAYER_WAITING, User } from './models';
-import { loadGame, playerRef, queryContains, loadAndVerifyUser } from './utils';
+import { GameCode, Game, UserId, Player, FirebaseAuthToken, User, PLAYER_JOINING, PLAYER_ALIVE } from './models';
+import { loadGame, playerRef, queryContains, loadAndVerifyUser, loadUser } from './utils';
 import { log } from 'util';
+import { CODE_ILLEGAL_STATE } from './constants';
 
 /// Joins a player to a game.
-// TODO: Prevent player from joining twice.
 export async function handleRequest(
   req: functions.Request,
   res: functions.Response
 ): Promise<void> {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code'
+    'me', 'authToken', 'game'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id: UserId = req.query.id;
+  const id: UserId = req.query.me;
   const authToken: FirebaseAuthToken = req.query.authToken;
-  const code: GameCode = req.query.code;
+  const code: GameCode = req.query.game;
 
   log(code + ': ' + id + ' joins.');
 
@@ -43,38 +44,52 @@ export async function handleRequest(
   const game: Game = await loadGame(res, firestore, code);
   if (game === null) return;
 
+  // Make sure user didn't already join.
+  const existingPlayer = await playerRef(firestore, code, id).get();
+  if (existingPlayer.exists) {
+    const errText = 'You already joined this game.';
+    res.status(CODE_ILLEGAL_STATE).send(errText);
+    return;
+  }
+
   // Create the player.
+  const isCreator: boolean = (id === game.creator);
   const player: Player = {
-    state: PLAYER_WAITING,
+    state: isCreator ? PLAYER_ALIVE : PLAYER_JOINING,
+    kills: 0,
     murderer: null,
     victim: null,
-    wasOutsmarted: false,
-    death: null,
-    kills: 0
+    wantsNewVictim: isCreator,
+    death: null
   };
 
   await playerRef(firestore, code, id).set(player);
 
-  // Send back the id.
+  // Send response.
   res.set('application/json').send('Joined.');
 
-  // TODO: Also send a notification to _all_ members of the game that opted in for notifications about new players.
+  // Get the creator.
+  const creator: User = await loadUser(firestore, game.creator, res);
+  if (creator === null) {
+    log("Creator couldn't be found and notified.");
+    return;
+  }
+
+  // Send a notification to the creator.
   admin.messaging().send({
     notification: {
-      title: 'Someone just joined the game ' + code,
-      body: 'Say hi by killing ' + id + '!',
+      title: user.name + ' wants to join the game',
+      body: 'Tap to go to the admin panel.',
     },
     android: {
-      priority: 'normal',
-      collapseKey: 'someone_joins_' + code,
+      priority: 'high',
+      collapseKey: 'game_' + code + '_admin',
       notification: {
         color: '#ff0000',
       },
     },
-    token: 'emd1IxAjbQg:APA91bF7MNO65rvy3Pg_XGEkJPHNdCSLpmahmreQYYRVEAzsIXaeg2XQNdRUHphERXzAX8WTRXnEEdisiMNsWoTQF-ee5HHDN8Gn1TIfF0MVxDbWso21JxDJt5-9-QtVUc2Jfe6EJYq7'
-  }).then((response) => {
-    log('Successfully sent message. Message id: ' + response);
+    token: creator.messagingToken
   }).catch((error) => {
-    log('Error sending message: ' + error);
+    log('Error sending message to creator: ' + error);
   });
 }

@@ -1,0 +1,8260 @@
+{
+	"version": 21,
+	"artboards": [
+		{
+			"name": "Artboard",
+			"translation": [
+				0,
+				0
+			],
+			"width": 512,
+			"height": 512,
+			"origin": [
+				0,
+				0
+			],
+			"clipContents": true,
+			"color": [
+				1,
+				1,
+				1,
+				1
+			],
+			"nodes": [
+				{
+					"name": "grave",
+					"translation": [
+						244.72042846679688,
+						248.54501342773438
+					],
+					"rotation": 0,
+					"scale": [
+						1.0060220956802368,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "grave back",
+					"parent": 0,
+					"translation": [
+						7.125545501708984,
+						26.040863037109375
+					],
+					"rotation": 0,
+					"scale": [
+						1.0327807664871216,
+						1.0240001678466797
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 1,
+					"type": "shape"
+				},
+				{
+					"name": "Rectangle Path",
+					"parent": 1,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								-124.10420227050781,
+								-123.57091522216797
+							],
+							"in": [
+								-139.56149291992188,
+								-37.298095703125
+							],
+							"out": [
+								-108.64692687988281,
+								-209.84375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								121,
+								-115.5
+							],
+							"in": [
+								106.0361328125,
+								-210.51229858398438
+							],
+							"out": [
+								135.9638671875,
+								-20.487701416015625
+							]
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								121,
+								115.5
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-121,
+								115.5
+							],
+							"radius": 0
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "Color",
+					"parent": 1,
+					"opacity": 1,
+					"color": [
+						0.22380952537059784,
+						0.22380952537059784,
+						0.22380952537059784,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "grave front",
+					"parent": 0,
+					"translation": [
+						0.16752424836158752,
+						28.040985107421875
+					],
+					"rotation": 0,
+					"scale": [
+						0.9940139651298523,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 2,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 4,
+					"opacity": 1,
+					"color": [
+						0.4000000059604645,
+						0.4000000059604645,
+						0.4000000059604645,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Rectangle Path",
+					"parent": 4,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								-124.10420227050781,
+								-123.57091522216797
+							],
+							"in": [
+								-139.56149291992188,
+								-37.298095703125
+							],
+							"out": [
+								-108.64692687988281,
+								-209.84375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								121,
+								-115.5
+							],
+							"in": [
+								106.0361328125,
+								-210.51229858398438
+							],
+							"out": [
+								135.9638671875,
+								-20.487701416015625
+							]
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								121,
+								115.5
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-121,
+								115.5
+							],
+							"radius": 0
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "R",
+					"parent": 0,
+					"translation": [
+						-58.60176467895508,
+						-35
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 3,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 7,
+					"opacity": 1,
+					"color": [
+						0.20000000298023224,
+						0.20000000298023224,
+						0.20000000298023224,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Rectangle Path",
+					"parent": 7,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 0,
+							"translation": [
+								-26.5,
+								-42
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								12.335308074951172,
+								-34
+							],
+							"in": [
+								4.044824600219727,
+								-44.75
+							],
+							"out": [
+								20.625791549682617,
+								-23.25
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								13.822067260742188,
+								-8.827163696289062
+							],
+							"in": [
+								16.42681884765625,
+								-12.327163696289062
+							],
+							"out": [
+								11.217315673828125,
+								-5.3271636962890625
+							]
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-0.09412828087806702,
+								0.4228363037109375
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								27.494020462036133,
+								32.75
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								15.140310287475586,
+								41.624759674072266
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-12.19619083404541,
+								7.75018310546875
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-11.450679779052734,
+								41.25018310546875
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-26.5,
+								42
+							],
+							"radius": 0
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "I",
+					"parent": 0,
+					"translation": [
+						-2.685568332672119,
+						-36
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 4,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 10,
+					"opacity": 1,
+					"color": [
+						0.20000000298023224,
+						0.20000000298023224,
+						0.20000000298023224,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Rectangle Path",
+					"parent": 10,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 0,
+							"translation": [
+								-8.529928207397461,
+								-41.5
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								10.020955085754395,
+								-41.5
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								10.766465187072754,
+								40.5
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-4.802375316619873,
+								40
+							],
+							"radius": 0
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "P",
+					"parent": 0,
+					"translation": [
+						59.751548767089844,
+						-35.5
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 5,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 13,
+					"opacity": 1,
+					"color": [
+						0.20000000298023224,
+						0.20000000298023224,
+						0.20000000298023224,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Rectangle Path",
+					"parent": 13,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 0,
+							"translation": [
+								-13.996875762939453,
+								-40.25
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								23.191648483276367,
+								-22.25
+							],
+							"in": [
+								23.272489547729492,
+								-46.5
+							],
+							"out": [
+								23.11080551147461,
+								2
+							]
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-0.9804434180259705,
+								0.7884063720703125
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								0.08082301169633865,
+								36
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-13.5,
+								36
+							],
+							"radius": 0
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "inner R",
+					"parent": 0,
+					"translation": [
+						-62.50600051879883,
+						-55.75
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 6,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 16,
+					"opacity": 1,
+					"color": [
+						0.4000000059604645,
+						0.4000000059604645,
+						0.4000000059604645,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Rectangle Path",
+					"parent": 16,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 0,
+							"translation": [
+								-9.5,
+								-9
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								7.263462543487549,
+								0
+							],
+							"in": [
+								7.631682395935059,
+								-12
+							],
+							"out": [
+								6.895242691040039,
+								12
+							]
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-8.754486083984375,
+								12.25
+							],
+							"radius": 0
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "inner P",
+					"parent": 0,
+					"translation": [
+						67.95828247070312,
+						-58
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 7,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 19,
+					"opacity": 1,
+					"color": [
+						0.4000000059604645,
+						0.4000000059604645,
+						0.4000000059604645,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Rectangle Path",
+					"parent": 19,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 0,
+							"translation": [
+								-9.50001335144043,
+								-4.25
+							],
+							"radius": 0
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.2933762073516846,
+								1.5
+							],
+							"in": [
+								2.661611557006836,
+								-10.5
+							],
+							"out": [
+								1.9251712560653687,
+								13.5
+							]
+						},
+						{
+							"pointType": 0,
+							"translation": [
+								-8.754486083984375,
+								12.25
+							],
+							"radius": 0
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "obscurance",
+					"translation": [
+						267.3283996582031,
+						575.747314453125
+					],
+					"rotation": 0.0013917863464525276,
+					"scale": [
+						1,
+						1.8698148727416992
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 8,
+					"type": "shape"
+				},
+				{
+					"name": "obscurance rect",
+					"parent": 22,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"width": 365,
+					"height": 65,
+					"cornerRadius": 0,
+					"type": "rectangle"
+				},
+				{
+					"name": "Color",
+					"parent": 22,
+					"opacity": 1,
+					"color": [
+						1,
+						1,
+						1,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "flying dirt 1",
+					"translation": [
+						129.05117797851562,
+						392.5716857910156
+					],
+					"rotation": 0,
+					"scale": [
+						0.9719999432563782,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 1 back",
+					"parent": 25,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 11,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 26,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 26,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 1 front",
+					"parent": 25,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 12,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 29,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 29,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 2",
+					"translation": [
+						153.55117797851562,
+						392.5716857910156
+					],
+					"rotation": -2.125620911932433,
+					"scale": [
+						0.9719999432563782,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 2 back",
+					"parent": 32,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 29,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 33,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 33,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 2 front",
+					"parent": 32,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 30,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 36,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 36,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 3",
+					"translation": [
+						172.55117797851562,
+						389.5716857910156
+					],
+					"rotation": -0.21447578005525622,
+					"scale": [
+						0.9719999432563782,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 3 back",
+					"parent": 39,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 31,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 40,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 40,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 3 front",
+					"parent": 39,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 32,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 43,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 43,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 4",
+					"translation": [
+						193.55117797851562,
+						392.0716857910156
+					],
+					"rotation": -0.5773494916698432,
+					"scale": [
+						0.9719999432563782,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 4 back",
+					"parent": 46,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 17,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 47,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 47,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 4 front",
+					"parent": 46,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 18,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 50,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 50,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 5",
+					"translation": [
+						214.55117797851562,
+						392.0716857910156
+					],
+					"rotation": -1.8181330712737043,
+					"scale": [
+						0.9719999432563782,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 5 back",
+					"parent": 53,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 21,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 54,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 54,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 5 front",
+					"parent": 53,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 22,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 57,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 57,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 6",
+					"translation": [
+						234.55117797851562,
+						391.0716857910156
+					],
+					"rotation": 2.956229752532594,
+					"scale": [
+						0.9719999432563782,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 6 back",
+					"parent": 60,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 23,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 61,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 61,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 6 front",
+					"parent": 60,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 24,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 64,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 64,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 7",
+					"translation": [
+						256.25994873046875,
+						396.9422607421875
+					],
+					"rotation": -2.125620911932433,
+					"scale": [
+						0.9719999432563782,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 7 back",
+					"parent": 67,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 25,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 68,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 68,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 7 front",
+					"parent": 67,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 26,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 71,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 71,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 8",
+					"translation": [
+						279.5511779785156,
+						392.5716857910156
+					],
+					"rotation": -3.0857197806682977,
+					"scale": [
+						0.9719997048377991,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 8 back",
+					"parent": 74,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 27,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 75,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 75,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 8 front",
+					"parent": 74,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 28,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 78,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 78,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 9",
+					"translation": [
+						304.0511779785156,
+						393.0716857910156
+					],
+					"rotation": -1.7308339255036813,
+					"scale": [
+						0.9719999432563782,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 9 back",
+					"parent": 81,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 13,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 82,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 82,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 9 front",
+					"parent": 81,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 14,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 85,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 85,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 10",
+					"translation": [
+						328.0511779785156,
+						393.0716857910156
+					],
+					"rotation": -0.15846752227889185,
+					"scale": [
+						0.9719999432563782,
+						1.0000001192092896
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 10 back",
+					"parent": 88,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 15,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 89,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 89,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 10 front",
+					"parent": 88,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 16,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 92,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 92,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 11",
+					"translation": [
+						355.05120849609375,
+						392.5716857910156
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "flying dirt 11 back",
+					"parent": 95,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 9,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 96,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 96,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-6.5606689453125,
+								-6.019561767578125
+							],
+							"out": [
+								13.8958740234375,
+								-16.385101318359375
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								17.125,
+								-0.125
+							],
+							"in": [
+								19.63287353515625,
+								-8.5426025390625
+							],
+							"out": [
+								14.61712646484375,
+								8.2926025390625
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "flying dirt 11 front",
+					"parent": 95,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 10,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 99,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 99,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								11.875,
+								2.0020980834960938
+							],
+							"in": [
+								11.50787353515625,
+								-5.6178460121154785
+							],
+							"out": [
+								12.24212646484375,
+								9.622041702270508
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.5909423828125,
+								14.420440673828125
+							],
+							"out": [
+								-5.3409423828125,
+								10.079559326171875
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 1",
+					"translation": [
+						129.30117797851562,
+						417.94677734375
+					],
+					"rotation": 0,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 1 back",
+					"parent": 102,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 33,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 103,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 103,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								18.564592361450195,
+								7.9293694496154785
+							],
+							"out": [
+								-13.314592361450195,
+								16.57063102722168
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 1 front",
+					"parent": 102,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 34,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 106,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 106,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								30.26594352722168,
+								0.7866281867027283
+							],
+							"in": [
+								29.898853302001953,
+								-6.833314418792725
+							],
+							"out": [
+								30.63311195373535,
+								8.406570434570312
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-4.705092906951904,
+								13.333778381347656
+							],
+							"in": [
+								3.2606945037841797,
+								15.504195213317871
+							],
+							"out": [
+								-12.671021461486816,
+								11.163328170776367
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-9.97826099395752,
+								0.17744924128055573
+							],
+							"in": [
+								-10.103259086608887,
+								5.54014778137207
+							],
+							"out": [
+								-9.853262901306152,
+								-5.185249328613281
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 2",
+					"translation": [
+						179.67617797851562,
+						421.57177734375
+					],
+					"rotation": -2.939018634224421,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 2 back",
+					"parent": 109,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 35,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 110,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 110,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								4.571418762207031,
+								17.83190155029297
+							],
+							"in": [
+								24.730947494506836,
+								24.99844741821289
+							],
+							"out": [
+								-15.588109970092773,
+								10.665356636047363
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-12.416696548461914,
+								-0.9408736228942871
+							],
+							"in": [
+								-12.806868553161621,
+								1.8767883777618408
+							],
+							"out": [
+								-12.026524543762207,
+								-3.758535623550415
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 2 front",
+					"parent": 109,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 36,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 113,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 113,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								30.26594352722168,
+								0.7866281867027283
+							],
+							"in": [
+								29.898853302001953,
+								-6.833314418792725
+							],
+							"out": [
+								30.63311195373535,
+								8.406570434570312
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								7.74006462097168,
+								20.591169357299805
+							],
+							"in": [
+								23.12614631652832,
+								23.7821102142334
+							],
+							"out": [
+								-7.646001815795898,
+								17.400226593017578
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-9.97826099395752,
+								0.17744924128055573
+							],
+							"in": [
+								-10.103259086608887,
+								5.54014778137207
+							],
+							"out": [
+								-9.853262901306152,
+								-5.185249328613281
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 3",
+					"translation": [
+						209.4984588623047,
+						430.4598388671875
+					],
+					"rotation": -6.608782249880324,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 3 back",
+					"parent": 116,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 37,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 117,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 117,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								1.5143156051635742,
+								15.50628662109375
+							],
+							"in": [
+								20.46402931213379,
+								21.461729049682617
+							],
+							"out": [
+								-17.43539810180664,
+								9.550844192504883
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 3 front",
+					"parent": 116,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 38,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 120,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 120,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								30.26594352722168,
+								0.7866281867027283
+							],
+							"in": [
+								29.898853302001953,
+								-6.833314418792725
+							],
+							"out": [
+								30.63311195373535,
+								8.406570434570312
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								3.866528034210205,
+								15.807368278503418
+							],
+							"in": [
+								14.8783540725708,
+								18.453834533691406
+							],
+							"out": [
+								-7.145322799682617,
+								13.160926818847656
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-9.97826099395752,
+								0.17744924128055573
+							],
+							"in": [
+								-10.103259086608887,
+								5.54014778137207
+							],
+							"out": [
+								-9.853262901306152,
+								-5.185249328613281
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 4",
+					"translation": [
+						265.65771484375,
+						433.7695617675781
+					],
+					"rotation": -9.447745857404502,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 4 back",
+					"parent": 123,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 39,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 124,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 124,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								18.564592361450195,
+								7.9293694496154785
+							],
+							"out": [
+								-13.314592361450195,
+								16.57063102722168
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 4 front",
+					"parent": 123,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 40,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 127,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 127,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								30.26594352722168,
+								0.7866281867027283
+							],
+							"in": [
+								29.898853302001953,
+								-6.833314418792725
+							],
+							"out": [
+								30.63311195373535,
+								8.406570434570312
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-4.705092906951904,
+								13.333778381347656
+							],
+							"in": [
+								3.2606945037841797,
+								15.504195213317871
+							],
+							"out": [
+								-12.671021461486816,
+								11.163328170776367
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-9.97826099395752,
+								0.17744924128055573
+							],
+							"in": [
+								-10.103259086608887,
+								5.54014778137207
+							],
+							"out": [
+								-9.853262901306152,
+								-5.185249328613281
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 5",
+					"translation": [
+						279.8011779785156,
+						412.32177734375
+					],
+					"rotation": -12.503377816543052,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 5 back",
+					"parent": 130,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 41,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 131,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 131,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								4.1760077476501465,
+								18.40283966064453
+							],
+							"in": [
+								22.881933212280273,
+								15.057392120361328
+							],
+							"out": [
+								-14.529885292053223,
+								21.7482852935791
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 5 front",
+					"parent": 130,
+					"translation": [
+						-4.458549976348877,
+						-1.8034406900405884
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 42,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 134,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 134,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								32.04798889160156,
+								4.737786293029785
+							],
+							"in": [
+								32.05649948120117,
+								-7.383537292480469
+							],
+							"out": [
+								32.03947830200195,
+								16.85907745361328
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-3.829463005065918,
+								17.20946502685547
+							],
+							"in": [
+								4.136315822601318,
+								19.379871368408203
+							],
+							"out": [
+								-11.795402526855469,
+								15.0390043258667
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-9.97826099395752,
+								0.17744924128055573
+							],
+							"in": [
+								-10.103259086608887,
+								5.54014778137207
+							],
+							"out": [
+								-9.853262901306152,
+								-5.185249328613281
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 6",
+					"translation": [
+						319.7675476074219,
+						423.673583984375
+					],
+					"rotation": -12.812085102115107,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 6 back",
+					"parent": 137,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 43,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 138,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 138,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								10.584851264953613,
+								0.17762376368045807
+							],
+							"out": [
+								-5.334851264953613,
+								24.322376251220703
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 6 front",
+					"parent": 137,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 44,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 141,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 141,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								30.26594352722168,
+								0.7866281867027283
+							],
+							"in": [
+								36.695655822753906,
+								-3.0848984718322754
+							],
+							"out": [
+								23.836231231689453,
+								4.6581549644470215
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.5934369564056396,
+								13.306583404541016
+							],
+							"in": [
+								7.603808403015137,
+								4.507965564727783
+							],
+							"out": [
+								-2.4169042110443115,
+								22.105209350585938
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-9.97826099395752,
+								0.17744924128055573
+							],
+							"in": [
+								-10.103259086608887,
+								5.54014778137207
+							],
+							"out": [
+								-9.853262901306152,
+								-5.185249328613281
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 7",
+					"translation": [
+						371.34124755859375,
+						408.0201721191406
+					],
+					"rotation": -16.269434507899465,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 7 back",
+					"parent": 144,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 45,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 145,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 145,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								18.564592361450195,
+								7.9293694496154785
+							],
+							"out": [
+								-13.314592361450195,
+								16.57063102722168
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 7 front",
+					"parent": 144,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 46,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 148,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 148,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								30.26594352722168,
+								0.7866281867027283
+							],
+							"in": [
+								29.898853302001953,
+								-6.833314418792725
+							],
+							"out": [
+								30.63311195373535,
+								8.406570434570312
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-4.705092906951904,
+								13.333778381347656
+							],
+							"in": [
+								3.2606945037841797,
+								15.504195213317871
+							],
+							"out": [
+								-12.671021461486816,
+								11.163328170776367
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-9.97826099395752,
+								0.17744924128055573
+							],
+							"in": [
+								-10.103259086608887,
+								5.54014778137207
+							],
+							"out": [
+								-9.853262901306152,
+								-5.185249328613281
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 8",
+					"translation": [
+						297.84124755859375,
+						437.5201721191406
+					],
+					"rotation": -16.269434507899465,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 8 back",
+					"parent": 151,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 19,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 152,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 152,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								2.625,
+								12.25
+							],
+							"in": [
+								18.564592361450195,
+								7.9293694496154785
+							],
+							"out": [
+								-13.314592361450195,
+								16.57063102722168
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-10.75,
+								-0.5
+							],
+							"in": [
+								-10.875,
+								4.862701416015625
+							],
+							"out": [
+								-10.625,
+								-5.862701416015625
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 8 front",
+					"parent": 151,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 20,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 155,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 155,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								30.26594352722168,
+								0.7866281867027283
+							],
+							"in": [
+								29.898853302001953,
+								-6.833314418792725
+							],
+							"out": [
+								30.63311195373535,
+								8.406570434570312
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-4.705092906951904,
+								13.333778381347656
+							],
+							"in": [
+								3.2606945037841797,
+								15.504195213317871
+							],
+							"out": [
+								-12.671021461486816,
+								11.163328170776367
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-7.483349323272705,
+								0.07018385827541351
+							],
+							"in": [
+								-9.483512878417969,
+								3.2316205501556396
+							],
+							"out": [
+								-5.483185768127441,
+								-3.0912530422210693
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 9",
+					"translation": [
+						340.6761779785156,
+						437.07177734375
+					],
+					"rotation": -0.0231155016807838,
+					"scale": [
+						0.9719999432563782,
+						0.9819997549057007
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"type": "node"
+				},
+				{
+					"name": "medium dirt 9 back",
+					"parent": 158,
+					"translation": [
+						-4.590240478515625,
+						-0.03741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 47,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 159,
+					"opacity": 1,
+					"color": [
+						0.2857142984867096,
+						0.12871429324150085,
+						0.06142856553196907,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 159,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								3.6676025390625,
+								-11.20233154296875
+							],
+							"in": [
+								-4.632676124572754,
+								-9.840291976928711
+							],
+							"out": [
+								11.967881202697754,
+								-12.564371109008789
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								35.516353607177734,
+								2.0418059825897217
+							],
+							"in": [
+								38.024227142333984,
+								-6.375795841217041
+							],
+							"out": [
+								33.008480072021484,
+								10.459407806396484
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								4.571418762207031,
+								17.83190155029297
+							],
+							"in": [
+								24.730947494506836,
+								24.99844741821289
+							],
+							"out": [
+								-15.588109970092773,
+								10.665356636047363
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-12.416696548461914,
+								-0.9408736228942871
+							],
+							"in": [
+								-12.806868553161621,
+								1.8767883777618408
+							],
+							"out": [
+								-12.026524543762207,
+								-3.758535623550415
+							]
+						}
+					],
+					"type": "path"
+				},
+				{
+					"name": "medium dirt 9 front",
+					"parent": 158,
+					"translation": [
+						-4.715240478515625,
+						-1.78741455078125
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						0.9402486085891724
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"isVisible": true,
+					"blendMode": 3,
+					"drawOrder": 48,
+					"type": "shape"
+				},
+				{
+					"name": "Color",
+					"parent": 162,
+					"opacity": 1,
+					"color": [
+						0.46666666865348816,
+						0.2412666529417038,
+						0.1446666717529297,
+						1
+					],
+					"fillRule": 1,
+					"type": "colorFill"
+				},
+				{
+					"name": "Ellipse Path",
+					"parent": 162,
+					"translation": [
+						0,
+						0
+					],
+					"rotation": 0,
+					"scale": [
+						1,
+						1
+					],
+					"opacity": 1,
+					"isCollapsed": false,
+					"clips": [],
+					"bones": [],
+					"isVisible": true,
+					"isClosed": true,
+					"points": [
+						{
+							"pointType": 1,
+							"translation": [
+								6.6676025390625,
+								-8.14465045928955
+							],
+							"in": [
+								3.1893310546875,
+								-7.349000930786133
+							],
+							"out": [
+								10.1458740234375,
+								-8.940266609191895
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								30.26594352722168,
+								0.7866281867027283
+							],
+							"in": [
+								29.898853302001953,
+								-6.833314418792725
+							],
+							"out": [
+								30.63311195373535,
+								8.406570434570312
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								7.74006462097168,
+								20.591169357299805
+							],
+							"in": [
+								23.12614631652832,
+								23.7821102142334
+							],
+							"out": [
+								-7.646001815795898,
+								17.400226593017578
+							]
+						},
+						{
+							"pointType": 1,
+							"translation": [
+								-9.97826099395752,
+								0.17744924128055573
+							],
+							"in": [
+								-10.103259086608887,
+								5.54014778137207
+							],
+							"out": [
+								-9.853262901306152,
+								-5.185249328613281
+							]
+						}
+					],
+					"type": "path"
+				}
+			],
+			"animations": [
+				{
+					"name": "intro",
+					"fps": 120,
+					"duration": 10,
+					"isLooping": false,
+					"keyed": [
+						{
+							"component": 0,
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 588.4871826171875
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 235.111572265625
+									},
+									{
+										"time": 0.20833333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 248.54501342773438
+									},
+									{
+										"time": 0.26666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 241.41000000000003
+									},
+									{
+										"time": 0.325,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 248.54501342773438
+									}
+								]
+							],
+							"scaleY": [
+								[
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 1.0753722190856934
+									},
+									{
+										"time": 0.20833333333333334,
+										"interpolatorType": 1,
+										"value": 1
+									},
+									{
+										"time": 0.26666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 1.04
+									},
+									{
+										"time": 0.325,
+										"interpolatorType": 1,
+										"value": 1
+									}
+								]
+							],
+							"scaleX": [
+								[
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0.9414169788360596
+									},
+									{
+										"time": 0.20833333333333334,
+										"interpolatorType": 1,
+										"value": 1
+									},
+									{
+										"time": 0.26666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.3655913978494624,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0.96
+									},
+									{
+										"time": 0.325,
+										"interpolatorType": 1,
+										"value": 1
+									}
+								]
+							]
+						},
+						{
+							"component": 7,
+							"posX": [
+								[
+									{
+										"time": 0.724700000019744,
+										"interpolatorType": 1,
+										"value": -49.60176467895508
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.724700000019744,
+										"interpolatorType": 1,
+										"value": -39
+									}
+								]
+							]
+						},
+						{
+							"component": 13,
+							"posX": [
+								[
+									{
+										"time": 0.724700000019744,
+										"interpolatorType": 1,
+										"value": 46.751548767089844
+									}
+								]
+							]
+						},
+						{
+							"component": 16,
+							"posX": [
+								[
+									{
+										"time": 0.724700000019744,
+										"interpolatorType": 1,
+										"value": -53.50600051879883
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.724700000019744,
+										"interpolatorType": 1,
+										"value": -59.75
+									}
+								]
+							]
+						},
+						{
+							"component": 19,
+							"posX": [
+								[
+									{
+										"time": 0.724700000019744,
+										"interpolatorType": 1,
+										"value": 54.958282470703125
+									}
+								]
+							]
+						},
+						{
+							"component": 22,
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 451.7502136230469
+									}
+								]
+							]
+						},
+						{
+							"component": 25,
+							"posX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 375.0511779785156
+									},
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4663978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 129.05117797851562
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.614247311827957,
+										"value": 98.01046752929688
+									},
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": 53.301177978515625
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 779.5716552734375
+									},
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4663978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 408.5716857910156
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.614247311827957,
+										"value": 305.01708984375
+									},
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": 380.5716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4663978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.614247311827957,
+										"value": -2.7168215695893494
+									},
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": -3.9893127473774577
+									}
+								]
+							],
+							"scaleX": [
+								[
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.614247311827957,
+										"value": 1.0190632343292236
+									},
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": 0.954632043838501
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.614247311827957,
+										"value": 1
+									},
+									{
+										"time": 0.1,
+										"interpolatorType": 1,
+										"value": 1
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 1,
+										"value": 0
+									},
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": 0
+									}
+								]
+							],
+							"scaleY": [
+								[
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.614247311827957,
+										"value": 1.0691287517547607
+									}
+								]
+							]
+						},
+						{
+							"component": 32,
+							"posX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 400.01568603515625
+									},
+									{
+										"time": 0.05,
+										"interpolatorType": 1,
+										"value": 154.0157012939453
+									},
+									{
+										"time": 0.1,
+										"interpolatorType": 1,
+										"value": 117.55117797851562
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 1,
+										"value": 74.55117797851562
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 775.0025024414062
+									},
+									{
+										"time": 0.05,
+										"interpolatorType": 1,
+										"value": 404.00250244140625
+									},
+									{
+										"time": 0.1,
+										"interpolatorType": 1,
+										"value": 353.5716857910156
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 1,
+										"value": 386.5716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.05,
+										"interpolatorType": 1,
+										"value": -2.125620911932433
+									},
+									{
+										"time": 0.1,
+										"interpolatorType": 1,
+										"value": -7.242737282193904
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 1,
+										"value": -9.37269469082393
+									}
+								]
+							],
+							"scaleY": [
+								[
+									{
+										"time": 0.1,
+										"interpolatorType": 1,
+										"value": 0.9680336117744446
+									}
+								]
+							],
+							"scaleX": [
+								[
+									{
+										"time": 0.1,
+										"interpolatorType": 1,
+										"value": 0.9719998240470886
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.1,
+										"interpolatorType": 1,
+										"value": 1
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 1,
+										"value": 0
+									}
+								]
+							]
+						},
+						{
+							"component": 39,
+							"posX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 421.8785705566406
+									},
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4663978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 175.87857055664062
+									},
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.17069892473118287,
+										"value": 153.3991241455078
+									},
+									{
+										"time": 0.15833333333333333,
+										"interpolatorType": 1,
+										"value": 118.30117797851562
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 775.8470458984375
+									},
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4663978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 404.8470764160156
+									},
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.17069892473118287,
+										"value": 357.5967102050781
+									},
+									{
+										"time": 0.15833333333333333,
+										"interpolatorType": 1,
+										"value": 386.5716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4663978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -0.21447576507609115
+									},
+									{
+										"time": 0.15833333333333333,
+										"interpolatorType": 1,
+										"value": -4.267050289984617
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.15833333333333333,
+										"interpolatorType": 1,
+										"value": 1
+									}
+								]
+							]
+						},
+						{
+							"component": 46,
+							"rotation": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.6411290322580645,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -0.5773495104508559
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.5,
+										"value": -1.6818570568554967
+									},
+									{
+										"time": 0.25,
+										"interpolatorType": 1,
+										"value": -1.389464094762201
+									}
+								]
+							],
+							"posX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 433.90216064453125
+									},
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.6411290322580645,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 187.90216064453125
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.5,
+										"value": 168.05117797851562
+									},
+									{
+										"time": 0.25,
+										"interpolatorType": 1,
+										"value": 135.55117797851562
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 779.3568725585938
+									},
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.6411290322580645,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 408.35687255859375
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.5,
+										"value": 236.07168579101562
+									},
+									{
+										"time": 0.25,
+										"interpolatorType": 1,
+										"value": 383.0716857910156
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.5,
+										"value": 1
+									}
+								]
+							]
+						},
+						{
+							"component": 53,
+							"posX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 464.1740417480469
+									},
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 1,
+										"value": 218.17404174804688
+									},
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": 86.55117797851562
+									},
+									{
+										"time": 0.19166666666666668,
+										"interpolatorType": 1,
+										"value": 39.551177978515625
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 777.41943359375
+									},
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 1,
+										"value": 406.4194030761719
+									},
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": 308.0716857910156
+									},
+									{
+										"time": 0.19166666666666668,
+										"interpolatorType": 1,
+										"value": 313.0716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 1,
+										"value": -1.8181330712737045
+									},
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": -5.842126170374899
+									},
+									{
+										"time": 0.19166666666666668,
+										"interpolatorType": 1,
+										"value": -6.935788294277005
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.15,
+										"interpolatorType": 1,
+										"value": 1
+									},
+									{
+										"time": 0.19166666666666668,
+										"interpolatorType": 1,
+										"value": 0
+									}
+								]
+							]
+						},
+						{
+							"component": 60,
+							"posX": [
+								[
+									{
+										"time": 0.041666666666666664,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.614247311827957,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 236.90615844726562
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.5201612903225806,
+										"value": 213.55117797851562
+									},
+									{
+										"time": 0.21666666666666667,
+										"interpolatorType": 1,
+										"value": 195.47665405273438
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.041666666666666664,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.614247311827957,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 403.630126953125
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.5201612903225806,
+										"value": 171.07168579101562
+									},
+									{
+										"time": 0.21666666666666667,
+										"interpolatorType": 1,
+										"value": 384.6965026855469
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.041666666666666664,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.614247311827957,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 2.956229752532594
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.5201612903225806,
+										"value": 1.255826123059412
+									},
+									{
+										"time": 0.21666666666666667,
+										"interpolatorType": 1,
+										"value": 0.5720626006368781
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.041666666666666664,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.614247311827957,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 1
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.5201612903225806,
+										"value": 1
+									}
+								]
+							]
+						},
+						{
+							"component": 67,
+							"posX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 250.1035614013672
+									},
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.674731182795699,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 252.02598571777344
+									},
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.5376344086021505,
+										"cubicY1": -0.004032258064516014,
+										"cubicX2": 1,
+										"cubicY2": 0.2782258064516129,
+										"value": 262.5511779785156
+									},
+									{
+										"time": 0.19166666666666668,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.674731182795699,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 268.5511779785156
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 411.8912658691406
+									},
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.674731182795699,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 406.38818359375
+									},
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.5376344086021505,
+										"cubicY1": -0.004032258064516014,
+										"cubicX2": 1,
+										"cubicY2": 0.2782258064516129,
+										"value": 213.57168579101562
+									},
+									{
+										"time": 0.19166666666666668,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.674731182795699,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 384.5716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.5376344086021505,
+										"cubicY1": -0.004032258064516014,
+										"cubicX2": 1,
+										"cubicY2": 0.2782258064516129,
+										"value": -1.23472088082002
+									},
+									{
+										"time": 0.19166666666666668,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.674731182795699,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -1.0926424286907224
+									}
+								]
+							],
+							"scaleX": [
+								[
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.5376344086021505,
+										"cubicY1": -0.004032258064516014,
+										"cubicX2": 1,
+										"cubicY2": 0.2782258064516129,
+										"value": 1.073
+									}
+								]
+							],
+							"scaleY": [
+								[
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.5376344086021505,
+										"cubicY1": -0.004032258064516014,
+										"cubicX2": 1,
+										"cubicY2": 0.2782258064516129,
+										"value": 1.102
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.5376344086021505,
+										"cubicY1": -0.004032258064516014,
+										"cubicX2": 1,
+										"cubicY2": 0.2782258064516129,
+										"value": 1
+									}
+								]
+							]
+						},
+						{
+							"component": 74,
+							"posX": [
+								[
+									{
+										"time": 0.05,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5134408602150538,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 278.8232421875
+									},
+									{
+										"time": 0.16666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0.6666666666666666,
+										"cubicY1": 0.009408602150537626,
+										"cubicX2": 1,
+										"cubicY2": 0.5873655913978495,
+										"value": 308.5511779785156
+									},
+									{
+										"time": 0.225,
+										"interpolatorType": 2,
+										"cubicX1": 0.6666666666666666,
+										"cubicY1": 0.009408602150537626,
+										"cubicX2": 1,
+										"cubicY2": 0.5873655913978495,
+										"value": 341.5511779785156
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.05,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5134408602150538,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 405.58697509765625
+									},
+									{
+										"time": 0.16666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0.6666666666666666,
+										"cubicY1": 0.009408602150537626,
+										"cubicX2": 1,
+										"cubicY2": 0.5873655913978495,
+										"value": 252.57168579101562
+									},
+									{
+										"time": 0.225,
+										"interpolatorType": 2,
+										"cubicX1": 0.6666666666666666,
+										"cubicY1": 0.009408602150537626,
+										"cubicX2": 1,
+										"cubicY2": 0.5873655913978495,
+										"value": 381.5716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.05,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5134408602150538,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -3.085719790941602
+									},
+									{
+										"time": 0.16666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0.6666666666666666,
+										"cubicY1": 0.009408602150537626,
+										"cubicX2": 1,
+										"cubicY2": 0.5873655913978495,
+										"value": -0.10192284233013282
+									},
+									{
+										"time": 0.225,
+										"interpolatorType": 2,
+										"cubicX1": 0.6666666666666666,
+										"cubicY1": 0.009408602150537626,
+										"cubicX2": 1,
+										"cubicY2": 0.5873655913978495,
+										"value": -1.8001567081724965
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.16666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0.6666666666666666,
+										"cubicY1": 0.009408602150537626,
+										"cubicX2": 1,
+										"cubicY2": 0.5873655913978495,
+										"value": 1
+									}
+								]
+							]
+						},
+						{
+							"component": 81,
+							"posX": [
+								[
+									{
+										"time": 0.041666666666666664,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5739247311827957,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 305.78167724609375
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.4395161290322581,
+										"value": 352.0511779785156
+									},
+									{
+										"time": 0.20833333333333334,
+										"interpolatorType": 1,
+										"value": 393.0511779785156
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.041666666666666664,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5739247311827957,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 403.7923889160156
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.4395161290322581,
+										"value": 181.07168579101562
+									},
+									{
+										"time": 0.20833333333333334,
+										"interpolatorType": 1,
+										"value": 380.0716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.041666666666666664,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5739247311827957,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -1.7308339344558425
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.4395161290322581,
+										"value": -0.7963299472240593
+									},
+									{
+										"time": 0.20833333333333334,
+										"interpolatorType": 1,
+										"value": -0.29598396082164147
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.4395161290322581,
+										"value": 1
+									}
+								]
+							]
+						},
+						{
+							"component": 88,
+							"posX": [
+								[
+									{
+										"time": 0.016666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4731182795698925,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 330.23272705078125
+									},
+									{
+										"time": 0.175,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": -0.024193548387096753,
+										"value": 401.0511779785156
+									},
+									{
+										"time": 0.24166666666666667,
+										"interpolatorType": 1,
+										"value": 439.0511779785156
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.016666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4731182795698925,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 406.7230529785156
+									},
+									{
+										"time": 0.175,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": -0.024193548387096753,
+										"value": 314.0716857910156
+									},
+									{
+										"time": 0.24166666666666667,
+										"interpolatorType": 1,
+										"value": 326.0716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.016666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4731182795698925,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -0.15846752227889188
+									},
+									{
+										"time": 0.175,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": -0.024193548387096753,
+										"value": 5.566024591334986
+									},
+									{
+										"time": 0.24166666666666667,
+										"interpolatorType": 1,
+										"value": 6.5331008810469315
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.016666666666666666,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.4731182795698925,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 1
+									},
+									{
+										"time": 0.175,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": -0.024193548387096753,
+										"value": 1
+									},
+									{
+										"time": 0.24166666666666667,
+										"interpolatorType": 1,
+										"value": 0
+									}
+								]
+							]
+						},
+						{
+							"component": 95,
+							"posX": [
+								[
+									{
+										"time": 0.025,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5806451612903226,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 355.05120849609375
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.17069892473118287,
+										"value": 411.55120849609375
+									},
+									{
+										"time": 0.2,
+										"interpolatorType": 1,
+										"value": 467.55120849609375
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 1,
+										"value": 407.5716857910156
+									},
+									{
+										"time": 0.025,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5806451612903226,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 401.5716857910156
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.17069892473118287,
+										"value": 227.57168579101562
+									},
+									{
+										"time": 0.2,
+										"interpolatorType": 1,
+										"value": 384.5716857910156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.025,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.5806451612903226,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.17069892473118287,
+										"value": 2.1725641945110103
+									},
+									{
+										"time": 0.2,
+										"interpolatorType": 1,
+										"value": 3.1882329212033165
+									}
+								]
+							],
+							"scaleX": [
+								[
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.17069892473118287,
+										"value": 1.063673734664917
+									}
+								]
+							],
+							"opacity": [
+								[
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.17069892473118287,
+										"value": 1
+									},
+									{
+										"time": 0.2,
+										"interpolatorType": 1,
+										"value": 0
+									}
+								]
+							],
+							"scaleY": [
+								[
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.17069892473118287,
+										"value": 1.030778169631958
+									}
+								]
+							]
+						},
+						{
+							"component": 102,
+							"posX": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.9233870967741935,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 136.13050842285156
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 1,
+										"value": 135.13050842285156
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.9233870967741935,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 407.4225769042969
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.4731182795698925,
+										"value": 366.94677734375
+									},
+									{
+										"time": 0.125,
+										"interpolatorType": 1,
+										"value": 391.44677734375
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.9233870967741935,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 1.497336933521949
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 1,
+										"value": 0.5892883405220103
+									},
+									{
+										"time": 0.125,
+										"interpolatorType": 1,
+										"value": 0.031635045783171556
+									}
+								]
+							]
+						},
+						{
+							"component": 109,
+							"posY": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.788978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 406.07177734375
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.48655913978494625,
+										"value": 348.07177734375
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": 389.07177734375
+									}
+								]
+							],
+							"posX": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.788978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 183.92617797851562
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.48655913978494625,
+										"value": 186.92617797851562
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": 186.42617797851562
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.788978494623656,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0.0548537211222313
+									},
+									{
+										"time": 0.08333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.48655913978494625,
+										"value": -1.6333402261748269
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": -3.3115321825426536
+									}
+								]
+							]
+						},
+						{
+							"component": 116,
+							"posY": [
+								[
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7016129032258065,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 409.4598388671875
+									},
+									{
+										"time": 0.1,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.39919354838709675,
+										"value": 297.9598388671875
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": 391.9598388671875
+									}
+								]
+							],
+							"posX": [
+								[
+									{
+										"time": 0.1,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.39919354838709675,
+										"value": 201.9984588623047
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": 209.9984588623047
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7016129032258065,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -6.568962001463872
+									},
+									{
+										"time": 0.1,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.39919354838709675,
+										"value": -6.442497835344782
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": -6.00180318518881
+									}
+								]
+							]
+						},
+						{
+							"component": 123,
+							"posY": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7419354838709677,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 410.7695617675781
+									},
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.1908602150537635,
+										"value": 310.2695617675781
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 1,
+										"value": 382.2695617675781
+									}
+								]
+							],
+							"posX": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7419354838709677,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 243.15771484375
+									},
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.1908602150537635,
+										"value": 252.15771484375
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 1,
+										"value": 241.15771484375
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7419354838709677,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -9.351105373564247
+									},
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.1908602150537635,
+										"value": -10.201288374762633
+									},
+									{
+										"time": 0.14166666666666666,
+										"interpolatorType": 1,
+										"value": -10.689059715847964
+									}
+								]
+							]
+						},
+						{
+							"component": 130,
+							"posY": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7217741935483871,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 412.575927734375
+									},
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.43279569892473124,
+										"value": 326.82177734375
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 1,
+										"value": 387.82177734375
+									}
+								]
+							],
+							"posX": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7217741935483871,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 284.0946044921875
+									},
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.43279569892473124,
+										"value": 284.4261779785156
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 1,
+										"value": 280.4261779785156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7217741935483871,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -11.770784616555794
+									},
+									{
+										"time": 0.058333333333333334,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.43279569892473124,
+										"value": -12.372889810088036
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 1,
+										"value": -13.059025583454691
+									}
+								]
+							]
+						},
+						{
+							"component": 137,
+							"posX": [
+								[
+									{
+										"time": 0.025,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7419354838709677,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 314.5175476074219
+									},
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.446236559139785,
+										"value": 314.0175476074219
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 1,
+										"value": 310.0175476074219
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.025,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7419354838709677,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 409.173583984375
+									},
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.446236559139785,
+										"value": 369.173583984375
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 1,
+										"value": 388.173583984375
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.025,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7419354838709677,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -12.60899993678111
+									},
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.446236559139785,
+										"value": -12.472482312319388
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 1,
+										"value": -12.115934473973159
+									}
+								]
+							]
+						},
+						{
+							"component": 144,
+							"posY": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 1.010752688172043,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 413.8373107910156
+									},
+									{
+										"time": 0.075,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.2513440860215054,
+										"value": 338.0201721191406
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": 387.0201721191406
+									}
+								]
+							],
+							"posX": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 1.010752688172043,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 294.08905029296875
+									},
+									{
+										"time": 0.075,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.2513440860215054,
+										"value": 343.84124755859375
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": 368.34124755859375
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 1.010752688172043,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": -17.62683661194609
+									},
+									{
+										"time": 0.075,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.2513440860215054,
+										"value": -16.984370797948596
+									},
+									{
+										"time": 0.13333333333333333,
+										"interpolatorType": 1,
+										"value": -16.138163245798726
+									}
+								]
+							]
+						},
+						{
+							"component": 151,
+							"posX": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 1,
+										"value": 257.34124755859375
+									},
+									{
+										"time": 0.075,
+										"interpolatorType": 1,
+										"value": 255.09124755859375
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 1,
+										"value": 261.34124755859375
+									}
+								]
+							],
+							"posY": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 1,
+										"value": 411.5201721191406
+									},
+									{
+										"time": 0.075,
+										"interpolatorType": 1,
+										"value": 349.5201721191406
+									},
+									{
+										"time": 0.10833333333333334,
+										"interpolatorType": 1,
+										"value": 389.2701721191406
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.03333333333333333,
+										"interpolatorType": 1,
+										"value": -15.240216180482834
+									},
+									{
+										"time": 0.075,
+										"interpolatorType": 1,
+										"value": -15.783903367198922
+									}
+								]
+							]
+						},
+						{
+							"component": 158,
+							"posY": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7016129032258065,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 418.7484436035156
+									},
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.7486559139784946,
+										"value": 280.57177734375
+									},
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 1,
+										"value": 391.07177734375
+									}
+								]
+							],
+							"posX": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7016129032258065,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 320.8737487792969
+									},
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.7486559139784946,
+										"value": 311.6761779785156
+									},
+									{
+										"time": 0.11666666666666667,
+										"interpolatorType": 1,
+										"value": 326.1761779785156
+									}
+								]
+							],
+							"rotation": [
+								[
+									{
+										"time": 0.008333333333333333,
+										"interpolatorType": 2,
+										"cubicX1": 0,
+										"cubicY1": 0.7016129032258065,
+										"cubicX2": 0.58,
+										"cubicY2": 1,
+										"value": 0.5486056725124423
+									},
+									{
+										"time": 0.06666666666666667,
+										"interpolatorType": 2,
+										"cubicX1": 0.42,
+										"cubicY1": 0,
+										"cubicX2": 1,
+										"cubicY2": 0.7486559139784946,
+										"value": 0.20682048806717265
+									}
+								]
+							]
+						},
+						{
+							"component": 0,
+							"drawOrder": [
+								[
+									{
+										"time": 0,
+										"drawOrder": [
+											{
+												"component": 4,
+												"order": 2
+											},
+											{
+												"component": 1,
+												"order": 1
+											},
+											{
+												"component": 96,
+												"order": 8
+											},
+											{
+												"component": 99,
+												"order": 9
+											},
+											{
+												"component": 26,
+												"order": 10
+											},
+											{
+												"component": 29,
+												"order": 11
+											},
+											{
+												"component": 82,
+												"order": 12
+											},
+											{
+												"component": 85,
+												"order": 13
+											},
+											{
+												"component": 47,
+												"order": 16
+											},
+											{
+												"component": 50,
+												"order": 17
+											},
+											{
+												"component": 68,
+												"order": 22
+											},
+											{
+												"component": 71,
+												"order": 23
+											},
+											{
+												"component": 33,
+												"order": 26
+											},
+											{
+												"component": 36,
+												"order": 27
+											},
+											{
+												"component": 40,
+												"order": 28
+											},
+											{
+												"component": 43,
+												"order": 29
+											},
+											{
+												"component": 54,
+												"order": 18
+											},
+											{
+												"component": 57,
+												"order": 19
+											},
+											{
+												"component": 61,
+												"order": 20
+											},
+											{
+												"component": 64,
+												"order": 21
+											},
+											{
+												"component": 75,
+												"order": 24
+											},
+											{
+												"component": 78,
+												"order": 25
+											},
+											{
+												"component": 89,
+												"order": 14
+											},
+											{
+												"component": 92,
+												"order": 15
+											},
+											{
+												"component": 22,
+												"order": 48
+											},
+											{
+												"component": 103,
+												"order": 30
+											},
+											{
+												"component": 106,
+												"order": 31
+											},
+											{
+												"component": 110,
+												"order": 32
+											},
+											{
+												"component": 113,
+												"order": 33
+											},
+											{
+												"component": 117,
+												"order": 34
+											},
+											{
+												"component": 120,
+												"order": 35
+											},
+											{
+												"component": 124,
+												"order": 37
+											},
+											{
+												"component": 127,
+												"order": 39
+											},
+											{
+												"component": 131,
+												"order": 40
+											},
+											{
+												"component": 134,
+												"order": 41
+											},
+											{
+												"component": 138,
+												"order": 42
+											},
+											{
+												"component": 141,
+												"order": 43
+											},
+											{
+												"component": 145,
+												"order": 44
+											},
+											{
+												"component": 148,
+												"order": 45
+											},
+											{
+												"component": 152,
+												"order": 46
+											},
+											{
+												"component": 155,
+												"order": 47
+											},
+											{
+												"component": 159,
+												"order": 36
+											},
+											{
+												"component": 162,
+												"order": 38
+											},
+											{
+												"component": 7,
+												"order": 3
+											},
+											{
+												"component": 10,
+												"order": 4
+											},
+											{
+												"component": 13,
+												"order": 5
+											},
+											{
+												"component": 16,
+												"order": 6
+											},
+											{
+												"component": 19,
+												"order": 7
+											}
+										]
+									},
+									{
+										"time": 0.08333333333333333,
+										"drawOrder": [
+											{
+												"component": 4,
+												"order": 2
+											},
+											{
+												"component": 1,
+												"order": 1
+											},
+											{
+												"component": 96,
+												"order": 9
+											},
+											{
+												"component": 99,
+												"order": 10
+											},
+											{
+												"component": 26,
+												"order": 11
+											},
+											{
+												"component": 29,
+												"order": 12
+											},
+											{
+												"component": 82,
+												"order": 13
+											},
+											{
+												"component": 85,
+												"order": 14
+											},
+											{
+												"component": 47,
+												"order": 17
+											},
+											{
+												"component": 50,
+												"order": 18
+											},
+											{
+												"component": 68,
+												"order": 25
+											},
+											{
+												"component": 71,
+												"order": 26
+											},
+											{
+												"component": 33,
+												"order": 29
+											},
+											{
+												"component": 36,
+												"order": 30
+											},
+											{
+												"component": 40,
+												"order": 31
+											},
+											{
+												"component": 43,
+												"order": 32
+											},
+											{
+												"component": 54,
+												"order": 21
+											},
+											{
+												"component": 57,
+												"order": 22
+											},
+											{
+												"component": 61,
+												"order": 23
+											},
+											{
+												"component": 64,
+												"order": 24
+											},
+											{
+												"component": 75,
+												"order": 27
+											},
+											{
+												"component": 78,
+												"order": 28
+											},
+											{
+												"component": 89,
+												"order": 15
+											},
+											{
+												"component": 92,
+												"order": 16
+											},
+											{
+												"component": 22,
+												"order": 8
+											},
+											{
+												"component": 103,
+												"order": 33
+											},
+											{
+												"component": 106,
+												"order": 34
+											},
+											{
+												"component": 110,
+												"order": 35
+											},
+											{
+												"component": 113,
+												"order": 36
+											},
+											{
+												"component": 117,
+												"order": 37
+											},
+											{
+												"component": 120,
+												"order": 38
+											},
+											{
+												"component": 124,
+												"order": 39
+											},
+											{
+												"component": 127,
+												"order": 40
+											},
+											{
+												"component": 131,
+												"order": 41
+											},
+											{
+												"component": 134,
+												"order": 42
+											},
+											{
+												"component": 138,
+												"order": 43
+											},
+											{
+												"component": 141,
+												"order": 44
+											},
+											{
+												"component": 145,
+												"order": 45
+											},
+											{
+												"component": 148,
+												"order": 46
+											},
+											{
+												"component": 152,
+												"order": 19
+											},
+											{
+												"component": 155,
+												"order": 20
+											},
+											{
+												"component": 159,
+												"order": 47
+											},
+											{
+												"component": 162,
+												"order": 48
+											},
+											{
+												"component": 7,
+												"order": 3
+											},
+											{
+												"component": 10,
+												"order": 4
+											},
+											{
+												"component": 13,
+												"order": 5
+											},
+											{
+												"component": 16,
+												"order": 6
+											},
+											{
+												"component": 19,
+												"order": 7
+											}
+										]
+									}
+								]
+							]
+						}
+					],
+					"animationStart": 0,
+					"animationEnd": 0.724700000019744,
+					"type": "animation"
+				}
+			],
+			"type": "artboard"
+		}
+	]
+}

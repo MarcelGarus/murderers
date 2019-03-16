@@ -14,7 +14,7 @@ Game _parseServerGame({
   final playersData = data['players'] as List;
   final players = <Player>[];
   
-  // First, save all players in players.
+  // First, save all players.
   for (final player in playersData) {
     players.add(Player(
       id: player['id'],
@@ -57,15 +57,10 @@ Game _parseServerGame({
 List<Player> _ranked(List<Player> players) {
   int rank = 0; // The current rank.
 
-  // Filter players who actually participate in the game.
-  players = players.where((p) =>
-    p.state != PlayerState.idle && p.state != PlayerState.waiting
-  ).toList();
-
   // First, divide the players into alive and dead ones.
   final alive = players.where((p) => p.isAlive).toList();
   final dead = players.where((p) => p.isDead).toList();
-  final rest = players.where((p) => !p.isAlive && !p.isDead).toList();
+  final joining = players.where((p) => p.isJoining).toList();
   
   // Sort the alive players according to their kills and give them ranks.
   alive.sort((a, b) => b.kills.compareTo(a.kills));
@@ -90,5 +85,5 @@ List<Player> _ranked(List<Player> players) {
     player.rank = rank;
   });
 
-  return alive.followedBy(dead).followedBy(rest).toList();
+  return alive.followedBy(dead).followedBy(joining).toList();
 }

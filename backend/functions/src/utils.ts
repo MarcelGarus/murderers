@@ -3,7 +3,7 @@
 import * as functions from 'firebase-functions';
 import { Game, isGame, GameCode, UserId, Player, isPlayer, FirebaseAuthToken, User, isUser } from './models';
 import { log } from 'util';
-import { CODE_BAD_REQUEST, CODE_USER_NOT_FOUND, TEXT_USER_NOT_FOUND, CODE_USER_CORRUPT, TEXT_USER_CORRUPT, CODE_AUTHENTIFICATION_FAILED, TEXT_AUTHENTIFICATION_FAILED, CODE_NO_PRIVILEGES, TEXT_NO_PRIVILEGES, CODE_GAME_NOT_FOUND, TEXT_GAME_NOT_FOUND, CODE_GAME_CORRUPT, TEXT_GAME_CORRUPT, CODE_PLAYER_CORRUPT, TEXT_PLAYER_NOT_FOUND, TEXT_PLAYER_CORRUPT } from './constants';
+import { CODE_BAD_REQUEST, CODE_USER_NOT_FOUND, TEXT_USER_NOT_FOUND, CODE_USER_CORRUPT, TEXT_USER_CORRUPT, CODE_AUTHENTIFICATION_FAILED, TEXT_AUTHENTIFICATION_FAILED, CODE_NO_PRIVILEGES, TEXT_NO_PRIVILEGES, CODE_GAME_NOT_FOUND, TEXT_GAME_NOT_FOUND, CODE_GAME_CORRUPT, TEXT_GAME_CORRUPT, CODE_PLAYER_CORRUPT, TEXT_PLAYER_NOT_FOUND, TEXT_PLAYER_CORRUPT, CODE_PLAYER_NOT_FOUND } from './constants';
 
 /// Generates a length-long random string using the provided chars.
 export function generateRandomString(chars: string, length: number): string {
@@ -37,7 +37,7 @@ export function queryContains(
   res?: functions.Response
 ): boolean {
   for (const arg of parameters) {
-    if (query[arg] === undefined || typeof query[arg] !== 'string') {
+    if (query[arg] === undefined || typeof query[arg] !== 'string' || query[arg] === '') {
       if (res !== null) {
         res.status(CODE_BAD_REQUEST)
           .send('Bad request. ' + arg + ' parameter missing.');
@@ -62,12 +62,19 @@ export async function loadUser(
   id: UserId,
   res: functions.Response
 ): Promise<User> {
-  if (id === null || id === undefined) return null;
+  if (id === null || id === undefined || id === '') {
+    if (res !== null) {
+      res.status(CODE_BAD_REQUEST).send('No user id provided.');
+    }
+    return null;
+  }
 
   const snapshot = await userRef(firestore, id).get();
 
-  if (!snapshot.exists && res !== null) {
-    res.status(CODE_USER_NOT_FOUND).send(TEXT_USER_NOT_FOUND);
+  if (!snapshot.exists) {
+    if (res !== null) {
+      res.status(CODE_USER_NOT_FOUND).send(TEXT_USER_NOT_FOUND);
+    }
     return null;
   }
 
@@ -133,6 +140,13 @@ export async function loadGame(
   firestore: FirebaseFirestore.Firestore,
   code: GameCode
 ): Promise<Game> {
+  if (code === null || code === undefined || code === '') {
+    if (res !== null) {
+      res.status(CODE_BAD_REQUEST).send('You need to provide a game code.');
+    }
+    return null;
+  }
+  
   const snapshot = await gameRef(firestore, code).get();
 
   if (!snapshot.exists) {
@@ -177,10 +191,18 @@ export async function loadPlayer(
   code: GameCode,
   id: UserId
 ): Promise<Player> {
+  if (id === null || id === undefined || id === '') {
+    if (res !== null) {
+      res.status(CODE_BAD_REQUEST).send('No player id provided.');
+    }
+    return null;
+  }
+
   const snapshot = await playerRef(firestore, code, id).get();
 
   if (!snapshot.exists) {
-    res.status(CODE_PLAYER_CORRUPT).send(TEXT_PLAYER_NOT_FOUND);
+    res.status(CODE_PLAYER_NOT_FOUND).send(TEXT_PLAYER_NOT_FOUND);
+    log('Player with id ' + id + ' not found in game ' + code + '.');
     return null;
   }
 

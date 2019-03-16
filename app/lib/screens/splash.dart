@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
@@ -16,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 600), () {
       final bloc = Bloc.of(context);
       String targetRoute;
 
@@ -35,9 +36,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.amber,
+      color: Colors.white,
       alignment: Alignment.center,
-      child: FlutterLogo(),
+      child: Center(
+        child: SizedBox.fromSize(
+          size: Size.square(128),
+          child: FlareActor('images/logo.flr', animation: 'intro'),
+        ),
+      ),
     );
   }
 }

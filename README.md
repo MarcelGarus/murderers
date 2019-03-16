@@ -1,7 +1,9 @@
 # Murderers
 
-A simple real-world game.
-Especially useful for larger groups.
+A dead-simple multi-player real-world game lasting several days.
+
+Interested in how everything works under the hood?
+Read the ["Getting started"](docs/getting_started.md) guide!
 
 ## How it works: The basics
 
@@ -50,8 +52,6 @@ The creator can resurrect players, joining them to the set of players who want t
 
 ## Interesting aspects of the game (from a programmer's point of view)
 
-It's a fun, social game.
-
-It's highly asynchronous (many independent actors).
-
-It's all about information management.
+* It's a fun, social game.
+* It's highly asynchronous (many independent actors).
+* It's all about information management.

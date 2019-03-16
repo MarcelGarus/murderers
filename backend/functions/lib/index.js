@@ -2,6 +2,7 @@
 /// The webhook entry point for the back-end.
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
+const acceptPlayer = require("./accept_players");
 const createUser = require("./create_user");
 const createGame = require("./create_game");
 const getGame = require("./get_game");
@@ -20,18 +21,12 @@ exports.create_user = functions.https.onRequest(createUser.handleRequest);
 exports.create_game = functions.https.onRequest(createGame.handleRequest);
 /// Joins a player to a game.
 exports.join_game = functions.https.onRequest(joinGame.handleRequest);
+/// Accepts a player who wants to join the game.
+exports.accept_players = functions.https.onRequest(acceptPlayer.handleRequest);
 /// Gets the game state.
 exports.get_game = functions.https.onRequest(getGame.handleRequest);
-/// Starts or resumes the game.
+/// Starts the game.
 exports.start_game = functions.https.onRequest(startGame.handleRequest);
-/// Pauses or stops the game.
-///
-/// Needs:
-/// * Firebase auth in header
-/// * a game id
-/// Returns:
-/// 200: {}
-// exports.stop_game = functions.https.onRequest(stopGame.handleRequest);
 /// Kills the caller's victim.
 exports.kill_player = functions.https.onRequest(killPlayer.handleRequest);
 /// The caller confirms the death.

@@ -1,9 +1,9 @@
 /// Starts an existing game.
 ///
 /// Needs:
-/// * user [id]
+/// * [me]
 /// * [authToken]
-/// * game [code]
+/// * [game]
 ///
 /// Returns either:
 /// 200: Game started.
@@ -13,22 +13,21 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { GameCode, Game, GAME_RUNNING, FirebaseAuthToken, User, UserId } from './models';
+import { GameCode, Game, GAME_RUNNING, FirebaseAuthToken, User, UserId, GAME_NOT_STARTED_YET, PLAYER_ALIVE, Player } from './models';
 import { loadGame, queryContains, gameRef, loadPlayersAndIds, allPlayersRef, loadAndVerifyUser, verifyCreator, playerRef } from './utils';
 import { shuffleVictims } from './shuffle_victims';
 import { log } from 'util';
+import { CODE_ILLEGAL_STATE, GAME_MINIMUM_PLAYERS } from './constants';
 
-/// Starts an existing game.
-// TODO: make sure not already started
 export async function handleRequest(req: functions.Request, res: functions.Response) {
   if (!queryContains(req.query, [
-    'id', 'authToken', 'code'
+    'me', 'authToken', 'game'
   ], res)) return;
 
   const firestore = admin.app().firestore();
-  const id: UserId = req.query.id;
+  const id: UserId = req.query.me;
   const authToken: FirebaseAuthToken = req.query.authToken;
-  const code: GameCode = req.query.code;
+  const code: GameCode = req.query.game;
 
   log(code + ': Starting the game.');
 
@@ -36,25 +35,63 @@ export async function handleRequest(req: functions.Request, res: functions.Respo
   const game: Game = await loadGame(res, firestore, code);
   if (game === null) return;
 
+  // Make sure the game didn't start yet.
+  if (game.state !== GAME_NOT_STARTED_YET) {
+    const errText = 'The game already started.';
+    res.status(CODE_ILLEGAL_STATE).send(errText);
+    log(errText);
+    return;
+  }
+
   // Verify the creator.
   if (!verifyCreator(game, id, res)) return;
   const user: User = await loadAndVerifyUser(firestore, id, authToken, res);
   if (user === null) return;
 
-  // First, shuffle all the players.
-  const players = await loadPlayersAndIds(res, allPlayersRef(firestore, code).get());
-  if (!players) return;
+  // Get all the players and make sure there are enough.
+  const players = await loadPlayersAndIds(res,
+    allPlayersRef(firestore, code)
+      .where('state', '==', PLAYER_ALIVE).get()
+  );
+  if (!players || !ensureEnoughPlayers(res, players.length)) return;
+  
+  // Shuffle all the players and change the game state.
+  const batch = firestore.batch();
   shuffleVictims(players);
 
-  players.forEach(async (player) => {
-    await playerRef(firestore, code, player.id).update(player.data);
-  })
-
-  // Then, start the game.
-  await gameRef(firestore, code).update({
-    state: GAME_RUNNING
+  players.forEach((player) => {
+    batch.update(playerRef(firestore, code, player.id), player.data);
   });
+  batch.update(gameRef(firestore, code), { state: GAME_RUNNING });
+  await batch.commit();
   
   // Send a response.
   res.send('Game started.');
+
+  // Notify everyone that the game started.
+  admin.messaging().send({
+    notification: {
+      title: 'The game just started',
+      body: 'Get ready for an exciting time!',
+    },
+    android: {
+      priority: 'normal',
+      collapseKey: 'game_' + code,
+      notification: { color: '#ff0000' },
+    },
+    condition: "'game_" + code + "' in topics",
+  }).catch((error) => {
+    log('Error while sending "game started" message: ' + error);
+  });
+}
+
+function ensureEnoughPlayers(res: functions.Response, numPlayers: number): boolean {
+  if (numPlayers < GAME_MINIMUM_PLAYERS) {
+    const errText = 'There are only ' + numPlayers + ' players, but '
+      + GAME_MINIMUM_PLAYERS + ' are required to start the game.'
+    res.status(CODE_ILLEGAL_STATE).send(errText);
+    log(errText);
+    return false;
+  }
+  return true;
 }

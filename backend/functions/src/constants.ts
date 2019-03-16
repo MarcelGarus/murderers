@@ -19,12 +19,12 @@ export const TEXT_GAME_NOT_FOUND: string = 'Game not found.';
 export const TEXT_GAME_CORRUPT: string = 'Game corrupt.';
 export const TEXT_PLAYER_NOT_FOUND: string = 'Player not found.';
 export const TEXT_PLAYER_CORRUPT: string = 'Player corrupt.';
-export const TEXT_ILLEGAL_STATE: string = 'Illegal state.';
 
 // Constants for creating users.
 export const USER_ID_CHARS: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 export const USER_ID_LENGTH: number = 10;
 
 // Constants for creating games.
-export const GAME_CODE_CHARS: string = 'abcdefghijklmnopqrstuvwxyz0123456789';
+export const GAME_CODE_CHARS: string = 'abcdefghijkmnpqrstuvwxyz123456789';
 export const GAME_CODE_LENGTH: number = 5;
+export const GAME_MINIMUM_PLAYERS: number = 4;

@@ -10,7 +10,7 @@ import 'messaging.dart' as messaging;
 import 'persistence.dart' as persistence;
 
 import 'bloc_provider.dart';
-import 'models/game.dart';
+import 'models.dart';
 import 'streamed_property.dart';
 
 export 'bloc_provider.dart';
@@ -49,7 +49,7 @@ class Bloc {
         if (_games.isNotEmpty) {
           final current = await persistence.loadCurrentGame();
           currentGame = _games.singleWhere((g) => g.code == current);
-          await refreshGame();
+          await _refreshGame();
         }
       });
     });
@@ -60,7 +60,7 @@ class Bloc {
     // Configure the messaging synchronously.
     _messaging.requestNotificationPermissions();
     _messaging.configure(onMessageReceived: () async {
-      await refreshGame();
+      await _refreshGame();
     });
     _messaging.subscribeToDeaths();
   }
@@ -71,7 +71,17 @@ class Bloc {
   }
 
   // Handles the sign in status.
-  Future<void> signIn(account.SignInType type) => _account.signIn(type);
+  Future<void> signIn(account.SignInType type) async {
+    logEvent(analytics.AnalyticsEvent.sign_in_attempt, { 'type': type });
+
+    try {
+      await _account.signIn(type);
+      logEvent(analytics.AnalyticsEvent.sign_in_success);
+    } catch (e) {
+      logEvent(analytics.AnalyticsEvent.sign_in_failure, { 'error': e });
+      rethrow;
+    }
+  }
   Future<bool> signOut() => _account.signOut();
   bool get isSignedIn => _account.isSignedInWithFirebase;
 
@@ -107,7 +117,7 @@ class Bloc {
     assert(event != null);
     _analytics.logEvent(event, parameters);
   }
-  FirebaseAnalyticsObserver get firebaseAnalyticsObserver => _analytics.observer;
+  FirebaseAnalyticsObserver get analyticsObserver => _analytics.observer;
 
   Future<Game> previewGame(String code) async {
     return await _network.getGame(
@@ -185,23 +195,34 @@ class Bloc {
     await persistence.saveGames(_games);
   }
 
-  Future<Game> refreshGame() async {
+  Future<Game> _refreshGame() async {
     final game = await _network.getGame(
       id: _account.id,
       authToken: _account.authToken,
       code: currentGame.code
     );
+    logEvent(analytics.AnalyticsEvent.game_loaded, { 'code': game.code });
     _updateCurrentGame(game);
     return game;
+  }
+
+  Future<void> acceptPlayers({ @required List<Player> players }) async {
+    await _network.acceptPlayer(
+      id: _account.id,
+      authToken: _account.authToken,
+      code: currentGame.code,
+      players: players,
+    );
+    await _refreshGame();
   }
 
   Future<void> startGame() async {
     await _network.startGame(
       id: _account.id,
       authToken: _account.authToken,
-      code: currentGame.code
+      code: currentGame.code,
     );
-    return await refreshGame();
+    await _refreshGame();
   }
 
   Future<void> killPlayer() async {
@@ -210,7 +231,7 @@ class Bloc {
       authToken: _account.authToken,
       code: currentGame.code
     );
-    return await refreshGame();
+    await _refreshGame();
   }
 
   Future<void> confirmDeath({
@@ -224,7 +245,7 @@ class Bloc {
       weapon: weapon,
       lastWords: lastWords,
     );
-    return await refreshGame();
+    await _refreshGame();
   }
 
   Future<void> shuffleVictims(bool onlyOutsmartedPlayers) async {
@@ -233,6 +254,6 @@ class Bloc {
       code: currentGame.code,
       onlyOutsmartedPlayers: onlyOutsmartedPlayers,
     );
-    return await refreshGame();
+    await _refreshGame();
   }
 }

@@ -7,19 +7,18 @@ function isUser(obj) {
         && typeof obj.name === "string";
 }
 exports.isUser = isUser;
-exports.PLAYER_IDLE = 0;
-exports.PLAYER_WAITING = 1;
-exports.PLAYER_ALIVE = 2;
-exports.PLAYER_DYING = 3;
-exports.PLAYER_DEAD = 4;
+exports.PLAYER_JOINING = 0;
+exports.PLAYER_ALIVE = 1;
+exports.PLAYER_DYING = 2;
+exports.PLAYER_DEAD = 3;
 function isPlayer(obj) {
     return obj !== undefined
         && typeof obj.state === "number"
+        && typeof obj.kills === "number"
         && (obj.murderer === null || typeof obj.murderer === "string")
         && (obj.victim === null || typeof obj.victim === "string")
-        && typeof obj.wasOutsmarted === "boolean"
-        && (obj.death === null || isDeath(obj.death))
-        && typeof obj.kills === "number";
+        && typeof obj.wantsNewVictim === "boolean"
+        && (obj.death === null || isDeath(obj.death));
 }
 exports.isPlayer = isPlayer;
 function isDeath(obj) {
@@ -33,15 +32,13 @@ function isDeath(obj) {
 exports.isDeath = isDeath;
 exports.GAME_NOT_STARTED_YET = 0;
 exports.GAME_RUNNING = 1;
-exports.GAME_PAUSED = 2;
-exports.GAME_OVER = 3;
+exports.GAME_OVER = 2;
 function isGame(obj) {
     return obj !== undefined
         && typeof obj.name === "string"
         && typeof obj.state === "number"
         && typeof obj.creator === "string"
         && typeof obj.created === "number"
-        && typeof obj.start === "number"
         && typeof obj.end === "number";
 }
 exports.isGame = isGame;

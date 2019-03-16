@@ -1,5 +1,7 @@
 # Cloud Functions
 
+The cloud functions wrap the functionality described in ["A murderous graph"](murderous_graph.md) in a webhook and also do administrative stuff like authenticating the caller and sending out notifications (see ["Firebase Cloud Messaging"](cloud_messaging.md)).
+
 ## `create_user`
 
 Creates a new user by saving the auth token, the messaging token and the name.
