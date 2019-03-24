@@ -78,7 +78,7 @@ export async function handleRequest(
         color: '#ff0000',
       },
     },
-    token: victimUser.messagingToken,
+    token: victimUser.messagingToken
   }).catch((error) => {
     log('Error sending message: ' + error);
   });

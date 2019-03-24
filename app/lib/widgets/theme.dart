@@ -92,7 +92,6 @@ const MyThemeData kThemeLight = MyThemeData(
     color: kAccentColor
   ),
   bodyText: TextStyle(
-    fontSize: kBodyFontSize,
     color: Colors.black
   ),
   flatButtonColor: kAccentColor,
@@ -110,7 +109,6 @@ const MyThemeData kThemeAccent = MyThemeData(
     color: Colors.white,
   ),
   bodyText: TextStyle(
-    fontSize: kBodyFontSize,
     color: Colors.white,
   ),
   flatButtonColor: Colors.white,
@@ -128,7 +126,6 @@ const MyThemeData kThemeDark = MyThemeData(
     color: Colors.white,
   ),
   bodyText: TextStyle(
-    fontSize: kBodyFontSize,
     color: Colors.white,
   ),
   flatButtonColor: Colors.white,

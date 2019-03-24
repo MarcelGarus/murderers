@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:firebase_analytics/observer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'account.dart' as account;
 import 'analytics.dart' as analytics;
@@ -76,6 +76,15 @@ class Bloc {
       _analytics.enable();
     } else {
       _analytics.disable();
+    }
+  }
+
+  void openPrivacyPolicy() async {
+    const url = 'https://docs.google.com/document/d/1GKn3hvv9OxzLCzdI9gkDNClfoo7lKBIQd4K9unkJumU/edit?usp=sharing';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 
@@ -246,7 +255,8 @@ class Bloc {
     await _network.killPlayer(
       id: _account.id,
       authToken: _account.authToken,
-      code: currentGame.code
+      code: currentGame.code,
+      victim: currentGame.victim.id,
     );
     await _refreshGame();
   }

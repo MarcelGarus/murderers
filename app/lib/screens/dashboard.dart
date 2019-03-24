@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
-import '../widgets/dashboard_app_bar.dart';
+import '../widgets/app_bar.dart';
 import '../widgets/gradient_background.dart';
 import '../widgets/statistics.dart';
 import '../widgets/theme.dart';
@@ -84,7 +84,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 content = _DashboardContent.alive;
                 break;
               case PlayerState.dying:
-                content = _DashboardContent.gameOver;
+                content = _DashboardContent.waitingForVictim;
                 break;
             }
         }
@@ -189,7 +189,7 @@ class DashboardSliverDelegate extends SliverPersistentHeaderDelegate {
 
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     var items = <Widget>[
-      DashboardAppBar(),
+      MyAppBar(),
       Expanded(child: child),
       bottom,
     ];

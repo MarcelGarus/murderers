@@ -9,8 +9,6 @@ class PrivacyScreen extends StatefulWidget {
 }
 
 class _PrivacyScreenState extends State<PrivacyScreen> {
-  bool analyticsEnabled;
-
   Widget build(BuildContext context) {
     var theme = MyTheme.of(context);
     return Container(
@@ -53,7 +51,9 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
           SizedBox(height: 8),
           Button.text('Read the full privacy policy',
             isRaised: false,
-            onPressed: () => Bloc.of(context).signIn(SignInType.anonymous),
+            onPressed: () {
+              Bloc.of(context).openPrivacyPolicy();
+            },
           ),
           Spacer(),
         ],

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
+import '../widgets/app_bar.dart';
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/button.dart';
+import '../widgets/staggered_column.dart';
 import '../widgets/theme.dart';
 
 class KillWarning extends StatelessWidget {
@@ -20,7 +20,7 @@ class KillWarning extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           padding: EdgeInsets.all(16),
-          child: Column(
+          child: StaggeredColumn(
             children: <Widget>[
               Spacer(),
               Container(width: 250, height: 150, child: Placeholder()),
@@ -42,7 +42,7 @@ class KillWarning extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                   ),
                   SizedBox(width: 8),
-                  Button.text("Yes, I killed xx",
+                  Button.text("Yes, I killed $victim",
                     onPressed: () {
                       return Bloc.of(context).killPlayer();
                     },

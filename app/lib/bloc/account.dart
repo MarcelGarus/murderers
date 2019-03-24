@@ -34,7 +34,7 @@ class Handler {
     _user = await _auth.currentUser();
     _id = await persistence.loadId();
     _name = await persistence.loadName();
-    print('Initializing account. user: $_user, id: $_id, name: $_name');
+    print('Account initialized. $_name with id $_id has auth token $authToken');
   }
 
   /// Signs in the user.

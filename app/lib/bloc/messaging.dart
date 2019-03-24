@@ -28,8 +28,9 @@ class Handler {
       onResume: onReceived,
       onLaunch: onReceived,
     );
-    _firebaseMessaging.getToken().then(print);
-    print('Firebase messaging configured.');
+    getToken().then((token) {
+      print('Firebase messaging configured. Messaging token: $token');
+    });
   }
 
   Future<String> getToken() => _firebaseMessaging.getToken();

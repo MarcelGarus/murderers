@@ -37,7 +37,7 @@ exports.shuffle = shuffle;
 /// If not, sends a response (if res is not null) and returns false.
 function queryContains(query, parameters, res) {
     for (const arg of parameters) {
-        if (query[arg] === undefined || typeof query[arg] !== 'string') {
+        if (query[arg] === undefined || typeof query[arg] !== 'string' || query[arg] === '') {
             if (res !== null) {
                 res.status(constants_1.CODE_BAD_REQUEST)
                     .send('Bad request. ' + arg + ' parameter missing.');
@@ -56,8 +56,12 @@ exports.userRef = userRef;
 /// Loads a user.
 function loadUser(firestore, id, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (id === null || id === undefined)
+        if (id === null || id === undefined || id === '') {
+            if (res !== null) {
+                res.status(constants_1.CODE_BAD_REQUEST).send('No user id provided.');
+            }
             return null;
+        }
         const snapshot = yield userRef(firestore, id).get();
         if (!snapshot.exists) {
             if (res !== null) {
@@ -112,6 +116,12 @@ exports.gameRef = gameRef;
 /// If errors occur, they are handled and the function just returns null.
 function loadGame(res, firestore, code) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (code === null || code === undefined || code === '') {
+            if (res !== null) {
+                res.status(constants_1.CODE_BAD_REQUEST).send('You need to provide a game code.');
+            }
+            return null;
+        }
         const snapshot = yield gameRef(firestore, code).get();
         if (!snapshot.exists) {
             res.status(constants_1.CODE_GAME_NOT_FOUND).send(constants_1.TEXT_GAME_NOT_FOUND);
@@ -142,6 +152,12 @@ exports.playerRef = playerRef;
 /// If errors occur, they are handled and the function just returns null.
 function loadPlayer(res, firestore, code, id) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (id === null || id === undefined || id === '') {
+            if (res !== null) {
+                res.status(constants_1.CODE_BAD_REQUEST).send('No player id provided.');
+            }
+            return null;
+        }
         const snapshot = yield playerRef(firestore, code, id).get();
         if (!snapshot.exists) {
             res.status(constants_1.CODE_PLAYER_NOT_FOUND).send(constants_1.TEXT_PLAYER_NOT_FOUND);

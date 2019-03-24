@@ -34,16 +34,5 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      alignment: Alignment.center,
-      child: Center(
-        child: SizedBox.fromSize(
-          size: Size.square(128),
-          child: FlareActor('images/logo.flr', animation: 'intro'),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Container(color: Colors.white);
 }

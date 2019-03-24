@@ -11,11 +11,11 @@ class DyingDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 32),
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: <Widget>[
           Spacer(),
-          Text("Did you get killed?",
+          Text("Did you get killed by ${Bloc.of(context).currentGame.murderer}?",
             style: MyTheme.of(context).headerText,
           ),
           SizedBox(height: 16),
@@ -45,9 +45,10 @@ class DyingDashboard extends StatelessWidget {
             //onChanged: (name) => setState(() => config.gameName = name),
           ),
           SizedBox(height: 16),
-          Row(
+          Wrap(
+            alignment: WrapAlignment.end,
+            crossAxisAlignment: WrapCrossAlignment.end,
             children: <Widget>[
-              Spacer(),
               Button.text("I didn't get killed",
                 isRaised: false,
                 onPressed: () {},

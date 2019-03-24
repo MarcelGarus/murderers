@@ -6,9 +6,10 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:intl/intl.dart';
 
 import '../bloc/bloc.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/button.dart';
 import '../widgets/setup.dart';
 import '../widgets/staggered_column.dart';
-import '../widgets/button.dart';
 import '../widgets/theme.dart';
 
 /// A game configuration. It's passed between all the setup screens to carry
@@ -50,6 +51,7 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MyAppBar(),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
@@ -60,7 +62,7 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
                 size: Size.square(128),
                 child: FlareActor('images/logo.flr', animation: 'intro'),
               ),
-              SizedBox(height: 32),
+              SizedBox(height: 16),
               Button.text('Join a game',
                 onPressed: () { _selectRole(UserRole.player); },
               ),
@@ -75,10 +77,6 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
                 onPressed: () { _selectRole(UserRole.creator); },
               ),
               Spacer(),
-              Button.text('Sign out',
-                isRaised: false,
-                onPressed: () => Bloc.of(context).signOut(),
-              ),
             ],
           ),
         ),

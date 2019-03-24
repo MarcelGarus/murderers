@@ -60,11 +60,11 @@ export async function handleRequest(
     .where('authToken', '==', authToken)
     .limit(1).get();
 
+  let id: UserId;
   if (existingUser.size > 0) {
-    res.set('application/json').send({
-      id: existingUser.docs[0].id,
-    });
-    return;
+    id = existingUser.docs[0].id;
+  } else {
+    id = await createUserId(firestore);
   }
 
   // Create the user.
@@ -73,8 +73,6 @@ export async function handleRequest(
     messagingToken: messagingToken,
     name: name,
   };
-
-  const id: UserId = await createUserId(firestore);
 
   await userRef(firestore, id).set(user);
 

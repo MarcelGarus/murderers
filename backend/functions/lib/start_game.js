@@ -55,18 +55,10 @@ function handleRequest(req, res) {
         if (user === null)
             return;
         // Get all the players and make sure there are enough.
-        const acceptedPlayersRef = utils_1.allPlayersRef(firestore, code)
-            .where('state', '==', models_1.PLAYER_ALIVE);
-        const players = yield utils_1.loadPlayersAndIds(res, acceptedPlayersRef.get());
-        if (!players)
+        const players = yield utils_1.loadPlayersAndIds(res, utils_1.allPlayersRef(firestore, code)
+            .where('state', '==', models_1.PLAYER_ALIVE).get());
+        if (!players || !ensureEnoughPlayers(res, players.length))
             return;
-        if (players.length < constants_1.GAME_MINIMUM_PLAYERS) {
-            const errText = 'There are only ' + players.length + ' players, but '
-                + constants_1.GAME_MINIMUM_PLAYERS + ' are required to start the game.';
-            res.status(constants_1.CODE_ILLEGAL_STATE).send(errText);
-            util_1.log(errText);
-            return;
-        }
         // Shuffle all the players and change the game state.
         const batch = firestore.batch();
         shuffle_victims_1.shuffleVictims(players);
@@ -95,4 +87,14 @@ function handleRequest(req, res) {
     });
 }
 exports.handleRequest = handleRequest;
+function ensureEnoughPlayers(res, numPlayers) {
+    if (numPlayers < constants_1.GAME_MINIMUM_PLAYERS) {
+        const errText = 'There are only ' + numPlayers + ' players, but '
+            + constants_1.GAME_MINIMUM_PLAYERS + ' are required to start the game.';
+        res.status(constants_1.CODE_ILLEGAL_STATE).send(errText);
+        util_1.log(errText);
+        return false;
+    }
+    return true;
+}
 //# sourceMappingURL=start_game.js.map
