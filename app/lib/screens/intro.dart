@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
+import 'package:flutter_page_indicator/flutter_page_indicator.dart';
+import 'package:pedantic/pedantic.dart';
 
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
@@ -17,17 +19,20 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen>
     with TickerProviderStateMixin {
-  TabController _controller;
+  static const numPages = 4;
+  PageController _controller = PageController();
 
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: 4, vsync: this);
   }
 
   Future<bool> _onWillPop() async {
-    if (_controller.index > 0) {
-      _controller.index--;
+    if (_controller.page > 0) {
+      unawaited(_controller.previousPage(
+        curve: Curves.easeInOutCubic,
+        duration: Duration(milliseconds: 200),
+      ));
       return false;
     }
     return true;
@@ -61,7 +66,7 @@ class _IntroScreenState extends State<IntroScreen>
                 child: _buildBottomBar(),
               ),
             ],
-          )
+          ),
         ),
       ),
     );
@@ -72,42 +77,54 @@ class _IntroScreenState extends State<IntroScreen>
       padding: EdgeInsets.fromLTRB(32, 8, 16, 8),
       child: Row(
         children: <Widget>[
-          TabPageSelector(controller: _controller),
+          PageIndicator(
+            layout: PageIndicatorLayout.WARM,
+            size: 10,
+            controller: _controller,
+            space: 6,
+            count: numPages,
+            color: Colors.black26,
+            activeColor: MyTheme.of(context).raisedButtonFillColor,
+          ),
           Spacer(),
-          _NextButton(controller: _controller),
+          _NextButton(controller: _controller, numPages: numPages),
         ],
       ),
     );
   }
 
-  TabBarView _buildContent() {
-    return TabBarView(
+  Widget _buildContent() {
+    var children = <Widget>[
+      _IntroStep(
+        image: null,
+        title: "Welcome to\nThe Murderer Game.",
+        content: "A real world game for large groups of players hanging out "
+            "for several days.",
+      ),
+      _IntroStep(
+        image: null,
+        title: 'Kill players',
+        content: "This app tells you who's your victim. Kill it by giving it "
+            "a phyiscal object. After you informed your victim about its "
+            "death, mark the job as done in this app.",
+      ),
+      _IntroStep(
+        image: null,
+        title: 'Be the greatest assassin.',
+        content: "Once you killed your victim, you'll get a new one. Try to "
+            "kill as many players without dying.",
+      ),
+      PrivacyScreen(),
+    ];
+
+    assert(children.length == numPages);
+
+    return PageView(
       controller: _controller,
-      children: <Widget>[
-        _IntroStep(
-          image: null,
-          title: "Welcome to\nThe Murderer Game.",
-          content: 'A real world game for large groups of players '
-            'hanging out for several days.',
-        ),
-        _IntroStep(
-          image: null,
-          title: 'Kill players',
-          content: "This app tells you who's your victim. Kill it by "
-            "giving it a phyiscal object. After you informed your "
-            "victim about its death, mark the job as done in this app."
-        ),
-        _IntroStep(
-          image: null,
-          title: 'Be the greatest assassin.',
-          content: "Once you killed your victim, you'll get a new "
-            "one. Try to kill as many players without dying."
-        ),
-        PrivacyScreen(),
-      ].map((step) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: step
-      )).toList(),
+      children: children
+          .map((step) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16), child: step))
+          .toList(),
     );
   }
 }
@@ -143,42 +160,48 @@ class _IntroStep extends StatelessWidget {
 }
 
 /// The next button on the bottom of the screen. Adapts to a [TabController] and
-/// and automatically advances its index on click. If the controller already
+/// and automatically advances its page on click. If the controller already
 /// shows the last page, this button automatically disappears.
-class _NextButton extends StatelessWidget {
+class _NextButton extends StatefulWidget {
   _NextButton({
     @required this.controller,
+    @required this.numPages,
   }) : assert(controller != null);
-  
-  final TabController controller;
+
+  final PageController controller;
+  final int numPages;
+
+  @override
+  __NextButtonState createState() => __NextButtonState();
+}
+
+class __NextButtonState extends State<_NextButton> {
+  bool get isAcceptButton =>
+      (widget.controller.page ?? 0) < (widget.numPages - 1.5);
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller.animation,
-      builder: (context, child) {
-        return Button.text(
-          (controller.index < controller.length - 1) ? 'Next' : 'I agree',
-          isRaised: false,
-          onPressed: () {
-            if (controller.index < controller.length - 1) {
-              controller.index++;
-            } else {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (ctx) => SignInScreen(),
-              ));
-            }
-          },
-        );
+    return Button.text(
+      (isAcceptButton) ? 'Next' : 'I agree',
+      isRaised: false,
+      onPressed: () {
+        if (isAcceptButton) {
+          widget.controller.nextPage(
+            curve: Curves.easeInOutCubic,
+            duration: Duration(milliseconds: 200),
+          );
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) => SignInScreen(),
+          ));
+        }
       },
-      child: Button.text('Next',
-        isRaised: false,
-        onPressed: () {
-          if (controller.index < controller.length - 1) {
-            controller.index++;
-          }
-        },
-      )
     );
   }
 }
