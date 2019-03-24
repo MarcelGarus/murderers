@@ -36,8 +36,10 @@ enum AnalyticsEvent {
 
 String _stringifyEvent(AnalyticsEvent event) {
   switch (event) {
-    case AnalyticsEvent.app_open: return 'app_open';
-    default: return 'unknown_event';
+    case AnalyticsEvent.app_open:
+      return 'app_open';
+    default:
+      return 'unknown_event';
   }
 }
 
@@ -46,10 +48,12 @@ class Handler {
   bool get isEnabled => _analytics != null;
   FirebaseAnalyticsObserver _observer;
 
-  RouteObserverProxy get observer => RouteObserverProxy(
-    onDidPush: (route, previousRoute) => _observer?.didPush(route, previousRoute),
-    onDidPop: (route, previousRoute) => _observer?.didPop(route, previousRoute),
-  );
+  RouteObserverProxy get observer => RouteObserverProxy._(
+        onDidPush: (route, previousRoute) =>
+            _observer?.didPush(route, previousRoute),
+        onDidPop: (route, previousRoute) =>
+            _observer?.didPop(route, previousRoute),
+      );
 
   /// Initializes the analytics handler.
   Future<void> initialize() async {
@@ -75,26 +79,27 @@ class Handler {
   }
 
   /// Logs the given event.
-  Future<void> logEvent(
-    AnalyticsEvent event, [
-    Map<String, dynamic> parameters
-  ]) async {
+  Future<void> logEvent(AnalyticsEvent event,
+      [Map<String, dynamic> parameters]) async {
+    assert(event != null);
+
     await _analytics?.logEvent(
       name: _stringifyEvent(event),
-      parameters: parameters
+      parameters: parameters,
     );
   }
 }
 
+/// This is a [RouteObserver] that just forwards the [onDidPush] and [onDidPop]
+/// events to the given callbacks.
 class RouteObserverProxy extends RouteObserver<PageRoute<dynamic>> {
-  RouteObserverProxy({
+  RouteObserverProxy._({
     @required this.onDidPush,
     @required this.onDidPop,
-  }) :
-      assert(onDidPush != null),
-      assert(onDidPop != null);
+  })  : assert(onDidPush != null),
+        assert(onDidPop != null);
 
-  final void Function(Route roue, Route previousRoute) onDidPush, onDidPop;
+  final void Function(Route route, Route previousRoute) onDidPush, onDidPop;
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {

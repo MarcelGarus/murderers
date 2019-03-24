@@ -5,17 +5,16 @@ import 'player.dart';
 
 part 'game.g.dart';
 
-enum GameState {
-  notStartedYet,
-  running,
-  over
-}
+enum GameState { notStartedYet, running, over }
 
 GameState intToGameState(int i) {
   switch (i) {
-    case 0: return GameState.notStartedYet;
-    case 1: return GameState.running;
-    case 2: return GameState.over;
+    case 0:
+      return GameState.notStartedYet;
+    case 1:
+      return GameState.running;
+    case 2:
+      return GameState.over;
     default:
       print("Error: Unknown player state $i.");
       throw ArgumentError();
@@ -27,16 +26,16 @@ GameState intToGameState(int i) {
 @immutable
 class Game {
   final bool isCreator; // Whether this user is the creator.
-  final String code; // This game's code.
-  final String name; // This game's name.
-  final GameState state; // This game's state.
-  final DateTime created; // The creation timestamp.
-  final DateTime end; // The estimated end timestamp. May change.
-  final List<Player> players; // All the players.
-  final Player me; // This player. May be [null].
+  final String code;
+  final String name;
+  final GameState state;
+  final DateTime created;
+  final DateTime end;
+  final List<Player> players;
+  final Player me; // This user's player. May be [null].
   final Player murderer; // This player's murderer. May be [null].
   final Player victim; // This player's victim. May be [null].
-  final bool wantsNewVictim; // Whether this player's victim outsmarted this player.
+  final bool wantsNewVictim; // Whether this player wants a new victim.
 
   bool get isPlayer => me != null;
 
@@ -52,7 +51,14 @@ class Game {
     this.murderer,
     this.victim,
     this.wantsNewVictim,
-  });
+  })  : assert(isCreator != null),
+        assert(code != null),
+        assert(name != null),
+        assert(state != null),
+        assert(created != null),
+        assert(created != null),
+        assert(end != null),
+        assert(players != null);
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
   Map<String, dynamic> toJson() => _$GameToJson(this);
@@ -82,12 +88,12 @@ class Game {
       me: me ?? this.me,
       murderer: murderer ?? this.murderer,
       victim: victim ?? this.victim,
-      wantsNewVictim: wasOutsmarted ?? this.wantsNewVictim
+      wantsNewVictim: wasOutsmarted ?? this.wantsNewVictim,
     );
   }
 
   String toString() {
-    return 'Game $code with state $state and '
-      + (players.isEmpty ? 'no players.' : 'players ${players.join(', ')}.');
+    return 'Game $code with state $state and ' +
+        (players.isEmpty ? 'no players.' : 'players ${players.join(', ')}.');
   }
 }

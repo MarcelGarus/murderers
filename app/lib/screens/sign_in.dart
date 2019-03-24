@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
-import '../widgets/app_bar.dart';
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
 
@@ -16,9 +14,8 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   Future<bool> _onSignInSuccess() async {
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (ctx) => _EnterNameScreen()
-    ));
+    await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => _EnterNameScreen()));
     return false; // Make the button stop spinning.
   }
 
@@ -40,7 +37,8 @@ class _SignInScreenState extends State<SignInScreen> {
           child: Column(
             children: <Widget>[
               Spacer(flex: 2),
-              Text("Sign in to synchronize your games across all your devices.",
+              Text(
+                "Sign in to synchronize your games across all your devices.",
                 textAlign: TextAlign.center,
                 style: theme.bodyText,
               ),
@@ -49,7 +47,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 onPressed: () => Bloc.of(context).signIn(SignInType.google),
                 onSuccess: (_) => _onSignInSuccess(),
                 onError: _onSignInError,
-                icon: SvgPicture.asset('images/google_icon.svg',
+                icon: SvgPicture.asset(
+                  'images/google_icon.svg',
                   width: 36,
                   height: 36,
                   semanticsLabel: 'Google logo',
@@ -57,7 +56,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 text: 'Sign in with Google',
               ),
               SizedBox(height: 16),
-              Button.text('Sign in anonymously\n(erstmal nicht nehmen)',
+              Button.text(
+                'Sign in anonymously\n(erstmal nicht nehmen)',
                 isRaised: false,
                 onPressed: () => Bloc.of(context).signIn(SignInType.anonymous),
               ),
@@ -88,9 +88,10 @@ class _EnterNameScreenState extends State<_EnterNameScreen> {
 
     bloc.logEvent(AnalyticsEvent.name_entered);
     try {
-      await bloc.createAccount(name);
+      await bloc.createAccount(name: name);
       bloc.logEvent(AnalyticsEvent.signed_up);
-      await Navigator.of(context).pushNamedAndRemoveUntil('/setup', (route) => false);
+      await Navigator.of(context)
+          .pushNamedAndRemoveUntil('/setup', (route) => false);
     } catch (e) {
       print('Something went wrong: $e');
     }
@@ -123,14 +124,14 @@ class _EnterNameScreenState extends State<_EnterNameScreen> {
               Spacer(),
               Text(
                 "Other players will be able to see it. To counter confusion "
-                "in large groups, it's recommended to enter both your first "
-                "and last name.",
+                    "in large groups, it's recommended to enter both your first "
+                    "and last name.",
                 textAlign: TextAlign.center,
                 style: MyTheme.of(context).bodyText.copyWith(fontSize: 12),
               ),
             ],
           ),
-        )
+        ),
       ),
     );
   }

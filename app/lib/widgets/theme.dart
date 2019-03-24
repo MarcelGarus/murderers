@@ -37,23 +37,31 @@ class MyThemeData {
   }) {
     return MyThemeData(
       backgroundColor: backgroundColor ?? this.backgroundColor,
-      backgroundGradientColor: backgroundGradientColor ?? this.backgroundGradientColor,
-      headerText: headerText ?? ((textColor == null) ? this.headerText : this.headerText.copyWith(color: textColor)),
-      bodyText: bodyText ?? ((textColor == null) ? this.bodyText : this.bodyText.copyWith(color: textColor)),
-      raisedButtonFillColor: primaryButtonBackgroundColor ?? buttonColor ?? this.raisedButtonFillColor,
-      raisedButtonTextColor: primaryButtonTextColor ?? this.raisedButtonTextColor,
-      flatButtonColor: secondaryButtonColor ?? buttonColor ?? this.flatButtonColor,
+      backgroundGradientColor:
+          backgroundGradientColor ?? this.backgroundGradientColor,
+      headerText: headerText ??
+          ((textColor == null)
+              ? this.headerText
+              : this.headerText.copyWith(color: textColor)),
+      bodyText: bodyText ??
+          ((textColor == null)
+              ? this.bodyText
+              : this.bodyText.copyWith(color: textColor)),
+      raisedButtonFillColor: primaryButtonBackgroundColor ??
+          buttonColor ??
+          this.raisedButtonFillColor,
+      raisedButtonTextColor:
+          primaryButtonTextColor ?? this.raisedButtonTextColor,
+      flatButtonColor:
+          secondaryButtonColor ?? buttonColor ?? this.flatButtonColor,
     );
   }
 }
 
 /// Widget that is used to propagate MyThemeData to a subtree.
 class MyTheme extends StatelessWidget {
-  const MyTheme({
-    Key key,
-    @required this.data,
-    @required this.child
-  }) : super(key: key);
+  const MyTheme({Key key, @required this.data, @required this.child})
+      : super(key: key);
 
   final MyThemeData data;
   final Widget child;
@@ -89,11 +97,9 @@ const MyThemeData kThemeLight = MyThemeData(
   headerText: TextStyle(
     fontFamily: kHeaderFontFamily,
     fontSize: kHeaderFontSize,
-    color: kAccentColor
+    color: kAccentColor,
   ),
-  bodyText: TextStyle(
-    color: Colors.black
-  ),
+  bodyText: TextStyle(color: Colors.black),
   flatButtonColor: kAccentColor,
   raisedButtonFillColor: kAccentColor,
   raisedButtonTextColor: Colors.white,

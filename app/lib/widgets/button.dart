@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'theme.dart';
 
 /// A button that can morph into a loading spinner.
-/// 
+///
 /// This button can be given a child or a text to display. The passed
 /// [onPressed] callback is called if the button is pressed. In contrast to the
 /// normal built-in button, this button morphs into a loading spinner if the
@@ -23,10 +23,9 @@ class Button<T> extends StatefulWidget {
     @required this.onPressed,
     this.onSuccess,
     this.onError,
-  }) :
-      assert(child != null),
-      assert(isRaised != null),
-      assert(onPressed != null);
+  })  : assert(child != null),
+        assert(isRaised != null),
+        assert(onPressed != null);
 
   final Widget child;
   final bool isRaised;
@@ -41,13 +40,12 @@ class Button<T> extends StatefulWidget {
     @required this.onPressed,
     this.onSuccess,
     this.onError,
-  }) :
-      assert(text != null),
-      assert(onPressed != null),
-      child = Padding(
-        padding: EdgeInsets.all(16),
-        child: _ButtonText(text, isRaised: isRaised),
-      );
+  })  : assert(text != null),
+        assert(onPressed != null),
+        child = Padding(
+          padding: EdgeInsets.all(16),
+          child: _ButtonText(text, isRaised: isRaised),
+        );
 
   /// Creates a button that displays text next to an icon.
   Button.icon({
@@ -57,28 +55,26 @@ class Button<T> extends StatefulWidget {
     @required this.onPressed,
     this.onSuccess,
     this.onError,
-  }) :
-      assert(icon != null),
-      assert(text != null),
-      assert(onPressed != null),
-      child = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            icon,
-            SizedBox(width: 16),
-            _ButtonText(text, isRaised: isRaised),
-          ],
-        ),
-      );
+  })  : assert(icon != null),
+        assert(text != null),
+        assert(onPressed != null),
+        child = Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              icon,
+              SizedBox(width: 16),
+              _ButtonText(text, isRaised: isRaised),
+            ],
+          ),
+        );
 
   _ButtonState createState() => _ButtonState<T>();
 }
 
-class _ButtonState<T> extends State<Button>
-    with SingleTickerProviderStateMixin {
-  bool _isLoading = false;
+class _ButtonState<T> extends State<Button> {
+  var _isLoading = false;
 
   void _onPressed() {
     final result = widget.onPressed();
@@ -108,21 +104,23 @@ class _ButtonState<T> extends State<Button>
 
   @override
   Widget build(BuildContext context) {
-    final theme = MyTheme.of(context);
+    var theme = MyTheme.of(context);
 
     return RawMaterialButton(
       // Do not handle touch events if the button is already loading.
       onPressed: _isLoading ? () {} : _onPressed,
       fillColor: widget.isRaised ? theme.raisedButtonFillColor : null,
       highlightColor: Colors.black.withOpacity(0.08),
-      splashColor: _isLoading ? Colors.transparent
-        : widget.isRaised ? Colors.black26
-        : theme.flatButtonColor.withOpacity(0.3),
+      splashColor: _isLoading
+          ? Colors.transparent
+          : widget.isRaised
+              ? Colors.black26
+              : theme.flatButtonColor.withOpacity(0.3),
       elevation: widget.isRaised ? 2 : 0,
       highlightElevation: widget.isRaised ? 2 : 0,
       shape: _isLoading
-        ? CircleBorder()
-        : RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ? const CircleBorder()
+          : RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       animationDuration: Duration(milliseconds: 200),
       child: Container(
         width: _isLoading ? 52 : null,
@@ -133,9 +131,8 @@ class _ButtonState<T> extends State<Button>
   }
 
   Widget _buildLoadingContent(MyThemeData theme) {
-    final color = widget.isRaised
-      ? theme.raisedButtonTextColor
-      : theme.flatButtonColor;
+    final color =
+        widget.isRaised ? theme.raisedButtonTextColor : theme.flatButtonColor;
 
     return Center(
       child: SizedBox(
@@ -143,23 +140,25 @@ class _ButtonState<T> extends State<Button>
         height: 24,
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation(color),
-        )
-      )
+        ),
+      ),
     );
   }
 }
 
 /// Text that uses the appropriate text color from MyTheme when rendered.
 class _ButtonText extends StatelessWidget {
-  _ButtonText(this.text, { this.isRaised = true });
+  _ButtonText(this.text, {this.isRaised = true});
 
   final String text;
   final bool isRaised;
 
   @override
   Widget build(BuildContext context) {
-    final theme = MyTheme.of(context);
-    return Text(text,
+    var theme = MyTheme.of(context);
+
+    return Text(
+      text,
       style: TextStyle(
         color: isRaised ? theme.raisedButtonTextColor : theme.flatButtonColor,
         fontFamily: 'Signature',

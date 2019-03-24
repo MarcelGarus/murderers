@@ -9,20 +9,26 @@ import 'models.dart';
 part 'network_game_parser.dart';
 
 class NetworkError {}
+
 class NoConnectionError extends NetworkError {}
+
 class BadRequestError extends NetworkError {}
+
 class ServerCorruptError extends NetworkError {}
+
 class AuthenticationFailedError extends NetworkError {}
+
 class ResourceNotFoundError extends NetworkError {}
 
 /// A simple get request to the server.
 class _Request<T> {
-  _Request({
-    @required this.functionName,
-    @required this.parameters,
-    T Function(String body) this.parser,
-    void Function(T result) callback
-  }) {
+  _Request(
+      {@required this.functionName,
+      @required this.parameters,
+      T Function(String body) this.parser,
+      void Function(T result) callback})
+      : assert(functionName != null),
+        assert(parameters != null) {
     if (callback != null) {
       callbacks.add(callback);
     }
@@ -37,43 +43,54 @@ class _Request<T> {
   /// Executes the request.
   Future<T> _execute() async {
     // Build the URL. TODO: encode parameter values
-    final url = 'https://us-central1-murderers-e67bb.cloudfunctions.net/'
-      + functionName + '?' + parameters.keys
-      .map((key) => '$key=${parameters[key]}')
-      .reduce((a, b) => '$a&$b');
-    
+    final url = 'https://us-central1-murderers-e67bb.cloudfunctions.net/' +
+        functionName +
+        '?' +
+        parameters.keys
+            .map((key) => '$key=${parameters[key]}')
+            .reduce((a, b) => '$a&$b');
+
     // Make the request.
-    print('Making a request to ' + functionName);
+    debugPrint('Making a request to ' + functionName);
     final res = await http.get(url);
-    print('Got response: ${res.body}');
+    debugPrint('Got response: ${res.body}', wrapWidth: 80);
 
     // Handle errors. TODO: check for no internet & timeout
     switch (res.statusCode) {
-      case 200: break;
-      case 400: throw BadRequestError();
-      case 403: throw AuthenticationFailedError();
-      case 404: throw ResourceNotFoundError();
-      case 500: throw ServerCorruptError();
-      default: throw ServerCorruptError();
+      case 200:
+        break;
+      case 400:
+        throw BadRequestError();
+      case 403:
+        throw AuthenticationFailedError();
+      case 404:
+        throw ResourceNotFoundError();
+      case 500:
+        throw ServerCorruptError();
+      default:
+        throw ServerCorruptError();
     }
 
     // Parse response.
     try {
-      print('Parsing the response.');
+      debugPrint('Parsing the response.');
       return (parser == null) ? null : parser(res.body);
     } catch (e, stacktrace) {
-      print('Seems like the server output is corrupt: $e');
-      print(stacktrace);
+      debugPrint('Seems like the server output is corrupt: $e', wrapWidth: 80);
+      debugPrint(stacktrace.toString());
       throw ServerCorruptError();
     }
   }
 
   /// Executes the scheduled requests.
-  Future<T> _executeScheduled(
-    List<_Request> requestsToWaitFor
-  ) async {
+  Future<T> _executeScheduled(List<_Request> requestsToWaitFor) async {
     // Wait for the given requests.
-    print("The following ${requestsToWaitFor.length} requests are scheduled: $requestsToWaitFor");
+    debugPrint(
+      "The following ${requestsToWaitFor.length} requests are scheduled: "
+          "$requestsToWaitFor",
+      wrapWidth: 80,
+    );
+
     while (requestsToWaitFor.first != this) {
       if (!requestsToWaitFor.contains(this)) return null;
 
@@ -91,10 +108,10 @@ class _Request<T> {
     return await _executor;
   }
 
-  bool operator == (Object other) {
-    return other is _Request<T>
-      && functionName == other.functionName
-      && true; // TODO: check for parameters
+  bool operator ==(Object other) {
+    return other is _Request<T> &&
+        functionName == other.functionName &&
+        true; // TODO: check for parameters
   }
 
   String toString() => functionName;
@@ -122,16 +139,22 @@ class Handler {
   Future<String> createUser({
     @required String name,
     @required String authToken,
-    String messagingToken,
-  }) => _makeRequest(_Request(
-    functionName: 'create_user',
-    parameters: {
-      'name': name,
-      'authToken': authToken,
-      'messagingToken': messagingToken,
-    },
-    parser: (body) => json.decode(body)['id']
-  ));
+    @required String messagingToken,
+  }) {
+    assert(name != null);
+    assert(authToken != null);
+    assert(messagingToken != null);
+
+    return _makeRequest(_Request(
+      functionName: 'create_user',
+      parameters: {
+        'name': name,
+        'authToken': authToken,
+        'messagingToken': messagingToken,
+      },
+      parser: (body) => json.decode(body)['id'],
+    ));
+  }
 
   /// Creates a game on the server.
   Future<Game> createGame({
@@ -140,40 +163,54 @@ class Handler {
     @required String name,
     @required DateTime start,
     @required DateTime end,
-  }) => _makeRequest(_Request(
-    functionName: 'create_game',
-    parameters: {
-      'me': id,
-      'authToken': authToken,
-      'name': name,
-      'start': start.millisecondsSinceEpoch.toString(),
-      'end': end.millisecondsSinceEpoch.toString(),
-    },
-    parser: (body) {
-      final data = json.decode(body);
-      return Game(
-        isCreator: true,
-        code: data['code'],
-        name: data['name'],
-        created: _parseTime(data['created']),
-        end: _parseTime(data['end']),
-      );
-    }
-  ));
+  }) {
+    assert(id != null);
+    assert(authToken != null);
+    assert(name != null);
+    assert(start != null);
+    assert(end != null);
+
+    return _makeRequest(_Request(
+      functionName: 'create_game',
+      parameters: {
+        'me': id,
+        'authToken': authToken,
+        'name': name,
+        'start': start.millisecondsSinceEpoch.toString(),
+        'end': end.millisecondsSinceEpoch.toString(),
+      },
+      parser: (body) {
+        final data = json.decode(body);
+        return Game(
+          isCreator: true,
+          code: data['code'],
+          name: data['name'],
+          created: _parseTime(data['created']),
+          end: _parseTime(data['end']),
+        );
+      },
+    ));
+  }
 
   /// Joins a game on the server.
   Future<void> joinGame({
     @required String id,
     @required String authToken,
     @required String code,
-  }) => _makeRequest(_Request(
-    functionName: 'join_game',
-    parameters: {
-      'me': id,
-      'authToken': authToken,
-      'game': code,
-    }
-  ));
+  }) {
+    assert(id != null);
+    assert(authToken != null);
+    assert(code != null);
+
+    return _makeRequest(_Request(
+      functionName: 'join_game',
+      parameters: {
+        'me': id,
+        'authToken': authToken,
+        'game': code,
+      },
+    ));
+  }
 
   /// Accepts some players.
   Future<void> acceptPlayer({
@@ -181,48 +218,67 @@ class Handler {
     @required String authToken,
     @required String code,
     @required List<Player> players,
-  }) => _makeRequest(_Request(
-    functionName: 'accept_players',
-    parameters: {
-      'me': id,
-      'authToken': authToken,
-      'game': code,
-      'playersToAccept': players.map((p) => p.id).join('_'),
-    }
-  ));
+  }) {
+    assert(id != null);
+    assert(authToken != null);
+    assert(code != null);
+    assert(players != null);
+
+    return _makeRequest(_Request(
+      functionName: 'accept_players',
+      parameters: {
+        'me': id,
+        'authToken': authToken,
+        'game': code,
+        'playersToAccept': players.map((p) => p.id).join('_'),
+      },
+    ));
+  }
 
   /// Gets a game from the server.
   Future<Game> getGame({
     @required String id,
     @required String authToken,
     @required String code,
-  }) => _makeRequest(_Request(
-    functionName: 'get_game',
-    parameters: {
-      'me': id,
-      'authToken': authToken,
-      'game': code,
-    },
-    parser: (body) => _parseServerGame(
-      body: body,
-      code: code,
-      id: id,
-    ),
-  ));
+  }) {
+    assert(id != null);
+    assert(authToken != null);
+    assert(code != null);
+
+    return _makeRequest(_Request(
+      functionName: 'get_game',
+      parameters: {
+        'me': id,
+        'authToken': authToken,
+        'game': code,
+      },
+      parser: (body) => _parseServerGame(
+            body: body,
+            code: code,
+            id: id,
+          ),
+    ));
+  }
 
   /// Starts a game on the server.
   Future<void> startGame({
     @required String id,
     @required String authToken,
     @required String code,
-  }) => _makeRequest(_Request(
-    functionName: 'start_game',
-    parameters: {
-      'me': id,
-      'authToken': authToken,
-      'game': code,
-    },
-  ));
+  }) {
+    assert(id != null);
+    assert(authToken != null);
+    assert(code != null);
+
+    return _makeRequest(_Request(
+      functionName: 'start_game',
+      parameters: {
+        'me': id,
+        'authToken': authToken,
+        'game': code,
+      },
+    ));
+  }
 
   /// Kills a player on the server.
   Future<void> killPlayer({
@@ -230,15 +286,22 @@ class Handler {
     @required String authToken,
     @required String code,
     @required String victim,
-  }) => _makeRequest(_Request(
-    functionName: 'kill_player',
-    parameters: {
-      'me': id,
-      'authToken': authToken,
-      'game': code,
-      'victim': victim,
-    },
-  ));
+  }) {
+    assert(id != null);
+    assert(authToken != null);
+    assert(code != null);
+    assert(victim != null);
+
+    return _makeRequest(_Request(
+      functionName: 'kill_player',
+      parameters: {
+        'me': id,
+        'authToken': authToken,
+        'game': code,
+        'victim': victim,
+      },
+    ));
+  }
 
   /// A player dies on the server.
   Future<void> die({
@@ -247,28 +310,42 @@ class Handler {
     @required String code,
     @required String weapon,
     @required String lastWords,
-  }) => _makeRequest(_Request(
-    functionName: 'die',
-    parameters: {
-      'me': id,
-      'authToken': authToken,
-      'game': code,
-      'weapon': weapon,
-      'lastWords': lastWords
-    },
-  ));
+  }) {
+    assert(id != null);
+    assert(authToken != null);
+    assert(code != null);
+    assert(weapon != null);
+    assert(lastWords != null);
+
+    return _makeRequest(_Request(
+      functionName: 'die',
+      parameters: {
+        'me': id,
+        'authToken': authToken,
+        'game': code,
+        'weapon': weapon,
+        'lastWords': lastWords
+      },
+    ));
+  }
 
   /// Shuffles some victims on the server.
   Future<void> shuffleVictims({
     @required String authToken,
     @required String code,
     @required bool onlyOutsmartedPlayers,
-  }) => _makeRequest(_Request(
-    functionName: 'shuffle_victims',
-    parameters: {
-      'authToken': authToken,
-      'game': code,
-      'onlyOutsmartedPlayers': onlyOutsmartedPlayers ? 'true' : 'false',
-    },
-  ));
+  }) {
+    assert(authToken != null);
+    assert(code != null);
+    assert(onlyOutsmartedPlayers != null);
+
+    return _makeRequest(_Request(
+      functionName: 'shuffle_victims',
+      parameters: {
+        'authToken': authToken,
+        'game': code,
+        'onlyOutsmartedPlayers': onlyOutsmartedPlayers ? 'true' : 'false',
+      },
+    ));
+  }
 }

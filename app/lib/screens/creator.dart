@@ -16,8 +16,8 @@ class CreatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final game = Bloc.of(context).currentGame;
-    final joiningPlayers = game.players
-      .where((p) => p.state == PlayerState.joining).toList();
+    final joiningPlayers =
+        game.players.where((p) => p.state == PlayerState.joining).toList();
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -43,13 +43,15 @@ class _AcceptPlayersCard extends StatelessWidget {
     @required this.onAccept,
     @required this.onDeny,
   });
-  
+
   final List<Player> players;
   final void Function(List<Player> players) onAccept;
   final void Function(List<Player> players) onDeny;
 
   @override
   Widget build(BuildContext context) {
+    var theme = MyTheme.of(context);
+
     return _CreatorFeedCard(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -57,14 +59,16 @@ class _AcceptPlayersCard extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Text('These players want to join the game.',
-              style: MyTheme.of(context).headerText.copyWith(color: Colors.black),
+            child: Text(
+              'These players want to join the game.',
+              style: theme.headerText.copyWith(color: Colors.black),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Text('Swipe left or right to accept or deny them.',
-              style: MyTheme.of(context).bodyText,
+            child: Text(
+              'Swipe left or right to accept or deny them.',
+              style: theme.bodyText,
             ),
           ),
         ].followedBy(players.map((player) {
@@ -73,13 +77,13 @@ class _AcceptPlayersCard extends StatelessWidget {
             background: Container(
               color: Colors.red,
               alignment: Alignment.centerLeft,
-              padding:EdgeInsets.only(left: 16),
+              padding: EdgeInsets.only(left: 16),
               child: Icon(Icons.close, color: Colors.white),
             ),
             secondaryBackground: Container(
               color: Colors.green,
               alignment: Alignment.centerRight,
-              padding:EdgeInsets.only(right: 16),
+              padding: EdgeInsets.only(right: 16),
               child: Icon(Icons.done, color: Colors.white),
             ),
             child: Container(
@@ -88,9 +92,9 @@ class _AcceptPlayersCard extends StatelessWidget {
             ),
             onDismissed: (direction) {
               if (direction == DismissDirection.endToStart) {
-                onAccept([ player ]);
+                onAccept([player]);
               } else {
-                onDeny([ player ]);
+                onDeny([player]);
               }
             },
           );
@@ -106,7 +110,7 @@ class _CreatorFeedCard extends StatelessWidget {
   _CreatorFeedCard({
     @required this.child,
   });
-  
+
   final child;
 
   @override
@@ -121,7 +125,7 @@ class _CreatorFeedCard extends StatelessWidget {
         elevation: 0,
         child: child,
         color: Colors.white,
-      )
+      ),
     );
   }
 }

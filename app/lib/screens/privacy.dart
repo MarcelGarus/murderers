@@ -4,29 +4,36 @@ import '../bloc/bloc.dart';
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
 
+// This is still a [StatefulWidget], because the state is just outsourced to the
+// BLoC. Once the analytics toggle is tapped, the BLoC is updated with the new
+// value and this widget rebuilds (using [setState]). That wouldn't be possible
+// with a [StatelessWidget] (unless you use a complex Stream-based solution).
 class PrivacyScreen extends StatefulWidget {
   _PrivacyScreenState createState() => _PrivacyScreenState();
 }
 
 class _PrivacyScreenState extends State<PrivacyScreen> {
+  @override
   Widget build(BuildContext context) {
     var theme = MyTheme.of(context);
+
     return Container(
       alignment: Alignment.centerLeft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Spacer(flex: 2),
-          Text("Almost there!",
+          Text(
+            "Almost there!",
             textAlign: TextAlign.center,
             style: theme.headerText,
           ),
           SizedBox(height: 16),
           Text(
             "The backend of this app runs on Google's servers. That means, "
-            "some information about your device as well as the actions you "
-            "take inside the app are sent to Google. By continuing, you agree "
-            "to the full privacy policy of the app.",
+                "some information about your device as well as the actions you "
+                "take inside the app are sent to Google. By continuing, you agree "
+                "to the full privacy policy of the app.",
             style: theme.bodyText,
           ),
           SizedBox(height: 16),
@@ -35,25 +42,24 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
               Checkbox(
                 value: Bloc.of(context).analyticsEnabled,
                 onChanged: (isEnabled) => setState(() {
-                  Bloc.of(context).analyticsEnabled = isEnabled;
-                }),
+                      Bloc.of(context).analyticsEnabled = isEnabled;
+                    }),
                 activeColor: kAccentColor,
               ),
               Expanded(
                 child: Text(
                   'Make Marcel happy by providing analytics data, like device '
-                  'information and how you interact with the app.',
+                      'information and how you interact with the app.',
                   style: theme.bodyText,
                 ),
               ),
             ],
           ),
           SizedBox(height: 8),
-          Button.text('Read the full privacy policy',
+          Button.text(
+            'Read the full privacy policy',
             isRaised: false,
-            onPressed: () {
-              Bloc.of(context).openPrivacyPolicy();
-            },
+            onPressed: () => Bloc.of(context).openPrivacyPolicy(),
           ),
           Spacer(),
         ],

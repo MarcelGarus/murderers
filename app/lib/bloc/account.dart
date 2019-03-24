@@ -2,21 +2,18 @@ import 'dart:async';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 
 import 'messaging.dart' as messaging;
 import 'network.dart' as network;
 import 'persistence.dart' as persistence;
 
-enum SignInType {
-  anonymous,
-  google
-}
+enum SignInType { anonymous, google }
 
 class Handler {
   final _auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn.standard(
-    scopes: [ 'email', 'https://www.googleapis.com/auth/drive.appdata' ]
-  );
+      scopes: ['email', 'https://www.googleapis.com/auth/drive.appdata']);
   FirebaseUser _user;
   String _id;
   String _name;
@@ -28,13 +25,16 @@ class Handler {
   String get authToken => _user?.uid;
   String get photoUrl => _user.photoUrl;
 
-
   /// Initializes account on app startup.
   Future<void> initialize() async {
     _user = await _auth.currentUser();
     _id = await persistence.loadId();
     _name = await persistence.loadName();
-    print('Account initialized. $_name with id $_id has auth token $authToken');
+
+    debugPrint(
+      'Account initialized. $_name with id $_id has auth token $authToken',
+      wrapWidth: 80,
+    );
   }
 
   /// Signs in the user.
@@ -67,31 +67,31 @@ class Handler {
     _user = null;
     _id = null;
     _name = null;
-    
+
     await persistence.saveId(_id);
     await persistence.saveName(_name);
-    
-    print('Signed out.');
+
+    debugPrint('Signed out.');
     return !isSignedInWithFirebase;
   }
 
   /// Creates a user on the server.
   Future<void> createUser(
-    network.Handler networkHandler,
-    messaging.Handler messagingHandler,
-    String name
-  ) async {
+      {@required network.Handler networkHandler,
+      @required messaging.Handler messagingHandler,
+      @required String name}) async {
+    assert(networkHandler != null);
+    assert(messagingHandler != null);
     assert(name != null);
     assert(isSignedInWithFirebase);
 
     _name = name;
     await persistence.saveName(name);
 
-    final id = await networkHandler.createUser(
-      name: name,
-      authToken: authToken,
-      messagingToken: await messagingHandler.getToken()
-    );
+    var id = await networkHandler.createUser(
+        name: name,
+        authToken: authToken,
+        messagingToken: await messagingHandler.getToken());
 
     // If the user creation was successful, save the id.
     _id = id;
@@ -100,14 +100,16 @@ class Handler {
 
   /// Renames the user.
   Future<void> rename(
-    network.Handler networkHandler,
-    String name
-  ) async {
+      {@required network.Handler networkHandler, @required String name}) async {
+    assert(networkHandler != null);
+    assert(name != null);
     assert(userWasCreated);
+
+    if (_name == name) return;
 
     _name = name;
     await persistence.saveName(name);
- 
+
     // TODO: rename user on the server
     //final result = null;
   }

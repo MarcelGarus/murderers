@@ -12,20 +12,9 @@ import 'privacy.dart';
 
 /// The screen which introduces the user to the game concept. In the last step,
 /// the user is asked to sign in (using the [SignInScreen]).
-class IntroScreen extends StatefulWidget {
-  @override
-  _IntroScreenState createState() => _IntroScreenState();
-}
-
-class _IntroScreenState extends State<IntroScreen>
-    with TickerProviderStateMixin {
+class IntroScreen extends StatelessWidget {
   static const numPages = 4;
-  PageController _controller = PageController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final _controller = PageController();
 
   Future<bool> _onWillPop() async {
     if (_controller.page > 0) {
@@ -63,7 +52,7 @@ class _IntroScreenState extends State<IntroScreen>
                   relativeOffset: 1,
                   curve: Curves.easeOutCubic,
                 ),
-                child: _buildBottomBar(),
+                child: _buildBottomBar(context),
               ),
             ],
           ),
@@ -72,7 +61,7 @@ class _IntroScreenState extends State<IntroScreen>
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(32, 8, 16, 8),
       child: Row(

@@ -5,8 +5,8 @@ import 'bloc.dart';
 /// The bloc provider that can be searched for by widgets in the subtree.
 /// Links the BLoC's lifecycle to this widget.
 class BlocProvider extends StatefulWidget {
-  BlocProvider({ @required this.child });
-  
+  BlocProvider({@required this.child});
+
   final Bloc bloc = Bloc();
   final Widget child;
 

@@ -11,13 +11,11 @@ void _displayNotImplementedSnackbar(BuildContext context) {
   ));
 }
 
-class SettingsScreen extends StatefulWidget {
-  _SettingsScreenState createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
+class SettingsScreen extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     var theme = kThemeLight;
+
     return MyTheme(
       data: theme,
       child: Scaffold(
@@ -62,18 +60,21 @@ class _ProfileSettings extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Signed in as ${Bloc.of(context).name}.",
+                Text(
+                  "Signed in as ${Bloc.of(context).name}.",
                   style: theme.bodyText.copyWith(fontSize: 24),
                 ),
                 SizedBox(height: 8),
                 Row(
                   children: <Widget>[
-                    Button.text('Edit name',
+                    Button.text(
+                      'Edit name',
                       onPressed: () => _displayNotImplementedSnackbar(context),
                       isRaised: false,
                     ),
                     SizedBox(width: 8),
-                    Button.text('Sign out',
+                    Button.text(
+                      'Sign out',
                       onPressed: Bloc.of(context).signOut,
                       isRaised: false,
                     ),
@@ -92,10 +93,8 @@ class _GameSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: Bloc.of(context).allGames.map<Widget>((game) {
-        return ListTile(
-          title: Text(game.name),
-        );
-      }).followedBy([Container(height:8,color:Colors.pink)]).toList(),
+        return ListTile(title: Text(game.name));
+      }).followedBy([Container(height: 8, color: Colors.pink)]).toList(),
     );
   }
 }
@@ -131,18 +130,18 @@ class _PrivacySettings extends StatelessWidget {
     return Column(
       children: <Widget>[
         Text(
-          "The backend of this app runs on Google's servers. That means, some "
-          "information about your device as well as the actions you take "
-          "inside the app are sent to Google."
-        ),
+            "The backend of this app runs on Google's servers. That means, some "
+            "information about your device as well as the actions you take "
+            "inside the app are sent to Google."),
         _buildCheckbox(
           context: context,
           value: true,
           onChanged: (_) => _displayNotImplementedSnackbar(context),
           label: "Provide analytics data, like device information and how you "
-            "interact with the app to make the app better."
+              "interact with the app to make the app better.",
         ),
-        Button.text('Read the privacy policy',
+        Button.text(
+          'Read the privacy policy',
           isRaised: false,
           onPressed: () {
             Bloc.of(context).openPrivacyPolicy();
@@ -161,7 +160,7 @@ class _About extends StatelessWidget {
         SizedBox(height: 16),
         Text(
           "This app was built with Flutter.\n"
-          "It is open source. Feel free to contribute on Github.",
+              "It is open source. Feel free to contribute on Github.",
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 16),
@@ -194,11 +193,14 @@ class _About extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Text(title,
-          style: theme.bodyText.copyWith(color: Colors.red, fontFamily: 'Signature'),
+        Text(
+          title,
+          style: theme.bodyText
+              .copyWith(color: Colors.red, fontFamily: 'Signature'),
         ),
         SizedBox(height: 8),
-        Text(names.join('\n'),
+        Text(
+          names.join('\n'),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 16),
@@ -214,14 +216,13 @@ Widget _buildCheckbox({
   @required String label,
 }) {
   var theme = MyTheme.of(context);
-  return Row(
-    children: <Widget>[
-      Checkbox(
-        value: value,
-        onChanged: onChanged,
-        activeColor: theme.flatButtonColor
-      ),
-      Expanded(child: Text(label, style: theme.bodyText)),
-    ]
-  );
+
+  return Row(children: <Widget>[
+    Checkbox(
+      value: value,
+      onChanged: onChanged,
+      activeColor: theme.flatButtonColor,
+    ),
+    Expanded(child: Text(label, style: theme.bodyText)),
+  ]);
 }

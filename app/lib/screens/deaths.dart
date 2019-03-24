@@ -6,7 +6,7 @@ import '../widgets/theme.dart';
 
 class DeathsScreen extends StatefulWidget {
   DeathsScreen(this.game);
-  
+
   final Game game;
 
   @override
@@ -26,8 +26,7 @@ class _DeathsScreenState extends State<DeathsScreen> {
   Widget build(BuildContext context) {
     if (widget.game != _lastGame) {
       _lastGame = widget.game;
-      _deadPlayers = _lastGame.players
-        .where((player) => player.isDead).toList();
+      _deadPlayers = _lastGame.players.where((p) => p.isDead).toList();
     }
 
     return Container(
@@ -51,7 +50,8 @@ class _DeathsScreenState extends State<DeathsScreen> {
         Container(
           height: 250,
           color: Colors.grey,
-          child: FlareActor('images/deaths.flr',
+          child: FlareActor(
+            'images/deaths.flr',
             fit: BoxFit.fitWidth,
             color: kThemeDark.backgroundColor,
             alignment: Alignment.bottomCenter,
@@ -64,10 +64,10 @@ class _DeathsScreenState extends State<DeathsScreen> {
             left: 16,
             right: 16,
           ),
-          child: Text('Recent deaths',
-            style: kThemeDark.headerText.copyWith(
-              color: kThemeDark.backgroundColor
-            ),
+          child: Text(
+            'Recent deaths',
+            style: kThemeDark.headerText
+                .copyWith(color: kThemeDark.backgroundColor),
           ),
         ),
       ],
@@ -75,12 +75,14 @@ class _DeathsScreenState extends State<DeathsScreen> {
   }
 
   Widget _buildDeath(Player player) {
+    assert(player != null);
+    assert(player.death != null);
+
     final death = player.death;
     final theme = MyTheme.of(context);
-    assert(death != null);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Material(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -90,7 +92,8 @@ class _DeathsScreenState extends State<DeathsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('"${death.lastWords}"',
+              Text(
+                '"${death.lastWords}"',
                 style: theme.headerText.copyWith(fontSize: 20),
               ),
               SizedBox(height: 8),

@@ -1,5 +1,4 @@
-
-/// 
+///
 enum UserRole {
   watcher, // TODO: implement
   player,

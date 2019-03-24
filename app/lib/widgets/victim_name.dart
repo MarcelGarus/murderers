@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'theme.dart';
 
 /// A widget that displays the victim's name.
-/// 
+///
 /// In its natural state, this widget displays a message that encourages the
 /// user to press and hold. If he does this, the [name] appears.
 class VictimName extends StatefulWidget {
-  VictimName({
+  const VictimName({
     @required this.name,
-  }) :
-      assert(name != null);
+  }) : assert(name != null);
 
   final String name;
 
@@ -26,26 +25,33 @@ class _VictimNameState extends State<VictimName>
   Animation<double> _animation;
   double _nameVisibility = 0; // ranges from 0 (name hidden) to 1 (name shown)
 
+  @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       duration: Duration(milliseconds: 200),
       vsync: this,
-    )..addListener(() => setState(() {
-      _nameVisibility = _animation?.value ?? 0;
-    }));
+    )..addListener(() {
+        setState(() {
+          _nameVisibility = _animation?.value ?? 0;
+        });
+      });
   }
 
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
   void _setNameVisibility(double visibility) {
-    _animation = Tween(begin: _nameVisibility, end: visibility)
-      .animate(_controller);
-    _controller..value = 0.0..forward();
+    _animation =
+        Tween(begin: _nameVisibility, end: visibility).animate(_controller);
+    _controller
+      ..value = 0.0
+      ..forward();
   }
+
   void _showName() => _setNameVisibility(1);
   void _hideName() => _setNameVisibility(0);
 
@@ -53,15 +59,15 @@ class _VictimNameState extends State<VictimName>
   double get _blurSigma => (1 - _nameVisibility) * 10.0;
   double get _nameOpacity => (5 * _nameVisibility).clamp(0.0, 1.0);
   double get _hintOpacity => (1 - 1.5 * _nameVisibility).clamp(0.0, 1.0);
-  Color get _backgroundColor => Color.lerp(
-    Color(0x19000000), Colors.transparent, _nameVisibility);
+  Color get _backgroundColor =>
+      Color.lerp(const Color(0x19000000), Colors.transparent, _nameVisibility);
 
   @override
   Widget build(BuildContext context) {
-    final theme = MyTheme.of(context);
+    var theme = MyTheme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       alignment: Alignment.center,
       height: 160,
       child: GestureDetector(
@@ -83,7 +89,10 @@ class _VictimNameState extends State<VictimName>
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: _blurSigma, sigmaY: _blurSigma),
+                filter: ImageFilter.blur(
+                  sigmaX: _blurSigma,
+                  sigmaY: _blurSigma,
+                ),
                 child: Container(color: _backgroundColor),
               ),
             ),
@@ -100,7 +109,7 @@ class _VictimNameState extends State<VictimName>
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }

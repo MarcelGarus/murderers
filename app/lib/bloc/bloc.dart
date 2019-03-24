@@ -14,11 +14,17 @@ import 'models.dart';
 import 'streamed_property.dart';
 
 export 'bloc_provider.dart';
-export 'function_status.dart';
 export 'models.dart';
 export 'analytics.dart' show AnalyticsEvent;
 export 'account.dart' show SignInType;
-export 'network.dart' show NetworkError, NoConnectionError, BadRequestError, ServerCorruptError, AuthenticationFailedError, ResourceNotFoundError;
+export 'network.dart'
+    show
+        NetworkError,
+        NoConnectionError,
+        BadRequestError,
+        ServerCorruptError,
+        AuthenticationFailedError,
+        ResourceNotFoundError;
 
 /// The BLoC.
 class Bloc {
@@ -33,15 +39,17 @@ class Bloc {
 
   /// This method allows subtree widgets to access this bloc.
   static Bloc of(BuildContext context) {
+    assert(context != null);
     final BlocProvider holder = context.ancestorWidgetOfExactType(BlocProvider);
     return holder?.bloc;
   }
 
   /// Initializes the BLoC.
   void initialize() {
-    print('Initializing the BLoC.');
+    debugPrint('Initializing the BLoC.');
 
     // Silently sign in asynchronously. Then, asynchronously load the games.
+    // TODO: do this in parallel
     _account.initialize().then((_) {
       persistence.loadGames().then((games) async {
         _games = games;
@@ -72,6 +80,8 @@ class Bloc {
   get analyticsEnabled => _analytics.isEnabled;
 
   set analyticsEnabled(bool isEnabled) {
+    assert(isEnabled != null);
+
     if (isEnabled) {
       _analytics.enable();
     } else {
@@ -80,7 +90,8 @@ class Bloc {
   }
 
   void openPrivacyPolicy() async {
-    const url = 'https://docs.google.com/document/d/1GKn3hvv9OxzLCzdI9gkDNClfoo7lKBIQd4K9unkJumU/edit?usp=sharing';
+    const url =
+        'https://docs.google.com/document/d/1GKn3hvv9OxzLCzdI9gkDNClfoo7lKBIQd4K9unkJumU/edit?usp=sharing';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -88,16 +99,18 @@ class Bloc {
     }
   }
 
-  void logEvent(
-    analytics.AnalyticsEvent event, [
-    Map<String, dynamic> parameters
-  ]) {
+  void logEvent(analytics.AnalyticsEvent event,
+      [Map<String, dynamic> parameters]) {
     assert(event != null);
+
     _analytics.logEvent(event, parameters);
   }
+
   analytics.RouteObserverProxy get analyticsObserver => _analytics.observer;
 
   Future<Game> previewGame(String code) async {
+    assert(code != null);
+
     return await _network.getGame(
       id: _account.id,
       authToken: _account.authToken,
@@ -106,13 +119,14 @@ class Bloc {
   }
 
   Future<void> signIn(account.SignInType type) async {
-    logEvent(analytics.AnalyticsEvent.sign_in_attempt, { 'type': type });
+    assert(type != null);
+    logEvent(analytics.AnalyticsEvent.sign_in_attempt, {'type': type});
 
     try {
       await _account.signIn(type);
       logEvent(analytics.AnalyticsEvent.sign_in_success);
     } catch (e) {
-      logEvent(analytics.AnalyticsEvent.sign_in_failure, { 'error': e });
+      logEvent(analytics.AnalyticsEvent.sign_in_failure, {'error': e});
       rethrow;
     }
   }
@@ -121,8 +135,14 @@ class Bloc {
 
   bool get isSignedIn => _account.isSignedInWithFirebase;
 
-  Future<void> createAccount(String name) async {
-    return await _account.createUser(_network, _messaging, name);
+  Future<void> createAccount({@required String name}) async {
+    assert(name != null);
+
+    return await _account.createUser(
+      networkHandler: _network,
+      messagingHandler: _messaging,
+      name: name,
+    );
   }
 
   // TODO: removes an account.
@@ -131,7 +151,15 @@ class Bloc {
 
   String get name => _account.name;
 
-  set name(String name) => _account.rename(_network, name); // TODO: handle result
+  set name(String name) {
+    assert(
+        name != null,
+        "The name cannot be null. If you want to delete the "
+        "account, consider calling removeAccount.");
+
+    // TODO: handle result
+    _account.rename(networkHandler: _network, name: name);
+  }
 
   String get accountPhotoUrl => _account.photoUrl;
 
@@ -141,7 +169,8 @@ class Bloc {
 
   set currentGame(Game game) {
     assert(game == null || _games.contains(game));
-    print("Setting current game to $game");
+    debugPrint("Setting current game to $game", wrapWidth: 80);
+
     _currentGame.value = game;
     persistence.saveCurrentGame(game?.code ?? '');
   }
@@ -151,13 +180,16 @@ class Bloc {
   get currentGameStream => _currentGame.stream;
 
   Future<Game> watchGame(String code) async {
+    assert(code != null);
+
     // TODO: implement
     return null;
   }
 
   Future<Game> joinGame(String code) async {
+    assert(code != null);
     assert(_account.userWasCreated);
-    
+
     final existingGame = _games.singleWhere((game) => game.code == code);
     if (existingGame?.isPlayer ?? false) {
       return existingGame;
@@ -166,13 +198,15 @@ class Bloc {
     await _network.joinGame(
       id: _account.id,
       authToken: _account.authToken,
-      code: code
-    );
-    return await _network.getGame(
-      id: _account.id,
-      authToken: _account.authToken,
       code: code,
-    ).then(_addGame);
+    );
+    return await _network
+        .getGame(
+          id: _account.id,
+          authToken: _account.authToken,
+          code: code,
+        )
+        .then(_addGame);
   }
 
   Future<Game> createGame({
@@ -180,15 +214,19 @@ class Bloc {
     @required DateTime start,
     @required DateTime end,
   }) async {
+    assert(name != null);
+    assert(start != null);
+    assert(end != null);
     assert(hasAccount);
 
-    return await _network.createGame(
-      id: _account.id,
-      authToken: _account.authToken,
-      name: name,
-      start: start,
-      end: end
-    ).then(_addGame);
+    return await _network
+        .createGame(
+            id: _account.id,
+            authToken: _account.authToken,
+            name: name,
+            start: start,
+            end: end)
+        .then(_addGame);
   }
 
   // Adds a game to the list of games.
@@ -205,6 +243,8 @@ class Bloc {
 
   // TODO: if we're a player or creator, deny or notify server.
   void removeGame(Game game) async {
+    assert(game != null);
+
     _games.remove(game);
     if (!_games.contains(currentGame)) {
       currentGame = _games.isEmpty ? null : _games.first;
@@ -225,14 +265,17 @@ class Bloc {
     final game = await _network.getGame(
       id: _account.id,
       authToken: _account.authToken,
-      code: currentGame.code
+      code: currentGame.code,
     );
-    logEvent(analytics.AnalyticsEvent.game_loaded, { 'code': game.code });
+    logEvent(analytics.AnalyticsEvent.game_loaded, {'code': game.code});
     _updateCurrentGame(game);
     return game;
   }
 
-  Future<void> acceptPlayers({ @required List<Player> players }) async {
+  Future<void> acceptPlayers({@required List<Player> players}) async {
+    assert(players != null);
+    assert(players.isNotEmpty);
+
     await _network.acceptPlayer(
       id: _account.id,
       authToken: _account.authToken,
@@ -265,6 +308,9 @@ class Bloc {
     @required String weapon,
     @required String lastWords,
   }) async {
+    assert(weapon != null);
+    assert(lastWords != null);
+
     await _network.die(
       id: _account.id,
       authToken: _account.authToken,
@@ -275,7 +321,9 @@ class Bloc {
     await _refreshGame();
   }
 
-  Future<void> shuffleVictims(bool onlyOutsmartedPlayers) async {
+  Future<void> shuffleVictims({@required bool onlyOutsmartedPlayers}) async {
+    assert(onlyOutsmartedPlayers != null);
+
     await _network.shuffleVictims(
       authToken: _account.authToken,
       code: currentGame.code,

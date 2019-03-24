@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'theme.dart';
 
 class Countdown extends StatefulWidget {
-  Countdown({
+  const Countdown({
     @required this.target,
   }) : assert(target != null);
 
@@ -16,18 +16,20 @@ class Countdown extends StatefulWidget {
 }
 
 class _CountdownState extends State<Countdown> {
-  bool _running = true;
+  var _running = true;
 
   @override
   void initState() {
     super.initState();
+
     Future.doWhile(() async {
       setState(() {});
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(milliseconds: 500));
       return _running;
     });
   }
 
+  @override
   void dispose() {
     _running = false;
     super.dispose();
@@ -35,7 +37,7 @@ class _CountdownState extends State<Countdown> {
 
   @override
   Widget build(BuildContext context) {
-    final delta = widget.target.difference(DateTime.now());
+    var delta = widget.target.difference(DateTime.now());
     String content;
 
     if (delta.isNegative) {
@@ -45,14 +47,12 @@ class _CountdownState extends State<Countdown> {
       final hours = delta.inHours % 24;
       final minutes = delta.inMinutes % 60;
       final seconds = delta.inSeconds % 60;
-      content = (days > 0 ? '${days}d ' : '')
-        + (hours > 0 || days > 0 ? '${hours}h ' : '')
-        + (minutes > 0 || hours > 0 || days > 0 ? '${minutes}m ' : '')
-        + '${seconds}s';
+      content = (days > 0 ? '${days}d ' : '') +
+          (hours > 0 || days > 0 ? '${hours}h ' : '') +
+          (minutes > 0 || hours > 0 || days > 0 ? '${minutes}m ' : '') +
+          '${seconds}s';
     }
 
-    return Text(content,
-      style: MyTheme.of(context).headerText
-    );
+    return Text(content, style: MyTheme.of(context).headerText);
   }
 }

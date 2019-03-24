@@ -15,9 +15,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         Align(
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (ctx) => SettingsScreen()
-              ));
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) => SettingsScreen()),
+              );
             },
             child: CircleAvatar(
               backgroundImage: NetworkImage(Bloc.of(context).accountPhotoUrl),

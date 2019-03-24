@@ -14,10 +14,14 @@ enum PlayerState {
 
 PlayerState intToPlayerState(int i) {
   switch (i) {
-    case 0: return PlayerState.joining;
-    case 1: return PlayerState.alive;
-    case 2: return PlayerState.dying;
-    case 3: return PlayerState.dead;
+    case 0:
+      return PlayerState.joining;
+    case 1:
+      return PlayerState.alive;
+    case 2:
+      return PlayerState.dying;
+    case 3:
+      return PlayerState.dead;
     default:
       print("Error: Unknown player state $i.");
       throw ArgumentError();
@@ -49,11 +53,10 @@ class Player {
     this.death,
     this.kills = 0,
     this.rank,
-  }) :
-      assert(id != null),
-      assert(name != null),
-      assert(state != null),
-      assert(kills != null);
+  })  : assert(id != null),
+        assert(name != null),
+        assert(state != null),
+        assert(kills != null);
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
   Map<String, dynamic> toJson() => _$PlayerToJson(this);
