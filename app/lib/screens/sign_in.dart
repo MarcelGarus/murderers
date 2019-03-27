@@ -16,7 +16,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Future<bool> _onSignInSuccess() async {
     await Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => _EnterNameScreen()));
-    return false; // Make the button stop spinning.
+    return false; // Make the button stop spinning if the user goes back here.
   }
 
   void _onSignInError(dynamic error) {
@@ -36,7 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
         child: Center(
           child: Column(
             children: <Widget>[
-              Spacer(flex: 2),
+              Spacer(),
               Text(
                 "Sign in to synchronize your games across all your devices.",
                 textAlign: TextAlign.center,
@@ -97,6 +97,7 @@ class _EnterNameScreenState extends State<_EnterNameScreen> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(

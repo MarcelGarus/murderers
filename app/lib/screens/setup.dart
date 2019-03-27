@@ -299,18 +299,16 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
 
     switch (config.role) {
       case UserRole.player:
+        debugPrint("Joining a game.");
         await bloc.joinGame(config.code);
         break;
       case UserRole.watcher:
+        debugPrint("Watching a game.");
         await bloc.watchGame(config.code);
         break;
       case UserRole.creator:
-        await bloc.createGame(
-          name: config.gameName,
-          start: DateTime.now().add(Duration(days: 1)),
-          end: DateTime.now().add(Duration(days: 10)),
-        );
-        break;
+        debugPrint("The creator should never see the preview screen.");
+        assert(false);
     }
 
     await Navigator.of(context)
@@ -409,7 +407,9 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
         Button.text(
           config.role == UserRole.player ? "Join" : "Watch",
           onPressed: _onConfirmed,
-          onError: (error) {}, // TODO: display error
+          onError: (error) {
+            debugPrint("An error occurred: $error");
+          }, // TODO: display error
         ),
         SizedBox(height: 32),
         Button.text(

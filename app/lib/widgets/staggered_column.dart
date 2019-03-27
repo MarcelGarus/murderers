@@ -28,7 +28,7 @@ class StaggeredColumn extends StatelessWidget {
     for (int i = 0; i < numChildren; i++) {
       var from = Duration(microseconds: (delay.inMicroseconds * i));
       var to = from + singleDuration;
-      var child = children[i];
+      var child = this.children[i];
 
       // To retain the effect of Expanded widgets, don't wrap themselves but
       // rather their children.

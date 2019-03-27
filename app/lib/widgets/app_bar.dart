@@ -10,7 +10,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      actionsIconTheme: IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: Colors.black),
       actions: <Widget>[
         Align(
           child: InkWell(

@@ -120,12 +120,15 @@ class Bloc {
 
   Future<void> signIn(account.SignInType type) async {
     assert(type != null);
+    debugPrint("Signing in with type $type.");
     logEvent(analytics.AnalyticsEvent.sign_in_attempt, {'type': type});
 
     try {
       await _account.signIn(type);
+      debugPrint("Sign in successful.");
       logEvent(analytics.AnalyticsEvent.sign_in_success);
     } catch (e) {
+      debugPrint("Sign in failed: $e");
       logEvent(analytics.AnalyticsEvent.sign_in_failure, {'error': e});
       rethrow;
     }
@@ -190,7 +193,10 @@ class Bloc {
     assert(code != null);
     assert(_account.userWasCreated);
 
-    final existingGame = _games.singleWhere((game) => game.code == code);
+    debugPrint("Looking for an existing game.");
+    final existingGame =
+        _games.singleWhere((game) => game.code == code, orElse: () => null);
+    debugPrint("Existing game is $existingGame.");
     if (existingGame?.isPlayer ?? false) {
       return existingGame;
     }
