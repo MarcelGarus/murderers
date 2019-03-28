@@ -1,7 +1,8 @@
-package main
+package storage
 
 import (
 	"errors"
+	"models"
 )
 
 type InMemoryStorage struct {
@@ -18,41 +19,41 @@ func NewInMemoryStorage() InMemoryStorage {
 	}
 }
 
-func (s* InMemoryStorage) LoadUser(id UserId) (User, error) {
+func (s* InMemoryStorage) LoadUser(id UserId) (User, ErrorWithStatus) {
 	var user User
 	if user, ok := s.users[id]; ok {
     return user, nil
 	}
-	return user, errors.New("storage: User not found.")
+	return user, ResourceNotFoundError("storage: User not found.")
 }
 
-func (s* InMemoryStorage) SaveUser(user User) error {
+func (s* InMemoryStorage) SaveUser(user User) ErrorWithStatus {
 	s.users[user.Id] = user
 	return nil
 }
 
-func (s* InMemoryStorage) LoadGame(code GameCode) (Game, error) {
+func (s* InMemoryStorage) LoadGame(code GameCode) (Game, ErrorWithStatus) {
 	var game Game
 	if game, ok := s.games[code]; ok {
     return game, nil
 	}
-	return game, errors.New("storage: Game not found.")
+	return game, ResourceNotFoundError("storage: Game not found.")
 }
 
-func (s* InMemoryStorage) SaveGame(game Game) error {
+func (s* InMemoryStorage) SaveGame(game Game) ErrorWithStatus {
 	s.games[game.Code] = game
 	return nil
 }
 
-func (s* InMemoryStorage) LoadPlayer(game Game, id UserId) (Player, error) {
+func (s* InMemoryStorage) LoadPlayer(game Game, id UserId) (Player, ErrorWithStatus) {
 	var player Player
 	if player, ok := s.players[id]; ok {
     return player, nil
 	}
-	return player, errors.New("storage: Player not found.")
+	return player, ResourceNotFoundError("storage: Player not found.")
 }
 
-func (s* InMemoryStorage) SavePlayer(player Player) error {
+func (s* InMemoryStorage) SavePlayer(player Player) ErrorWithStatus {
 	s.players[player.Id] = player
 	return nil
 }

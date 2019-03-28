@@ -1,11 +1,11 @@
-package main
+package bloc
 
 import (
 	"errors"
 	"time"
 )
 
-func generateUniqueGameCode(s Storage) (GameCode, error) {
+func generateUniqueGameCode(s Storage) (GameCode, ErrorWithStatus) {
 	var code GameCode
 	tries := 0
 
@@ -14,32 +14,28 @@ func generateUniqueGameCode(s Storage) (GameCode, error) {
 		tries++
 
 		if _, err := s.LoadGame(code); err != nil {
-			if serr, ok := err.(*GameNotFoundError); ok {
-				// The game couldn't be found, so the code is free to take.
-				break loop
-			} else {
-				return "", serr
-			}
+			// No game with that code exists, so the code is free to take.	
+			break loop
 		}
-		
+
 		if tries >= GameCodeMaxTries {
-			return "", errors.New("create_user: Exceeded maximum number of tries while generating a user id.")
+			return nil, InternalServerError("Exceeded maximum number of tries while generating a game code.")
 		}
 	}
 
-  return code, nil
+	return code, nil
 }
 
-func CreateGame(s Storage, name string, end time.Time, creator UserId, authToken string) (Game, error) {
-	var game Game
+func CreateGame(s Storage, me UserId, authToken string, name string, end time.Time) (Game, error) {
 	var user User
 	var code GameCode
-	
+	var game Game
+
 	// Load and validate the user.
-	if user, err := s.LoadUser(creator); err != nil {
+	if user, err := s.LoadUser(me); err != nil {
 		return game, err
 	} else if ok = validateUser(user, authToken); !ok {
-		return game, errors.New("create_game: authentication failed")
+		return game, AuthenticationFailedError()
 	}
 
 	// Generate a unique game code.
@@ -51,8 +47,10 @@ func CreateGame(s Storage, name string, end time.Time, creator UserId, authToken
 		Code: "TODO",
 		Name: name,
 		State: GameNotStartedYet,
-		Creator: creator,
+		Creator: me,
 		Created: time.Now(),
 		End: end,
 	}
+
+	s.SaveGame(game)
 }

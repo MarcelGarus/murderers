@@ -1,4 +1,4 @@
-package main
+package utils
 
 const (
 	UserIdCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"

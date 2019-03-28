@@ -76,7 +76,7 @@ id {
 (a ? indicates that the value may be null)
 ```
 
-where the state is encoded as:
+The state is encoded as:
 
 ```firestore
 0: player is joining
