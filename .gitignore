@@ -1,23 +1,16 @@
-.DS_Store
-.dart_tool/
-
-.packages
-.pub/
-
+# General project stuff
 .idea/
 .metadata
 
-build/
-backend/functions/lib/
-
-.flutter-plugins
-android/app/google-services.json
-android/app/key.properties
-
 *.lock
 
-backend/functions/node_modules
+.DS_Store
 
 .vscode/
 nohup.out
 
+# App
+.dart_tool/
+.pub/
+build/
+.flutter-plugins
