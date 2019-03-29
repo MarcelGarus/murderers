@@ -4,5 +4,5 @@ dart:
 
 dart_task:
 # - test: 
-- dartanalyzer: --fatal-warnings lib
+- dartanalyzer: --fatal-warnings app/lib
 - dartfmt
