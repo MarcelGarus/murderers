@@ -9,7 +9,9 @@ TODO: Validate auth token.
 
 ```url
 create_user?name=Marcel&authToken=...&messagingToken=...
-> { id: 'abcd' }
+{
+  id: "abcd"
+}
 ```
 
 ## `create_game`
@@ -19,7 +21,9 @@ The user who calls this method becomes the creator.
 
 ```url
 create_game?user=...&authToken=...&name=TheGameName&start=12345678&end=123456789
-> { code: 'abcd' }
+{
+  code: "abcd"
+}
 ```
 
 ## `join_game`
@@ -28,7 +32,7 @@ Joins the user to an existing game.
 
 ```url
 join_game?user=...&authToken=...&code=abcd
-> { id: 'a1b2c3d4e5' }
+Joined.
 ```
 
 ## `get_game`
@@ -37,7 +41,46 @@ TODO: implement properly
 
 ```url
 get_game?code=abcd
-> {  }
+{
+  "name": "Spiel",
+  "state": 1,
+  "created": 1553701496275,
+  "creator": "aaa",
+  "end": 0,
+  "players": [
+    {
+      "id": "1KD",
+      "name": "Marcel Garus",
+      "state": 1,
+      "murderer": null,
+      "victim": "bbb",
+      "kills": 0,
+      "wantsNewVictim": true,
+      "death": null
+    },
+    {
+      "id": "bbb",
+      "name": "B",
+      "state": 1,
+      "kills": 0,
+      "death": null
+    },
+    {
+      "id": "ccc",
+      "name": "C",
+      "state": 1,
+      "kills": 0,
+      "death": null
+    },
+    {
+      "id": "ddd",
+      "name": "D",
+      "state": 1,
+      "kills": 0,
+      "death": null
+    }
+  ]
+}
 ```
 
 ## `start_game`

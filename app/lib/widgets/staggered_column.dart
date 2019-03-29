@@ -1,42 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
 
-class StaggeredColumn extends StatefulWidget {
-  StaggeredColumn({
+class StaggeredColumn extends StatelessWidget {
+  const StaggeredColumn({
     @required this.children,
     this.totalDuration = const Duration(milliseconds: 600),
     this.singleDuration = const Duration(milliseconds: 400),
-  }) :
-      assert(children != null),
-      assert(totalDuration != null),
-      assert(singleDuration != null);
+  })  : assert(children != null),
+        assert(totalDuration != null),
+        assert(singleDuration != null);
 
   final List<Widget> children;
   final Duration totalDuration;
   final Duration singleDuration;
 
   @override
-  _StaggeredColumnState createState() => _StaggeredColumnState();
-}
-
-class _StaggeredColumnState extends State<StaggeredColumn>
-    with SingleTickerProviderStateMixin {
-  @override
   Widget build(BuildContext context) {
-    final numChildren = widget.children.length;
-    final totalDuration = widget.totalDuration;
-    final delay = Duration(
-      microseconds: ((totalDuration - widget.singleDuration).inMicroseconds
-        / numChildren).round()
-      );
-    final children = <Widget>[];
+    var numChildren = this.children.length;
+    var delay = Duration(
+        microseconds:
+            ((totalDuration - singleDuration).inMicroseconds / numChildren)
+                .round());
+    var children = <Widget>[];
 
     // Wrap all the children in Villains that animate them with the correct
     // layout.
     for (int i = 0; i < numChildren; i++) {
-      final from = Duration(microseconds: (delay.inMicroseconds * i));
-      final to = from + widget.singleDuration;
-      final child = widget.children[i];
+      var from = Duration(microseconds: (delay.inMicroseconds * i));
+      var to = from + singleDuration;
+      var child = this.children[i];
 
       // To retain the effect of Expanded widgets, don't wrap themselves but
       // rather their children.
@@ -46,11 +38,17 @@ class _StaggeredColumnState extends State<StaggeredColumn>
           flex: child.flex,
           child: _buildVillain(from, to, child.child),
         ));
-      } else if (child is Spacer) {
-        children.add(Spacer());
-      } else {
-        children.add(_buildVillain(from, to, child));
+        continue;
       }
+
+      // The same is true for Spacer widgets.
+      if (child is Spacer) {
+        children.add(Spacer());
+        continue;
+      }
+
+      // Otherwise, just wrap the widget in a villain.
+      children.add(_buildVillain(from, to, child));
     }
 
     return Column(children: children);

@@ -90,7 +90,7 @@ function handleRequest(req, res) {
         yield utils_1.playerRef(firestore, code, id).update({
             state: models_1.PLAYER_DEAD,
             victim: null,
-            isOutsmarted: false,
+            wantsNewVictim: false,
             death: {
                 time: Date.now(),
                 murderer: victim.murderer,

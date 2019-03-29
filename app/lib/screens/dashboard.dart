@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
-import '../widgets/dashboard_app_bar.dart';
+import '../widgets/app_bar.dart';
 import '../widgets/gradient_background.dart';
 import '../widgets/statistics.dart';
 import '../widgets/theme.dart';
@@ -56,7 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         content = _DashboardContent.preparation;
         break;
       case GameState.over:
-        content =_DashboardContent.gameOver;
+        content = _DashboardContent.gameOver;
         break;
       case GameState.running:
         if (game.me == null) {
@@ -84,7 +84,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 content = _DashboardContent.alive;
                 break;
               case PlayerState.dying:
-                content = _DashboardContent.gameOver;
+                content = _DashboardContent.waitingForVictim;
                 break;
             }
         }
@@ -149,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             body: CustomScrollView(
               slivers: [
                 SliverPersistentHeader(
-                  delegate: DashboardSliverDelegate(
+                  delegate: _DashboardSliverDelegate(
                     maxExtent: MediaQuery.of(context).size.height,
                     child: body,
                     bottom: Statistics(
@@ -157,7 +157,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       goToEventsCallback: widget.goToEventsCallback,
                       color: theme.bodyText.color,
                     ),
-                    showSwipeUpIndicator: Bloc.of(context).currentGame.isCreator,
+                    showSwipeUpIndicator:
+                        Bloc.of(context).currentGame.isCreator,
                   ),
                 ),
                 SliverList(
@@ -174,8 +175,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-class DashboardSliverDelegate extends SliverPersistentHeaderDelegate {
-  DashboardSliverDelegate({
+class _DashboardSliverDelegate extends SliverPersistentHeaderDelegate {
+  _DashboardSliverDelegate({
     @required this.maxExtent,
     @required this.child,
     @required this.bottom,
@@ -187,9 +188,10 @@ class DashboardSliverDelegate extends SliverPersistentHeaderDelegate {
   final Widget bottom;
   final bool showSwipeUpIndicator;
 
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     var items = <Widget>[
-      DashboardAppBar(),
+      MyAppBar(),
       Expanded(child: child),
       bottom,
     ];
@@ -207,5 +209,6 @@ class DashboardSliverDelegate extends SliverPersistentHeaderDelegate {
 
   double get minExtent => 0;
 
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true; // TODO: optimize
+  // TODO: optimize
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }

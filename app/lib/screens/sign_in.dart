@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_villains/villain.dart';
 
 import '../bloc/bloc.dart';
 import '../widgets/button.dart';
@@ -15,10 +14,9 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   Future<bool> _onSignInSuccess() async {
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (ctx) => _EnterNameScreen()
-    ));
-    return false; // Make the button stop spinning.
+    await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => _EnterNameScreen()));
+    return false; // Make the button stop spinning if the user goes back here.
   }
 
   void _onSignInError(dynamic error) {
@@ -29,38 +27,43 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     final theme = MyTheme.of(context);
 
-    return MyTheme(
-      data: theme.copyWith(
-        primaryButtonBackgroundColor: Colors.white,
-        primaryButtonTextColor: Colors.black,
-      ),
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            Spacer(flex: 2),
-            Text("Sign in to synchronize your games across all your devices.",
-              textAlign: TextAlign.center,
-              style: theme.bodyText,
-            ),
-            SizedBox(height: 16),
-            Button<void>.icon(
-              onPressed: () => Bloc.of(context).signIn(SignInType.google),
-              onSuccess: (_) => _onSignInSuccess(),
-              onError: _onSignInError,
-              icon: SvgPicture.asset('images/google_icon.svg',
-                width: 36,
-                height: 36,
-                semanticsLabel: 'Google logo',
+    return Scaffold(
+      body: MyTheme(
+        data: theme.copyWith(
+          primaryButtonBackgroundColor: Colors.white,
+          primaryButtonTextColor: Colors.black,
+        ),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              Text(
+                "Sign in to synchronize your games across all your devices.",
+                textAlign: TextAlign.center,
+                style: theme.bodyText,
               ),
-              text: 'Sign in with Google',
-            ),
-            SizedBox(height: 16),
-            Button.text('Sign in anonymously\n(erstmal nicht nehmen)',
-              isRaised: false,
-              onPressed: () => Bloc.of(context).signIn(SignInType.anonymous),
-            ),
-            Spacer(),
-          ],
+              SizedBox(height: 16),
+              Button<void>.icon(
+                onPressed: () => Bloc.of(context).signIn(SignInType.google),
+                onSuccess: (_) => _onSignInSuccess(),
+                onError: _onSignInError,
+                icon: SvgPicture.asset(
+                  'images/google_icon.svg',
+                  width: 36,
+                  height: 36,
+                  semanticsLabel: 'Google logo',
+                ),
+                text: 'Sign in with Google',
+              ),
+              SizedBox(height: 16),
+              Button.text(
+                'Sign in anonymously\n(erstmal nicht nehmen)',
+                isRaised: false,
+                onPressed: () => Bloc.of(context).signIn(SignInType.anonymous),
+              ),
+              Spacer(),
+            ],
+          ),
         ),
       ),
     );
@@ -85,14 +88,16 @@ class _EnterNameScreenState extends State<_EnterNameScreen> {
 
     bloc.logEvent(AnalyticsEvent.name_entered);
     try {
-      await bloc.createAccount(name);
+      await bloc.createAccount(name: name);
       bloc.logEvent(AnalyticsEvent.signed_up);
-      await Navigator.of(context).pushNamedAndRemoveUntil('/setup', (route) => false);
+      await Navigator.of(context)
+          .pushNamedAndRemoveUntil('/setup', (route) => false);
     } catch (e) {
       print('Something went wrong: $e');
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -120,14 +125,14 @@ class _EnterNameScreenState extends State<_EnterNameScreen> {
               Spacer(),
               Text(
                 "Other players will be able to see it. To counter confusion "
-                "in large groups, it's recommended to enter both your first "
-                "and last name.",
+                    "in large groups, it's recommended to enter both your first "
+                    "and last name.",
                 textAlign: TextAlign.center,
                 style: MyTheme.of(context).bodyText.copyWith(fontSize: 12),
               ),
             ],
           ),
-        )
+        ),
       ),
     );
   }

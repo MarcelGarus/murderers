@@ -2,43 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_villains/villain.dart';
+import 'package:flutter_page_indicator/flutter_page_indicator.dart';
+import 'package:pedantic/pedantic.dart';
 
-import '../bloc/bloc.dart';
 import '../widgets/button.dart';
 import '../widgets/theme.dart';
 import 'sign_in.dart';
+import 'privacy.dart';
 
 /// The screen which introduces the user to the game concept. In the last step,
 /// the user is asked to sign in (using the [SignInScreen]).
-class IntroScreen extends StatefulWidget {
-  @override
-  _IntroScreenState createState() => _IntroScreenState();
-}
-
-class _IntroScreenState extends State<IntroScreen>
-    with TickerProviderStateMixin {
-  TabController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    Bloc.of(context).logEvent(AnalyticsEvent.intro_begin);
-    _controller = TabController(length: 4, vsync: this);
-    _controller.animation.addListener(() {
-      if (_controller.indexIsChanging) {
-        Bloc.of(context).logEvent(AnalyticsEvent.intro_step, {
-          'step': _controller.index
-        });
-        if (_controller.index == 3) {
-          Bloc.of(context).logEvent(AnalyticsEvent.intro_completed);
-        }
-      }
-    });
-  }
+class IntroScreen extends StatelessWidget {
+  static const numPages = 4;
+  final _controller = PageController();
 
   Future<bool> _onWillPop() async {
-    if (_controller.index > 0) {
-      _controller.index--;
+    if (_controller.page > 0) {
+      unawaited(_controller.previousPage(
+        curve: Curves.easeInOutCubic,
+        duration: Duration(milliseconds: 200),
+      ));
       return false;
     }
     return true;
@@ -69,56 +52,68 @@ class _IntroScreenState extends State<IntroScreen>
                   relativeOffset: 1,
                   curve: Curves.easeOutCubic,
                 ),
-                child: _buildBottomBar(),
+                child: _buildBottomBar(context),
               ),
             ],
-          )
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(32, 8, 16, 8),
       child: Row(
         children: <Widget>[
-          TabPageSelector(controller: _controller),
+          PageIndicator(
+            layout: PageIndicatorLayout.WARM,
+            size: 10,
+            controller: _controller,
+            space: 6,
+            count: numPages,
+            color: Colors.black26,
+            activeColor: MyTheme.of(context).raisedButtonFillColor,
+          ),
           Spacer(),
-          _NextButton(controller: _controller),
+          _NextButton(controller: _controller, numPages: numPages),
         ],
       ),
     );
   }
 
-  TabBarView _buildContent() {
-    return TabBarView(
+  Widget _buildContent() {
+    var children = <Widget>[
+      _IntroStep(
+        image: null,
+        title: "Welcome to\nThe Murderer Game.",
+        content: "A real world game for large groups of players hanging out "
+            "for several days.",
+      ),
+      _IntroStep(
+        image: null,
+        title: 'Kill players',
+        content: "This app tells you who's your victim. Kill it by giving it "
+            "a phyiscal object. After you informed your victim about its "
+            "death, mark the job as done in this app.",
+      ),
+      _IntroStep(
+        image: null,
+        title: 'Be the greatest assassin.',
+        content: "Once you killed your victim, you'll get a new one. Try to "
+            "kill as many players without dying.",
+      ),
+      PrivacyScreen(),
+    ];
+
+    assert(children.length == numPages);
+
+    return PageView(
       controller: _controller,
-      children: <Widget>[
-        _IntroStep(
-          image: null,
-          title: "Welcome to\nThe Murderer Game.",
-          content: 'A real world game for large groups of players '
-            'hanging out for several days.',
-        ),
-        _IntroStep(
-          image: null,
-          title: 'Kill players',
-          content: "This app tells you who's your victim. Kill it by "
-            "giving it a phyiscal object. After you informed your "
-            "victim about its death, mark the job as done in this app."
-        ),
-        _IntroStep(
-          image: null,
-          title: 'Be the greatest assassin.',
-          content: "Once you killed your victim, you'll get a new "
-            "one. Try to kill as many players without dying."
-        ),
-        SignInScreen(),
-      ].map((step) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: step
-      )).toList(),
+      children: children
+          .map((step) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16), child: step))
+          .toList(),
     );
   }
 }
@@ -154,34 +149,48 @@ class _IntroStep extends StatelessWidget {
 }
 
 /// The next button on the bottom of the screen. Adapts to a [TabController] and
-/// and automatically advances its index on click. If the controller already
+/// and automatically advances its page on click. If the controller already
 /// shows the last page, this button automatically disappears.
-class _NextButton extends StatelessWidget {
+class _NextButton extends StatefulWidget {
   _NextButton({
     @required this.controller,
+    @required this.numPages,
   }) : assert(controller != null);
-  
-  final TabController controller;
+
+  final PageController controller;
+  final int numPages;
+
+  @override
+  __NextButtonState createState() => __NextButtonState();
+}
+
+class __NextButtonState extends State<_NextButton> {
+  bool get isAcceptButton =>
+      (widget.controller.page ?? 0) < (widget.numPages - 1.5);
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller.animation,
-      builder: (context, child) {
-        return AnimatedOpacity(
-          opacity: (controller.index < controller.length - 1) ? 1 : 0,
-          duration: Duration(milliseconds: 200),
-          child: child,
-        );
+    return Button.text(
+      (isAcceptButton) ? 'Next' : 'I agree',
+      isRaised: false,
+      onPressed: () {
+        if (isAcceptButton) {
+          widget.controller.nextPage(
+            curve: Curves.easeInOutCubic,
+            duration: Duration(milliseconds: 200),
+          );
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) => SignInScreen(),
+          ));
+        }
       },
-      child: Button.text('Next',
-        isRaised: false,
-        onPressed: () {
-          if (controller.index < controller.length - 1) {
-            controller.index++;
-          }
-        },
-      )
     );
   }
 }

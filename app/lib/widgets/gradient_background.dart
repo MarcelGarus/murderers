@@ -7,14 +7,14 @@ import 'theme.dart';
 class GradientBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = MyTheme.of(context);
+    var theme = MyTheme.of(context);
 
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [ theme.backgroundColor, theme.backgroundGradientColor ],
+          colors: [theme.backgroundColor, theme.backgroundGradientColor],
           begin: Alignment.bottomCenter,
-        )
+        ),
       ),
     );
   }

@@ -57,11 +57,12 @@ function handleRequest(req, res) {
             .collection('users')
             .where('authToken', '==', authToken)
             .limit(1).get();
+        let id;
         if (existingUser.size > 0) {
-            res.set('application/json').send({
-                id: existingUser.docs[0].id,
-            });
-            return;
+            id = existingUser.docs[0].id;
+        }
+        else {
+            id = yield createUserId(firestore);
         }
         // Create the user.
         const user = {
@@ -69,7 +70,6 @@ function handleRequest(req, res) {
             messagingToken: messagingToken,
             name: name,
         };
-        const id = yield createUserId(firestore);
         yield utils_1.userRef(firestore, id).set(user);
         util_1.log('User created.');
         // Send back the code.

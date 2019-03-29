@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import '../bloc/bloc.dart';
 
 class Statistics extends StatelessWidget {
-  Statistics({
+  const Statistics({
     this.goToPlayersCallback,
     this.goToEventsCallback,
     this.color,
-  }) :
-      assert(goToPlayersCallback != null),
-      assert(goToEventsCallback != null);
+  })  : assert(goToPlayersCallback != null),
+        assert(goToEventsCallback != null);
 
   final VoidCallback goToPlayersCallback;
   final VoidCallback goToEventsCallback;
@@ -45,7 +44,7 @@ class Statistics extends StatelessWidget {
     );
   }
 
-  Widget _buildItem({ String number, String text, VoidCallback onTap }) {
+  Widget _buildItem({String number, String text, VoidCallback onTap}) {
     return Expanded(
       child: InkResponse(
         highlightShape: BoxShape.rectangle,
@@ -55,18 +54,16 @@ class Statistics extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SizedBox(height: 16),
-            Text(number,
+            Text(
+              number,
               style: TextStyle(
-                color: color,
-                fontSize: 24,
-                fontWeight: FontWeight.bold
-              ),
+                  color: color, fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(text, style: TextStyle(color: color)),
             SizedBox(height: 16),
           ],
-        )
+        ),
       ),
     );
   }

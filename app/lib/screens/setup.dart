@@ -6,9 +6,10 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:intl/intl.dart';
 
 import '../bloc/bloc.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/button.dart';
 import '../widgets/setup.dart';
 import '../widgets/staggered_column.dart';
-import '../widgets/button.dart';
 import '../widgets/theme.dart';
 
 /// A game configuration. It's passed between all the setup screens to carry
@@ -26,30 +27,32 @@ class SetupJourney extends StatefulWidget {
   _SetupJourneyState createState() => _SetupJourneyState();
 }
 
-class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMixin {
+class _SetupJourneyState extends State<SetupJourney> {
   final _config = SetupConfiguration();
 
-  void _selectRole(UserRole role) => setState(() {
+  void _selectRole(UserRole role) {
     _config.role = role;
-    final navigator = Navigator.of(context);
+    var bloc = Bloc.of(context);
+    var navigator = Navigator.of(context);
     Widget nextScreen;
-    
+
     if (role == UserRole.player || role == UserRole.watcher) {
-      // For joining a game, enter the code.
-      Bloc.of(context).logEvent(AnalyticsEvent.join_game_begin);
+      // For joining or watching a game, enter the code.
+      bloc.logEvent(AnalyticsEvent.join_game_begin);
       nextScreen = _EnterCodeScreen(configuration: _config);
     } else {
       // User wants to create a new game.
-      Bloc.of(context).logEvent(AnalyticsEvent.create_game_begin);
+      bloc.logEvent(AnalyticsEvent.create_game_begin);
       nextScreen = _ConfigureGameScreen(configuration: _config);
     }
 
     navigator.push(SetupRoute(nextScreen));
-  });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MyAppBar(),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
@@ -60,29 +63,28 @@ class _SetupJourneyState extends State<SetupJourney> with TickerProviderStateMix
                 size: Size.square(128),
                 child: FlareActor('images/logo.flr', animation: 'intro'),
               ),
-              SizedBox(height: 32),
-              Button.text('Join a game',
-                onPressed: () { _selectRole(UserRole.player); },
+              SizedBox(height: 16),
+              Button.text(
+                'Join a game',
+                onPressed: () => _selectRole(UserRole.player),
               ),
               SizedBox(height: 16),
-              Button.text('Watch a game',
+              Button.text(
+                'Watch a game',
                 isRaised: false,
-                onPressed: () { _selectRole(UserRole.watcher); },
+                onPressed: () => _selectRole(UserRole.watcher),
               ),
               SizedBox(height: 4),
-              Button.text('Create a new game',
+              Button.text(
+                'Create a new game',
                 isRaised: false,
-                onPressed: () { _selectRole(UserRole.creator); },
+                onPressed: () => _selectRole(UserRole.creator),
               ),
               Spacer(),
-              Button.text('Sign out',
-                isRaised: false,
-                onPressed: () => Bloc.of(context).signOut(),
-              ),
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }
@@ -99,7 +101,7 @@ class _EnterCodeScreen extends StatefulWidget {
   _EnterCodeScreenState createState() => _EnterCodeScreenState();
 }
 
-class _EnterCodeScreenState extends State<_EnterCodeScreen> with TickerProviderStateMixin {
+class _EnterCodeScreenState extends State<_EnterCodeScreen> {
   final _controller = TextEditingController();
 
   String get code => widget.configuration.code;
@@ -111,11 +113,9 @@ class _EnterCodeScreenState extends State<_EnterCodeScreen> with TickerProviderS
   }
 
   void _onCodeFinished(String code) {
-    print('Code finished. Bloc is ${Bloc.of(context)}');
     this.code = code;
-    Navigator.of(context).push(SetupRoute(_PreviewGameScreen(
-      configuration: widget.configuration
-    )));
+    Navigator.of(context).push(
+        SetupRoute(_PreviewGameScreen(configuration: widget.configuration)));
   }
 
   @override
@@ -138,16 +138,18 @@ class _EnterCodeScreenState extends State<_EnterCodeScreen> with TickerProviderS
                 style: TextStyle(
                   fontFamily: 'Mono',
                   color: Colors.black,
-                  fontSize: 32
+                  fontSize: 32,
                 ),
                 autofocus: true,
               ),
             ),
-            Button.text('Continue',
+            Button.text(
+              'Continue',
               onPressed: () => _onCodeFinished(_controller.text),
             ),
             SizedBox(height: 8),
-            Button.text('Cancel',
+            Button.text(
+              'Cancel',
               isRaised: false,
               onPressed: () => Navigator.pop(context),
             ),
@@ -171,7 +173,7 @@ class _ConfigureGameScreen extends StatefulWidget {
   _ConfigureGameScreenState createState() => _ConfigureGameScreenState();
 }
 
-class _ConfigureGameScreenState extends State<_ConfigureGameScreen> with TickerProviderStateMixin {
+class _ConfigureGameScreenState extends State<_ConfigureGameScreen> {
   SetupConfiguration get config => widget.configuration;
 
   void initState() {
@@ -184,7 +186,7 @@ class _ConfigureGameScreenState extends State<_ConfigureGameScreen> with TickerP
       context: context,
       initialDate: DateTime.now().add(Duration(days: 5)),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 7*3)),
+      lastDate: DateTime.now().add(Duration(days: 7 * 3)),
     );
     if (pickedDate == null) return;
     // TODO: save date
@@ -220,40 +222,43 @@ class _ConfigureGameScreenState extends State<_ConfigureGameScreen> with TickerP
                 style: TextStyle(
                   fontFamily: 'Signature',
                   color: Colors.black,
-                  fontSize: 32
+                  fontSize: 32,
                 ),
                 autofocus: true,
                 onChanged: (name) => setState(() => config.gameName = name),
               ),
               SizedBox(height: 16),
-              Text('When should the game end?',
-                style: TextStyle(
-                  fontFamily: 'Signature',
-                  fontSize: 20
-                ),
+              Text(
+                'When should the game end?',
+                style: TextStyle(fontFamily: 'Signature', fontSize: 20),
               ),
-              Button.text(config.end == null ? 'Choose a date'
-                  : DateFormat('MMMM d, H:mm').format(config.end.toLocal()),
+              Button.text(
+                config.end == null
+                    ? 'Choose a date'
+                    : DateFormat('MMMM d, H:mm').format(config.end.toLocal()),
                 isRaised: false,
                 onPressed: () {
                   _chooseEndDate();
                 },
               ),
               SizedBox(height: 16),
-              Button.text('Create game',
+              Button.text(
+                'Create game',
                 onPressed: () => Bloc.of(context).createGame(
-                  name: config.gameName,
-                  start: DateTime.now(),
-                  end: config.end,
-                ),
+                      name: config.gameName,
+                      start: DateTime.now(),
+                      end: config.end,
+                    ),
                 onSuccess: (_) {
-                  Bloc.of(context).logEvent(AnalyticsEvent.create_game_completed);
+                  Bloc.of(context)
+                      .logEvent(AnalyticsEvent.create_game_completed);
                   Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/game', (route) => false);
+                      .pushNamedAndRemoveUntil('/game', (route) => false);
                 },
               ),
               SizedBox(height: 16),
-              Button.text('Cancel',
+              Button.text(
+                'Cancel',
                 isRaised: false,
                 onPressed: () => Navigator.pop(context),
               ),
@@ -287,30 +292,27 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
   }
 
   Future<void> _onConfirmed() async {
-    final config = widget.configuration;
-    final bloc = Bloc.of(context);
+    var config = widget.configuration;
+    var bloc = Bloc.of(context);
 
     Bloc.of(context).logEvent(AnalyticsEvent.join_game_completed);
-    print('Setting up a game.');
 
     switch (config.role) {
       case UserRole.player:
-        await bloc.joinGame(code: config.code);
+        debugPrint("Joining a game.");
+        await bloc.joinGame(config.code);
         break;
       case UserRole.watcher:
-        await bloc.watchGame(code: config.code);
+        debugPrint("Watching a game.");
+        await bloc.watchGame(config.code);
         break;
       case UserRole.creator:
-        await bloc.createGame(
-          name: config.gameName,
-          start: DateTime.now().add(Duration(days: 1)),
-          end: DateTime.now().add(Duration(days: 10))
-        );
-        break;
+        debugPrint("The creator should never see the preview screen.");
+        assert(false);
     }
 
     await Navigator.of(context)
-      .pushNamedAndRemoveUntil('/game', (route) => false);
+        .pushNamedAndRemoveUntil('/game', (route) => false);
   }
 
   @override
@@ -321,7 +323,8 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
           child: FutureBuilder<Game>(
             future: Bloc.of(context).previewGame(widget.configuration.code),
             builder: (context, snapshot) {
-              if (!isReady && snapshot.connectionState == ConnectionState.done) {
+              if (!isReady &&
+                  snapshot.connectionState == ConnectionState.done) {
                 Future.delayed(Duration.zero, () {
                   VillainController.playAllVillains(context);
                 });
@@ -335,7 +338,7 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
               } else {
                 return _buildPlaceholder();
               }
-            }
+            },
           ),
         ),
       ),
@@ -348,11 +351,13 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
         Spacer(flex: 2),
         CircularProgressIndicator(),
         SizedBox(height: 32),
-        Text("Searching for game\nwith id ${widget.configuration.code}",
+        Text(
+          "Searching for game\nwith id ${widget.configuration.code}",
           textAlign: TextAlign.center,
         ),
         Spacer(),
-        Button.text('Cancel',
+        Button.text(
+          'Cancel',
           isRaised: false,
           onPressed: () => Navigator.pop(context),
         ),
@@ -373,7 +378,8 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
         Spacer(),
         Text(message),
         SizedBox(height: 16),
-        Button.text('Back',
+        Button.text(
+          'Back',
           isRaised: false,
           onPressed: () => Navigator.pop(context),
         ),
@@ -389,22 +395,25 @@ class _PreviewGameScreenState extends State<_PreviewGameScreen> {
     return StaggeredColumn(
       children: <Widget>[
         Spacer(),
-        Text("You'll be ${config.role == UserRole.player ? "joining" : "watching"}",
+        Text(
+          "You'll be ${config.role == UserRole.player ? "joining" : "watching"}",
           style: theme.bodyText,
         ),
         SizedBox(height: 8),
         Text("${game.name}", style: theme.headerText),
         SizedBox(height: 8),
-        Text("with id ${game.code}.",
-          style: theme.bodyText
-        ),
+        Text("with id ${game.code}.", style: theme.bodyText),
         SizedBox(height: 32),
-        Button.text(config.role == UserRole.player ? "Join" : "Watch",
+        Button.text(
+          config.role == UserRole.player ? "Join" : "Watch",
           onPressed: _onConfirmed,
-          onError: (error) {}, // TODO: display error
+          onError: (error) {
+            debugPrint("An error occurred: $error");
+          }, // TODO: display error
         ),
         SizedBox(height: 32),
-        Button.text('Cancel',
+        Button.text(
+          'Cancel',
           isRaised: false,
           onPressed: () => Navigator.pop(context),
         ),

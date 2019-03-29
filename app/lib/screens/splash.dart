@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
 
 /// Screen with the logo. Is displayed when the app is openend.
-/// 
+///
 /// Redirects to the next appropriate screen.
 class SplashScreen extends StatefulWidget {
   @override
@@ -17,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 600), () {
+    Future.delayed(Duration(milliseconds: 400), () {
       final bloc = Bloc.of(context);
       String targetRoute;
 
@@ -34,16 +33,5 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      alignment: Alignment.center,
-      child: Center(
-        child: SizedBox.fromSize(
-          size: Size.square(128),
-          child: FlareActor('images/logo.flr', animation: 'intro'),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Container(color: Colors.white);
 }

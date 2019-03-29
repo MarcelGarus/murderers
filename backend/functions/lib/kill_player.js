@@ -78,7 +78,7 @@ function handleRequest(req, res) {
                     color: '#ff0000',
                 },
             },
-            token: victimUser.messagingToken,
+            token: victimUser.messagingToken
         }).catch((error) => {
             util_1.log('Error sending message: ' + error);
         });

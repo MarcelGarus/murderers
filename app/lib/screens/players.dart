@@ -5,8 +5,8 @@ import '../widgets/theme.dart';
 
 /// Displays a list of players.
 class PlayersScreen extends StatefulWidget {
-  PlayersScreen(this.game);
-  
+  PlayersScreen(this.game) : assert(game != null);
+
   final Game game;
 
   @override
@@ -14,6 +14,7 @@ class PlayersScreen extends StatefulWidget {
 }
 
 class _PlayersScreenState extends State<PlayersScreen> {
+  @override
   void initState() {
     super.initState();
     Bloc.of(context).logEvent(AnalyticsEvent.leaderboard);
@@ -23,9 +24,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: _buildList()
-      )
+      body: SafeArea(child: _buildList()),
     );
   }
 
@@ -59,7 +58,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
     final style = theme.headerText.copyWith(fontSize: 20, color: kAccentColor);
 
     return Container(
-      color: player.isDead ? Color(0xFFDDDDDD) : Colors.white,
+      color: player.isDead ? const Color(0xFFDDDDDD) : Colors.white,
       child: ListTile(
         leading: Material(
           shape: CircleBorder(),
@@ -68,7 +67,8 @@ class _PlayersScreenState extends State<PlayersScreen> {
             width: 48,
             height: 48,
             alignment: Alignment.center,
-            child: Text(player.rank == null ? '?' : '#${player.rank}',
+            child: Text(
+              player.rank == null ? '?' : '#${player.rank}',
               style: style.copyWith(color: isMe ? Colors.white : kAccentColor),
             ),
           ),
