@@ -60,10 +60,11 @@ func Die(
 	// We do that
 	if len(playersWhoWantNewVictim) >= 3 {
 		var splitted []Subgraph
-		var current Player = murderer
+		var current = murderer
 		var start Player
 
-	loop:
+		// Split the graph of players into subgraphs, each represented by a
+		// start player and and end player (the one who wants a new victim)
 		for {
 			if start == nil {
 				start = current
@@ -76,7 +77,7 @@ func Die(
 				start = nil
 			}
 			if current == murderer {
-				break loop
+				break
 			}
 			current = current.victim.Get()
 		}
@@ -87,6 +88,7 @@ func Die(
 			}
 		}
 
+		// Then, reverse the direction in which the subgraphs are connected.
 		for i = 0; i < len(splitted); i++ {
 			if i > 0 {
 				splitted[i].end.Victim = splitted[i-1].start.ToReference()
