@@ -1,18 +1,16 @@
 package foundation
 
-import (
-	"time"
-)
+import "time"
 
 // Player represents a player of a game.
 type Player struct {
 	Code           GameCode
 	User           User
 	State          PlayerState
-	Murderer       PlayerReference
-	Victim         PlayerReference
+	Murderer       *PlayerReference
+	Victim         *PlayerReference
 	WantsNewVictim bool
-	Deaths         []Death
+	Death          *Death
 	Kills          int
 }
 
@@ -34,15 +32,15 @@ const (
 // ToReference turns the player into a reference of itself.
 func (player Player) ToReference() PlayerReference {
 	return PlayerReference{
-		code: player.Code,
-		id:   player.User.ID,
+		Code: player.Code,
+		ID:   player.User.ID,
 	}
 }
 
 // PlayerReference references a player by holding its code and id.
 type PlayerReference struct {
-	code GameCode
-	id   UserID
+	Code GameCode
+	ID   UserID
 }
 
 // Death describes how a player died.

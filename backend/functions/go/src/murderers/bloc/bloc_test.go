@@ -6,5 +6,5 @@ import (
 )
 
 func TestActions(t *testing.T) {
-	fmt.Println("Testing actions")
+	fmt.Println("Testing the bloc")
 }

@@ -1,8 +1,6 @@
 package foundation
 
-import (
-	"time"
-)
+import "time"
 
 // GameCode is a string that uniquely identifies a game.
 type GameCode = string
@@ -15,7 +13,7 @@ type Game struct {
 	Creator User
 	Created time.Time
 	End     time.Time
-	Joining []Player
+	Joining map[UserID]bool
 }
 
 // GameState represents the state of a game.

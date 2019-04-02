@@ -2,7 +2,7 @@ package storage
 
 import (
 	"fmt"
-	. "foundation"
+	. "murderers/foundation"
 )
 
 // UserNotFoundError indicates that a user with the given id doesn't exist.

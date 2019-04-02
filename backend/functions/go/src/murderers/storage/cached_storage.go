@@ -1,8 +1,8 @@
 package storage
 
 import (
-	. "foundation"
 	"github.com/google/go-cmp/cmp"
+	. "murderers/foundation"
 )
 
 // CachedStorage is a storage that uses another storage and introduces the
@@ -12,11 +12,11 @@ import (
 // to the same entry get merged into one read or write.
 type CachedStorage struct {
 	originalStorage Storage
-	users           map[UserID]User
+	cachedUsers     map[UserID]User
+	cachedGames     map[GameCode]Game
+	cachedPlayers   map[GameCode]map[UserID]Player
 	originalUsers   map[UserID]User
-	games           map[GameCode]Game
 	originalGames   map[GameCode]Game
-	players         map[GameCode]map[UserID]Player
 	originalPlayers map[GameCode]map[UserID]Player
 }
 
@@ -24,9 +24,12 @@ type CachedStorage struct {
 func NewCachedStorageSession(s Storage) CachedStorage {
 	return CachedStorage{
 		originalStorage: s,
-		users:           make(map[UserID]User),
-		games:           make(map[GameCode]Game),
-		players:         make(map[UserID]map[UserID]Player),
+		cachedUsers:     make(map[UserID]User),
+		cachedGames:     make(map[GameCode]Game),
+		cachedPlayers:   make(map[GameCode]map[UserID]Player),
+		originalUsers:   make(map[UserID]User),
+		originalGames:   make(map[GameCode]Game),
+		originalPlayers: make(map[GameCode]map[UserID]Player),
 	}
 }
 
@@ -36,20 +39,26 @@ func (s *CachedStorage) LoadUser(id UserID) (User, RichError) {
 	var ok bool
 	var err RichError
 
-	if user, ok = s.users[id]; ok {
+	if user, ok = s.cachedUsers[id]; ok {
 		return user, nil
 	}
 	if user, err = s.originalStorage.LoadUser(id); err != nil {
 		return User{}, err
 	}
-	s.users[id] = user
+	s.cachedUsers[id] = user
 	s.originalUsers[id] = user
 	return user, nil
 }
 
 // SaveUser saves a user to cache.
 func (s *CachedStorage) SaveUser(user User) RichError {
-	s.users[user.ID] = user
+	s.cachedUsers[user.ID] = user
+	return nil
+}
+
+// DeleteUser deletes a user from the cache.
+func (s *CachedStorage) DeleteUser(user User) RichError {
+	delete(s.cachedUsers, user.ID)
 	return nil
 }
 
@@ -59,20 +68,26 @@ func (s *CachedStorage) LoadGame(code GameCode) (Game, RichError) {
 	var ok bool
 	var err RichError
 
-	if game, ok = s.games[code]; ok {
+	if game, ok = s.cachedGames[code]; ok {
 		return game, nil
 	}
 	if game, err = s.originalStorage.LoadGame(code); err != nil {
 		return Game{}, err
 	}
-	s.games[code] = game
+	s.cachedGames[code] = game
 	s.originalGames[code] = game
 	return game, nil
 }
 
 // SaveGame saves a game to memory.
 func (s *CachedStorage) SaveGame(game Game) RichError {
-	s.games[game.Code] = game
+	s.cachedGames[game.Code] = game
+	return nil
+}
+
+// DeleteGame deletes a game from the cache.
+func (s *CachedStorage) DeleteGame(game Game) RichError {
+	delete(s.cachedGames, game.Code)
 	return nil
 }
 
@@ -81,7 +96,7 @@ func (s *CachedStorage) LoadPlayer(code GameCode, id UserID) (Player, RichError)
 	var player Player
 	var err RichError
 
-	if players, ok := s.players[code]; ok {
+	if players, ok := s.cachedPlayers[code]; ok {
 		if player, ok = players[id]; ok {
 			return player, nil
 		}
@@ -89,14 +104,23 @@ func (s *CachedStorage) LoadPlayer(code GameCode, id UserID) (Player, RichError)
 	if player, err = s.originalStorage.LoadPlayer(code, id); err != nil {
 		return Player{}, err
 	}
-	s.players[code][id] = player
+	s.cachedPlayers[code][id] = player
 	s.originalPlayers[code][id] = player
 	return player, nil
 }
 
 // SavePlayer saves a player to memory.
 func (s *CachedStorage) SavePlayer(player Player) RichError {
-	s.players[player.Code][player.User.ID] = player
+	if _, found := s.cachedPlayers[player.Code]; !found {
+		s.cachedPlayers[player.Code] = make(map[UserID]Player)
+	}
+	s.cachedPlayers[player.Code][player.User.ID] = player
+	return nil
+}
+
+// DeletePlayer deletes a user from the cache.
+func (s *CachedStorage) DeletePlayer(player Player) RichError {
+	delete(s.cachedPlayers[player.Code], player.User.ID)
 	return nil
 }
 
@@ -104,7 +128,7 @@ func (s *CachedStorage) SavePlayer(player Player) RichError {
 // original storage.
 func (s *CachedStorage) EndSession() RichError {
 	// Synchronize users.
-	for _, user := range s.users {
+	for _, user := range s.cachedUsers {
 		originalUser, found := s.originalUsers[user.ID]
 		if !found || user != originalUser {
 			if err := s.originalStorage.SaveUser(user); err != nil {
@@ -120,7 +144,7 @@ func (s *CachedStorage) EndSession() RichError {
 	}
 
 	// Synchronize games.
-	for _, game := range s.games {
+	for _, game := range s.cachedGames {
 		originalGame, found := s.originalGames[game.Code]
 		if !found || cmp.Equal(game, originalGame) {
 			if err := s.originalStorage.SaveGame(game); err != nil {
@@ -136,7 +160,7 @@ func (s *CachedStorage) EndSession() RichError {
 	}
 
 	// Synchronize players.
-	for code, players := range s.players {
+	for code, players := range s.cachedPlayers {
 		for _, player := range players {
 			originalPlayer, found := s.originalPlayers[code][player.User.ID]
 			if !found || cmp.Equal(player, originalPlayer) {

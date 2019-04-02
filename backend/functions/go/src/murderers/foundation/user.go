@@ -7,7 +7,7 @@ type UserID = string
 // User represents a user of the service.
 type User struct {
 	ID             UserID
-	AuthToken      string
+	FirebaseID     string
 	MessagingToken string
 	Name           string
 }

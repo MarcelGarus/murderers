@@ -1,8 +1,6 @@
 package storage
 
-import (
-	. "foundation"
-)
+import . "murderers/foundation"
 
 // Storage is a system that allows for saving and loading top-level users and
 // games as well as players for every game.

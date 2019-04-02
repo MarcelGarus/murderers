@@ -1,8 +1,6 @@
 package storage
 
-import (
-	. "foundation"
-)
+import . "murderers/foundation"
 
 // The InMemoryStorage can be interpreted as a CachedStorageSession that never
 // ends.
