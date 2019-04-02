@@ -2,6 +2,7 @@ package storage
 
 import (
 	"github.com/google/go-cmp/cmp"
+	"github.com/jinzhu/copier"
 	. "murderers/foundation"
 )
 
@@ -34,20 +35,22 @@ func NewCachedStorageSession(s Storage) CachedStorage {
 }
 
 // LoadUser loads a user from the cache, if posible.
-func (s *CachedStorage) LoadUser(id UserID) (User, RichError) {
-	var user User
-	var ok bool
-	var err RichError
+func (s *CachedStorage) LoadUser(id UserID) (*User, RichError) {
+	if user, ok := s.cachedUsers[id]; ok {
+		return &user, nil
+	}
 
-	if user, ok = s.cachedUsers[id]; ok {
-		return user, nil
+	user, err := s.originalStorage.LoadUser(id)
+	if err != nil {
+		return nil, err
 	}
-	if user, err = s.originalStorage.LoadUser(id); err != nil {
-		return User{}, err
-	}
-	s.cachedUsers[id] = user
-	s.originalUsers[id] = user
-	return user, nil
+
+	s.cachedUsers[id] = *user
+	s.originalUsers[id] = *user
+
+	var copyOfUser User
+	copier.Copy(user, copyOfUser)
+	return &copyOfUser, nil
 }
 
 // SaveUser saves a user to cache.
@@ -63,20 +66,22 @@ func (s *CachedStorage) DeleteUser(user User) RichError {
 }
 
 // LoadGame loads a game from memory.
-func (s *CachedStorage) LoadGame(code GameCode) (Game, RichError) {
-	var game Game
-	var ok bool
-	var err RichError
+func (s *CachedStorage) LoadGame(code GameCode) (*Game, RichError) {
+	if game, ok := s.cachedGames[code]; ok {
+		return &game, nil
+	}
 
-	if game, ok = s.cachedGames[code]; ok {
-		return game, nil
+	game, err := s.originalStorage.LoadUser(code)
+	if err != nil {
+		return nil, err
 	}
-	if game, err = s.originalStorage.LoadGame(code); err != nil {
-		return Game{}, err
-	}
-	s.cachedGames[code] = game
-	s.originalGames[code] = game
-	return game, nil
+
+	s.cachedUsers[code] = *game
+	s.originalUsers[code] = *game
+
+	var copyOfGame Game
+	copier.Copy(game, copyOfGame)
+	return &copyOfGame, nil
 }
 
 // SaveGame saves a game to memory.
@@ -92,21 +97,24 @@ func (s *CachedStorage) DeleteGame(game Game) RichError {
 }
 
 // LoadPlayer loads a player from memory.
-func (s *CachedStorage) LoadPlayer(code GameCode, id UserID) (Player, RichError) {
-	var player Player
-	var err RichError
-
+func (s *CachedStorage) LoadPlayer(code GameCode, id UserID) (*Player, RichError) {
 	if players, ok := s.cachedPlayers[code]; ok {
-		if player, ok = players[id]; ok {
-			return player, nil
+		if player, ok := players[id]; ok {
+			return &player, nil
 		}
 	}
-	if player, err = s.originalStorage.LoadPlayer(code, id); err != nil {
-		return Player{}, err
+
+	player, err := s.originalStorage.LoadPlayer(code, id)
+	if err != nil {
+		return nil, err
 	}
-	s.cachedPlayers[code][id] = player
-	s.originalPlayers[code][id] = player
-	return player, nil
+
+	s.cachedPlayers[code][id] = *player
+	s.originalPlayers[code][id] = *player
+
+	var copyOfPlayer Player
+	copier.Copy(player, copyOfPlayer)
+	return &copyOfPlayer, nil
 }
 
 // SavePlayer saves a player to memory.

@@ -1,12 +1,12 @@
 package bloc
 
 import (
-	. "murderers/context"
+	"murderers/context"
 	. "murderers/foundation"
 )
 
 func JoinGame(
-	c MyContext,
+	c context.C,
 	me UserID,
 	authToken string,
 	code GameCode,

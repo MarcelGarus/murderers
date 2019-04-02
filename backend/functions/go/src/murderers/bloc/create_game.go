@@ -1,27 +1,25 @@
 package bloc
 
 import (
-	. "murderers/context"
+	"murderers/context"
 	. "murderers/foundation"
 	"time"
 )
 
 // CreateGame creates a new game.
 func CreateGame(
-	c MyContext,
+	c context.C,
 	me UserID,
 	authToken string,
 	name string,
 	end time.Time,
-) (Game, RichError) {
+) (*Game, RichError) {
 	// Load and validate the user.
 	user, err := c.Storage.LoadUser(me)
 	if err != nil {
 		return nil, err
-	} else if ok, err = c.AuthenticateUser(user, authToken); err != nil {
+	} else if err = c.AuthenticateUser(user, authToken); err != nil {
 		return nil, err
-	} else if !ok {
-		return nil, AuthenticationFailedError()
 	}
 
 	// Generate a unique game code.
@@ -30,28 +28,28 @@ func CreateGame(
 	for {
 		code = GameCode(generateRandomString(GameCodeCharacters, GameCodeLength))
 		tries++
-		if _, err := s.LoadGame(code); err != nil {
+		if _, err := c.Storage.LoadGame(code); err != nil {
 			break // No game with that code exists, so the code is free to take.
 		}
 		if tries >= GameCodeMaxTries {
-			return nil, InternalServerError("Exceeded maximum number of tries while generating a game code.")
+			return nil, ExceededNumberOfTriesWhileGeneratingCodeError()
 		}
 	}
 
 	// Create a new game.
 	game := Game{
-		Code:    "TODO",
+		Code:    code,
 		Name:    name,
 		State:   GameNotStartedYet,
-		Creator: me,
+		Creator: user,
 		Created: time.Now(),
 		End:     end,
 	}
 
 	// Save the game.
-	if err := c.p.SaveGame(game); err != nil {
+	if err := c.Storage.SaveGame(game); err != nil {
 		return nil, err
 	}
 
-	return game, nil
+	return &game, nil
 }

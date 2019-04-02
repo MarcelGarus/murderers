@@ -3,7 +3,6 @@ package bloc
 import (
 	"fmt"
 	"math/rand"
-	"murderers/context"
 	. "murderers/foundation"
 )
 

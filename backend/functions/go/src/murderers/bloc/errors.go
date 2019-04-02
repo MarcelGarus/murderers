@@ -35,10 +35,12 @@ func UserNotJoiningError(id UserID) RichError {
 		"You can't accept user %s, because it's not joining.", id))
 }
 
-// GameAlreadyOverError indicates that an action was tried to perform that can't
-// be executed when the game is already over.
-func GameAlreadyOverError() RichError {
-	return BadRequestError(26, "The game is already over.")
+// VictimNotMatchingError indicates that the victim id provided to the function
+// doesn't match the actual one. This may occur if the function is called
+// multiple times. See [kill_player.go] for more information.
+func VictimNotMatchingError() RichError {
+	return BadRequestError(20,
+		"The provided victim's id doesn't match with the actual one.")
 }
 
 // VictimNotDyingError indicates TODO:

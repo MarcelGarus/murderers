@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	. "storage"
+	"murderers/storage"
 )
 
 func main() {
 	fmt.Println("Hello world")
-	s := NewInMemoryStorage()
+	s := storage.NewInMemoryStorage()
 }

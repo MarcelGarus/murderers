@@ -1,13 +1,13 @@
 package bloc
 
 import (
-	. "murderers/context"
+	"murderers/context"
 	. "murderers/foundation"
 )
 
 // Die kills finishes a player off and provides a new victim to the murderer.
 func Die(
-	c Context,
+	c context.C,
 	me UserID,
 	authToken string,
 	code GameCode,
@@ -15,29 +15,24 @@ func Die(
 	lastWords string,
 ) RichError {
 	// Load and authenticate the murderer.
-	var murderer Player
-	if m, err = c.s.LoadAuthenticatedPlayer(code, me, authToken); err != nil {
-		return nil, err
-	} else {
-		murderer = m
+	murderer, err := c.LoadAndAuthenticatePlayer(code, me, authToken)
+	if err != nil {
+		return err
 	}
 
 	// Verify that the victim is dying.
-	var victim Player
-	if v, err := player.Victim.Get(); err != nil {
-		return nil, err
-	} else if v.State != PlayerDying {
-		return nil, VictimNotDyingError()
-	} else {
-		victim = v
+	victim, err := c.GetPlayer(*murderer.Victim)
+	if err != nil {
+		return err
+	} else if victim.State != PlayerDying {
+		return VictimNotDyingError()
 	}
 
 	// Load players who got accepted and have no victim yet.
-	var newPlayers []Player
-	if p, err := c.s.LoadNewPlayers(); err != nil {
-		return nil, err
+	var newPlayers, err := c.Storage.LoadNewPlayers()
+	if err != nil {
+		return err
 	}
-	newPlayers = p
 
 	// Load all the players who want a new victim.
 	var playersWhoWantNewVictims []Player
@@ -97,6 +92,8 @@ func Die(
 			}
 		}
 	}
+
+	// TODO: Notify players that their victims changed.
 
 	return "You died.", nil
 }
