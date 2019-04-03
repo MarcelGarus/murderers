@@ -113,7 +113,7 @@ func testPlayerStorage(t *testing.T, s Storage) {
 func createSampleUser() User {
 	return User{
 		ID:             UserID("marcel"),
-		AuthToken:      "authToken",
+		FirebaseID:     "firebaseID",
 		MessagingToken: "messagingToken",
 		Name:           "Marcel",
 	}
@@ -136,10 +136,10 @@ func createSamplePlayer() Player {
 		Code:           createSampleGame().Code,
 		User:           createSampleUser(),
 		State:          PlayerAlive,
-		Murderer:       nil,
-		Victim:         nil,
+		Murderer:       PlayerReference{},
+		Victim:         PlayerReference{},
 		WantsNewVictim: false,
-		Death:          nil,
+		Death:          Death{},
 		Kills:          0,
 	}
 }

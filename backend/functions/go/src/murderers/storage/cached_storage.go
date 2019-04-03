@@ -35,22 +35,22 @@ func NewCachedStorageSession(s Storage) CachedStorage {
 }
 
 // LoadUser loads a user from the cache, if posible.
-func (s *CachedStorage) LoadUser(id UserID) (*User, RichError) {
+func (s *CachedStorage) LoadUser(id UserID) (User, RichError) {
 	if user, ok := s.cachedUsers[id]; ok {
-		return &user, nil
+		return user, nil
 	}
 
 	user, err := s.originalStorage.LoadUser(id)
 	if err != nil {
-		return nil, err
+		return User{}, err
 	}
 
-	s.cachedUsers[id] = *user
-	s.originalUsers[id] = *user
+	s.cachedUsers[id] = user
+	s.originalUsers[id] = user
 
 	var copyOfUser User
 	copier.Copy(user, copyOfUser)
-	return &copyOfUser, nil
+	return copyOfUser, nil
 }
 
 // SaveUser saves a user to cache.
@@ -66,22 +66,22 @@ func (s *CachedStorage) DeleteUser(user User) RichError {
 }
 
 // LoadGame loads a game from memory.
-func (s *CachedStorage) LoadGame(code GameCode) (*Game, RichError) {
+func (s *CachedStorage) LoadGame(code GameCode) (Game, RichError) {
 	if game, ok := s.cachedGames[code]; ok {
-		return &game, nil
+		return game, nil
 	}
 
 	game, err := s.originalStorage.LoadUser(code)
 	if err != nil {
-		return nil, err
+		return Game{}, err
 	}
 
-	s.cachedUsers[code] = *game
-	s.originalUsers[code] = *game
+	s.cachedUsers[code] = game
+	s.originalUsers[code] = game
 
 	var copyOfGame Game
 	copier.Copy(game, copyOfGame)
-	return &copyOfGame, nil
+	return copyOfGame, nil
 }
 
 // SaveGame saves a game to memory.
@@ -97,24 +97,24 @@ func (s *CachedStorage) DeleteGame(game Game) RichError {
 }
 
 // LoadPlayer loads a player from memory.
-func (s *CachedStorage) LoadPlayer(code GameCode, id UserID) (*Player, RichError) {
+func (s *CachedStorage) LoadPlayer(code GameCode, id UserID) (Player, RichError) {
 	if players, ok := s.cachedPlayers[code]; ok {
 		if player, ok := players[id]; ok {
-			return &player, nil
+			return player, nil
 		}
 	}
 
 	player, err := s.originalStorage.LoadPlayer(code, id)
 	if err != nil {
-		return nil, err
+		return Player{}, err
 	}
 
-	s.cachedPlayers[code][id] = *player
-	s.originalPlayers[code][id] = *player
+	s.cachedPlayers[code][id] = player
+	s.originalPlayers[code][id] = player
 
 	var copyOfPlayer Player
 	copier.Copy(player, copyOfPlayer)
-	return &copyOfPlayer, nil
+	return copyOfPlayer, nil
 }
 
 // SavePlayer saves a player to memory.

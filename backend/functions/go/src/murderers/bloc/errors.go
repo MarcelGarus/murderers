@@ -1,6 +1,9 @@
 package bloc
 
-import . "murderers/foundation"
+import (
+	"fmt"
+	. "murderers/foundation"
+)
 
 // Quick note about error codes:
 // 2x: General error.
@@ -22,6 +25,11 @@ func ExceededNumberOfTriesWhileGeneratingCodeError() RichError {
 		"Exceeded maximum number of tries while generating a game code.")
 }
 
+// AlreadyJoinedError indicates that the user already joined the game.
+func AlreadyJoinedError() RichError {
+	return BadRequestError(20, "You already joined the game.")
+}
+
 // NoPlayersToAcceptError indicates that the creator tried to accept players but
 // didn't provide any.
 func NoPlayersToAcceptError() RichError {
@@ -33,6 +41,21 @@ func NoPlayersToAcceptError() RichError {
 func UserNotJoiningError(id UserID) RichError {
 	return NoPrivilegesError(25, fmt.Sprintf(
 		"You can't accept user %s, because it's not joining.", id))
+}
+
+// GameAlreadyStartedError indicates that the creator attempted to start a game
+// which was already running.
+func GameAlreadyStartedError() RichError {
+	return BadRequestError(20, fmt.Sprintf(
+		"The game is already running."))
+}
+
+// NotEnoughPlayersError indiciates that the creator attempted to start the game
+// but there are not enough  players to do so.
+func NotEnoughPlayersError(numPlayers int) RichError {
+	return BadRequestError(20, fmt.Sprintf(
+		"There are only %d player, but %d are required to start the game.",
+		numPlayers, MinimumPlayersToStart))
 }
 
 // VictimNotMatchingError indicates that the victim id provided to the function

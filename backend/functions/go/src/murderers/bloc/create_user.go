@@ -7,12 +7,13 @@ import (
 
 // CreateUser creates a new user.
 func CreateUser(
-	c context.C,
+	c *context.C,
 	name string,
 	authToken string,
 	messagingToken string,
 ) (*User, RichError) {
 	// TODO: Verify that the authToken is a valid Firebase Auth Token.
+	// TODO: Verify that a user with that authToken doesn't exist yet.
 
 	// Try to generate a new ID.
 	var id UserID
@@ -20,7 +21,7 @@ func CreateUser(
 	for {
 		id = UserID(generateRandomString(UserIDCharacters, UserIDLength))
 		tries++
-		if _, err := c.Storage.LoadUser(id); err != nil {
+		if _, err := c.LoadUser(id); err != nil {
 			break // No user with the id exists, so the id is free to take.
 		}
 		if tries >= UserIDMaxTries {
@@ -37,7 +38,7 @@ func CreateUser(
 	}
 
 	// Save the user.
-	if err := c.Storage.SaveUser(user); err != nil {
+	if err := c.SaveUser(user); err != nil {
 		return nil, err
 	}
 

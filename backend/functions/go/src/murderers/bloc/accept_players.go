@@ -7,7 +7,7 @@ import (
 
 // AcceptPlayers accepts the players with the given IDs.
 func AcceptPlayers(
-	c context.C,
+	c *context.C,
 	me UserID,
 	authToken string,
 	code GameCode,
@@ -24,18 +24,6 @@ func AcceptPlayers(
 		return err
 	}
 
-	for joiningID := range game.Joining {
-		user, err := c.Storage.LoadUser(joiningID)
-		if err != nil {
-			return err
-		}
-		player := Player{
-			Code: game.Code,
-			User: user,
-		}
-		c.Storage.SavePlayer(player)
-	}
-
 	// Make sure all those users are actually trying to join the game.
 	for _, id := range playersToAccept {
 		if _, found := game.Joining[id]; !found {
@@ -43,14 +31,23 @@ func AcceptPlayers(
 		}
 	}
 
-	// Accept all the players by changing their state.
-	for _, id := range playersToAccept {
-		player, err := c.Storage.LoadPlayer(code, id)
+	// Actually create players for all the joining users.
+	for joiningID := range game.Joining {
+		user, err := c.LoadUser(joiningID)
 		if err != nil {
 			return err
 		}
-		player.State = PlayerAlive
-		player.WantsNewVictim = true
+		player := Player{
+			Code:           game.Code,
+			User:           user,
+			State:          PlayerAlive,
+			Murderer:       PlayerReference{},
+			Victim:         PlayerReference{},
+			WantsNewVictim: true,
+			Death:          Death{},
+			Kills:          0,
+		}
+		c.SavePlayer(player)
 	}
 
 	return nil

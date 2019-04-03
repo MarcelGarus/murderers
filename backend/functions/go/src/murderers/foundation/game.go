@@ -21,11 +21,11 @@ type GameState = int
 
 const (
 	// GameNotStartedYet indicates that the game didn't start yet.
-	GameNotStartedYet = GameState(iota)
+	GameNotStartedYet = 0
 
 	// GameRunning indicates that the game is currently running.
-	GameRunning = GameState(iota)
+	GameRunning = 1
 
 	// GameOver indicates that the game is over.
-	GameOver = GameState(iota)
+	GameOver = 2
 )

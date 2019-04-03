@@ -5,55 +5,37 @@ import (
 	. "murderers/foundation"
 )
 
+// JoinGame joins a user in a game. The game creator still needs to approve the
+// user before he actually joins the game. That happens in [accept_players.go].
 func JoinGame(
-	c context.C,
+	c *context.C,
 	me UserID,
 	authToken string,
 	code GameCode,
 ) RichError {
 	// Load and authenticate the user.
-
-	// Load the game.
-	game, err := c.Storage.LoadGame(code)
-
-	// Make sure there are players to accept.
-	if len(playersToAccept) == 0 {
-		return NoPlayersToAcceptError()
-	}
-
-	// Load the creatoor and the game.
-	creator, game, err := c.LoadGameForCreatorAction(code, me, authToken)
+	user, err := c.LoadUserAndAuthenticate(me, authToken)
 	if err != nil {
 		return err
 	}
 
-	for joiningID := range game.Joining {
-		if user, err := c.Storage.LoadUser(joiningID); err != nil {
+	// Load the game.
+	game, err := c.LoadGame(code)
+	if err != nil {
+		return err
+	}
+
+	// Make sure the user didn't already join the game.
+	if _, err := c.LoadPlayer(code, me); err == nil {
+		return AlreadyJoinedError()
+	}
+
+	// If the user is the creator, instantly join without waiting for approval.
+	if user.ID == game.Creator.ID {
+		err = AcceptPlayers(c, me, authToken, code, []string{me})
+		if err != nil {
 			return err
 		}
-		player := Player{
-			Code: game.Code,
-			User: user,
-		}
-		c.Storage.SavePlayer()
-	}
-	game.Joining
-
-	// Make sure all those users are actually trying to join the game.
-	for id := range playersToAccept {
-		if _, found = game.Joining[id]; !found {
-			return nil, UserNotJoiningError(id)
-		}
-	}
-
-	// Accept all the players by changing their state.
-	for id := range playersToAccept {
-		player, err := c.s.LoadPlayer(code, id)
-		if err != nil {
-			return nil, err
-		}
-		player.State = PlayerAlive
-		player.WantsNewVictim = true
 	}
 
 	return nil

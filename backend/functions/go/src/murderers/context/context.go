@@ -31,7 +31,7 @@ func (c *C) AuthenticateUser(
 }
 
 // LoadUser loads a user.
-func (c *C) LoadUser(id UserID) (*User, RichError) {
+func (c *C) LoadUser(id UserID) (User, RichError) {
 	return c.storage.LoadUser(id)
 }
 
@@ -39,13 +39,13 @@ func (c *C) LoadUser(id UserID) (*User, RichError) {
 func (c *C) LoadUserAndAuthenticate(
 	id UserID,
 	authToken string,
-) (*User, RichError) {
+) (User, RichError) {
 	user, err := c.storage.LoadUser(id)
 
 	if err != nil {
-		return nil, err
-	} else if err := c.AuthenticateUser(*user, authToken); err != nil {
-		return nil, err
+		return User{}, err
+	} else if err := c.AuthenticateUser(user, authToken); err != nil {
+		return User{}, err
 	}
 
 	return user, nil
@@ -62,7 +62,7 @@ func (c *C) DeleteUser(user User) RichError {
 }
 
 // LoadGame loads a game.
-func (c *C) LoadGame(code GameCode) (*Game, RichError) {
+func (c *C) LoadGame(code GameCode) (Game, RichError) {
 	return c.storage.LoadGame(code)
 }
 
@@ -73,17 +73,17 @@ func (c *C) LoadGameForCreatorAction(
 	gameCode GameCode,
 	creatorID UserID,
 	authToken string,
-) (*Game, RichError) {
+) (Game, RichError) {
 	game, err := c.storage.LoadGame(gameCode)
 
 	if err != nil {
-		return nil, err
+		return Game{}, err
 	} else if game.Creator.ID != creatorID {
-		return nil, ReservedForCreatorError()
+		return Game{}, ReservedForCreatorError()
 	} else if err := c.AuthenticateUser(game.Creator, authToken); err != nil {
-		return nil, err
+		return Game{}, err
 	} else if game.State == GameOver {
-		return nil, GameAlreadyOverError()
+		return Game{}, GameAlreadyOverError()
 	}
 
 	return game, nil
@@ -100,12 +100,12 @@ func (c *C) DeleteGame(game Game) RichError {
 }
 
 // LoadPlayer loads a player.
-func (c *C) LoadPlayer(code GameCode, id UserID) (*Player, RichError) {
+func (c *C) LoadPlayer(code GameCode, id UserID) (Player, RichError) {
 	return c.storage.LoadPlayer(code, id)
 }
 
 // LoadPlayerFromReference loads the player referenced by the given reference.
-func (c *C) LoadPlayerFromReference(ref PlayerReference) (*Player, RichError) {
+func (c *C) LoadPlayerFromReference(ref PlayerReference) (Player, RichError) {
 	return c.storage.LoadPlayer(ref.Code, ref.ID)
 }
 
@@ -114,16 +114,33 @@ func (c *C) LoadPlayerAndAuthenticate(
 	code GameCode,
 	id UserID,
 	authToken string,
-) (*Player, RichError) {
+) (Player, RichError) {
 	player, err := c.storage.LoadPlayer(code, id)
 
 	if err != nil {
-		return nil, err
+		return Player{}, err
 	} else if err := c.AuthenticateUser(player.User, authToken); err != nil {
-		return nil, err
+		return Player{}, err
 	}
 
 	return player, nil
+}
+
+// LoadAllPlayers loads all players of a game.
+func (c *C) LoadAllPlayers(code GameCode) ([]Player, RichError) {
+	return make([]Player, 0), nil
+}
+
+// LoadPlayersWhoWantNewVictims loads all the players of a game who want new
+// victims.
+func (c *C) LoadPlayersWhoWantNewVictims(code GameCode) ([]Player, RichError) {
+	return make([]Player, 0), nil
+}
+
+// LoadNewPlayers loads all the players which got accepted to a game and are now
+// looking for a victim.
+func (c *C) LoadNewPlayers(code GameCode) ([]Player, RichError) {
+	return make([]Player, 0), nil
 }
 
 // SavePlayer saves a player.

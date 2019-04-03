@@ -8,18 +8,16 @@ import (
 
 // CreateGame creates a new game.
 func CreateGame(
-	c context.C,
+	c *context.C,
 	me UserID,
 	authToken string,
 	name string,
 	end time.Time,
-) (*Game, RichError) {
+) (Game, RichError) {
 	// Load and validate the user.
-	user, err := c.Storage.LoadUser(me)
+	user, err := c.LoadUserAndAuthenticate(me, authToken)
 	if err != nil {
-		return nil, err
-	} else if err = c.AuthenticateUser(user, authToken); err != nil {
-		return nil, err
+		return Game{}, err
 	}
 
 	// Generate a unique game code.
@@ -28,11 +26,11 @@ func CreateGame(
 	for {
 		code = GameCode(generateRandomString(GameCodeCharacters, GameCodeLength))
 		tries++
-		if _, err := c.Storage.LoadGame(code); err != nil {
+		if _, err := c.LoadGame(code); err != nil {
 			break // No game with that code exists, so the code is free to take.
 		}
 		if tries >= GameCodeMaxTries {
-			return nil, ExceededNumberOfTriesWhileGeneratingCodeError()
+			return Game{}, ExceededNumberOfTriesWhileGeneratingCodeError()
 		}
 	}
 
@@ -47,9 +45,9 @@ func CreateGame(
 	}
 
 	// Save the game.
-	if err := c.Storage.SaveGame(game); err != nil {
-		return nil, err
+	if err := c.SaveGame(game); err != nil {
+		return Game{}, err
 	}
 
-	return &game, nil
+	return game, nil
 }

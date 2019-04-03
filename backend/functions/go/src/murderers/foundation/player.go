@@ -7,10 +7,10 @@ type Player struct {
 	Code           GameCode
 	User           User
 	State          PlayerState
-	Murderer       *PlayerReference
-	Victim         *PlayerReference
+	Murderer       PlayerReference
+	Victim         PlayerReference
 	WantsNewVictim bool
-	Death          *Death
+	Death          Death
 	Kills          int
 }
 
@@ -19,14 +19,17 @@ type PlayerState = int
 
 const (
 	// PlayerAlive indicates the player is alive.
-	PlayerAlive = PlayerState(iota)
+	PlayerAlive = 0
 
 	// PlayerDying indicates the player got killed, but still needs to confirm
 	// its death.
-	PlayerDying = PlayerState(iota)
+	PlayerDying = 1
 
 	// PlayerDead indicates the player is dead.
-	PlayerDead = PlayerState(iota)
+	PlayerDead = 2
+
+	// PlayerWon indicates that the player won the game (is the only one left).
+	PlayerWon = 3
 )
 
 // ToReference turns the player into a reference of itself.
@@ -45,8 +48,8 @@ type PlayerReference struct {
 
 // Death describes how a player died.
 type Death struct {
-	time      time.Time
-	murderer  PlayerReference
-	weapon    string
-	lastWords string
+	Time      time.Time
+	Murderer  PlayerReference
+	Weapon    string
+	LastWords string
 }
