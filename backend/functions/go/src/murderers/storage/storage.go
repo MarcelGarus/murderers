@@ -12,6 +12,8 @@ type Storage interface {
 	SaveGame(game Game) RichError
 	DeleteGame(game Game) RichError
 	LoadPlayer(code GameCode, id UserID) (Player, RichError)
+	LoadAllPlayers(code GameCode) ([]Player, RichError)
+	LoadPlayersWhoWantNewVictims(code GameCode) ([]Player, RichError)
 	SavePlayer(player Player) RichError
 	DeletePlayer(player Player) RichError
 }

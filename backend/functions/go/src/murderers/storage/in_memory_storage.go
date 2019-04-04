@@ -40,6 +40,14 @@ func (s *noStorage) LoadPlayer(code GameCode, id UserID) (Player, RichError) {
 	return Player{}, PlayerNotFoundError(code, id)
 }
 
+func (s *noStorage) LoadAllPlayers(code GameCode) ([]Player, RichError) {
+	return make([]Player, 0), nil
+}
+
+func (s *noStorage) LoadPlayersWhoWantNewVictims(code GameCode) ([]Player, RichError) {
+	return make([]Player, 0), nil
+}
+
 func (s *noStorage) SavePlayer(player Player) RichError {
 	return nil
 }

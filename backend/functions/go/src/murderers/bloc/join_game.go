@@ -26,13 +26,19 @@ func JoinGame(
 	}
 
 	// Make sure the user didn't already join the game.
-	if _, err := c.LoadPlayer(code, me); err == nil {
+	if isJoining, ok := game.Joining[me]; ok && isJoining {
+		return AlreadyJoinedError()
+	} else if _, err := c.LoadPlayer(code, me); err == nil {
 		return AlreadyJoinedError()
 	}
 
+	// Make the user join the game.
+	game.Joining[me] = true
+	c.SaveGame(game)
+
 	// If the user is the creator, instantly join without waiting for approval.
 	if user.ID == game.Creator.ID {
-		err = AcceptPlayers(c, me, authToken, code, []string{me})
+		err = AcceptPlayers(c, me, authToken, code, []UserID{me})
 		if err != nil {
 			return err
 		}

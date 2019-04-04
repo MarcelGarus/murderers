@@ -17,6 +17,8 @@ type VictimChanged struct {
 // following:
 // - Rearranging the graph so players who want new victims get some new ones.
 // - Adding new players to the game.
+// Before reading through this function, I recommend to make yourself familiar
+// with the "Murderous graph" strategy in the project-level docs folder.
 func satisfyPlayers(c *context.C, code GameCode) ([]VictimChanged, RichError) {
 	// Which players got their victims changed.
 	changedLog := make([]VictimChanged, 0)
@@ -40,6 +42,12 @@ func satisfyPlayers(c *context.C, code GameCode) ([]VictimChanged, RichError) {
 		}
 	}
 
+	// We can't break up the existing cycle or connect new players to form a new
+	// one if there are no unhappy ones.
+	if len(unhappyPlayers) == 0 {
+		return changedLog, nil
+	}
+
 	// If there are at least 3 players who want new victims, split the graph of
 	// players into subgraphs and reverse the order in which they are connected,
 	// satisfying everyone.
@@ -55,7 +63,7 @@ func satisfyPlayers(c *context.C, code GameCode) ([]VictimChanged, RichError) {
 		// - Shift all elements on the right side of the index to the right.
 		// - Assign the new player's subgraph to the index.
 		for _, player := range newPlayers {
-			insertionIndex := rand.Intn(len(splitted))
+			insertionIndex := rand.Intn(len(splitted) + 1)
 			splitted = append(splitted, Subgraph{})
 			copy(splitted[insertionIndex+1:], splitted[insertionIndex:])
 			splitted[insertionIndex] = Subgraph{start: player, end: player}
@@ -79,15 +87,13 @@ func satisfyPlayers(c *context.C, code GameCode) ([]VictimChanged, RichError) {
 			c.SavePlayer(subgraph.end)
 		}
 	} else {
-		// There are less than three players who want a new victim. Let's
-		// have a look at all cases:
-		// - 0 players want new victims: We got nothing to do.
-		// - 1 player wants a new victim:: Let's look at all cases:
-		//   - it's a new player: We can't just break up the cycle.
-		//   - it's an unhappy player: We can break up the cycle, but there's
-		//     only one way to put it back together - the original one.
+		// There are less than three players who want a new victim. We already
+		// know there's at least one unhappy player. Let's have a look at all
+		// cases:
+		// - 1 player wants a new victim: It has to be the unhappy one. Sadly,
+		//   we can't do anything - we can break up the cycle, but then the only
+		//   available option is to put it together the way it was before.
 		// - 2 players want new victims: Again, let's look at all cases:
-		//   - 2 new players, 0 unhappy ones: We can't break the cycle.
 		//   - 0 new players, 2 unhappy ones: We can't divide the cycle and put
 		//     it back together differently, because that would create two
 		//     cycles, which has several drawbacks (see the "Murderous graph"

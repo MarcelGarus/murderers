@@ -11,7 +11,7 @@ func CreateUser(
 	name string,
 	authToken string,
 	messagingToken string,
-) (*User, RichError) {
+) (User, RichError) {
 	// TODO: Verify that the authToken is a valid Firebase Auth Token.
 	// TODO: Verify that a user with that authToken doesn't exist yet.
 
@@ -25,7 +25,7 @@ func CreateUser(
 			break // No user with the id exists, so the id is free to take.
 		}
 		if tries >= UserIDMaxTries {
-			return nil, ExceededNumberOfTriesWhileGeneratingIDError()
+			return User{}, ExceededNumberOfTriesWhileGeneratingIDError()
 		}
 	}
 
@@ -39,8 +39,8 @@ func CreateUser(
 
 	// Save the user.
 	if err := c.SaveUser(user); err != nil {
-		return nil, err
+		return User{}, err
 	}
 
-	return &user, nil
+	return user, nil
 }

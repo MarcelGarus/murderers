@@ -11,10 +11,10 @@ type C struct {
 	storage storage.Storage
 }
 
-// NewContext creates a new context.
-func NewContext(storage storage.Storage) C {
+// New creates a new context.
+func New(s storage.Storage) C {
 	return C{
-		storage: storage,
+		storage: s,
 	}
 }
 
@@ -128,19 +128,13 @@ func (c *C) LoadPlayerAndAuthenticate(
 
 // LoadAllPlayers loads all players of a game.
 func (c *C) LoadAllPlayers(code GameCode) ([]Player, RichError) {
-	return make([]Player, 0), nil
+	return c.storage.LoadAllPlayers(code)
 }
 
 // LoadPlayersWhoWantNewVictims loads all the players of a game who want new
 // victims.
 func (c *C) LoadPlayersWhoWantNewVictims(code GameCode) ([]Player, RichError) {
-	return make([]Player, 0), nil
-}
-
-// LoadNewPlayers loads all the players which got accepted to a game and are now
-// looking for a victim.
-func (c *C) LoadNewPlayers(code GameCode) ([]Player, RichError) {
-	return make([]Player, 0), nil
+	return c.storage.LoadPlayersWhoWantNewVictims(code)
 }
 
 // SavePlayer saves a player.

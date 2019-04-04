@@ -42,6 +42,7 @@ func CreateGame(
 		Creator: user,
 		Created: time.Now(),
 		End:     end,
+		Joining: make(map[UserID]bool),
 	}
 
 	// Save the game.

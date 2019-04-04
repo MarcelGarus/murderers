@@ -54,7 +54,7 @@ func GameAlreadyStartedError() RichError {
 // but there are not enough  players to do so.
 func NotEnoughPlayersError(numPlayers int) RichError {
 	return BadRequestError(20, fmt.Sprintf(
-		"There are only %d player, but %d are required to start the game.",
+		"There are only %d players, but %d are required to start the game.",
 		numPlayers, MinimumPlayersToStart))
 }
 

@@ -5,6 +5,11 @@ import (
 	. "murderers/foundation"
 )
 
+// CorruptError indicates that the storage is corrupt.
+func CorruptError() RichError {
+	return InternalServerError(11, fmt.Sprintf("The storage is corrupt."))
+}
+
 // UserNotFoundError indicates that a user with the given id doesn't exist.
 func UserNotFoundError(id UserID) RichError {
 	return ResourceNotFoundError(10, fmt.Sprintf(
