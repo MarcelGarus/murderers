@@ -1,4 +1,4 @@
-Before working with the go project, set the current GOPATH to the `go` dir:
+Before working with the go project, set the current GOPATH to this `go` dir:
 
 ```bash
 export GOPATH=$(pwd)

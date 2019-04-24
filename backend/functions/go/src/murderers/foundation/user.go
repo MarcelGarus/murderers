@@ -1,5 +1,7 @@
 package foundation
 
+import "fmt"
+
 // UserID is a string that uniquely identifies a user globally or a player in a
 // game.
 type UserID = string
@@ -10,4 +12,8 @@ type User struct {
 	FirebaseID     string
 	MessagingToken string
 	Name           string
+}
+
+func (u User) String() string {
+	return fmt.Sprintf("{User %s, %s}", u.ID, u.Name)
 }

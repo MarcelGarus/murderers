@@ -1,8 +1,10 @@
 package bloc
 
 import (
+	"math/rand"
 	"murderers/context"
 	. "murderers/foundation"
+	"time"
 )
 
 // StartGame starts a game.
@@ -30,7 +32,18 @@ func StartGame(
 	}
 
 	// Shuffle all the players and update their victims.
-	satisfyPlayers(c, code)
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(players), func(i, j int) {
+		players[i], players[j] = players[j], players[i]
+	})
+	for i, player := range players {
+		if i > 0 {
+			player.Victim = players[i-1].ToReference()
+		} else {
+			player.Victim = players[len(players)-1].ToReference()
+		}
+		c.SavePlayer(player)
+	}
 
 	// Update the game.
 	game.State = GameRunning

@@ -1,6 +1,9 @@
 package foundation
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // Player represents a player of a game.
 type Player struct {
@@ -38,6 +41,17 @@ func (player Player) ToReference() PlayerReference {
 		Code: player.Code,
 		ID:   player.User.ID,
 	}
+}
+
+func (player Player) String() string {
+	return fmt.Sprintf("{Player %s, state %d. Murderer: %s, Victim: %s, WantsnewVictim: %b, Death: %s}",
+		player.User.ID,
+		player.State,
+		player.Murderer.ID,
+		player.Victim.ID,
+		player.WantsNewVictim,
+		player.Death,
+	)
 }
 
 // PlayerReference references a player by holding its code and id.

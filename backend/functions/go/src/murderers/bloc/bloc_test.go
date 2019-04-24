@@ -43,15 +43,21 @@ func TestActions(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error while joining the game: %s", err)
 	}
+	ids := []UserID{}
 	for i := 1; i < 8; i++ {
+		fmt.Printf("Player %s joins the game %s.\n", users[i].ID, game.Code)
+		ids = append(ids, users[i].ID)
 		err = JoinGame(&c, users[i].ID, users[i].FirebaseID, game.Code)
 		if err != nil {
 			t.Errorf("Error while joining the game: %s", err)
 		}
-		err = AcceptPlayers(&c, creator.ID, creator.FirebaseID, game.Code, []UserID{users[i].ID})
-		if err != nil {
-			t.Errorf("Error while accepting a player: %s", err)
-		}
+	}
+
+	// Accept players.
+	fmt.Printf("Accepting players.\n")
+	err = AcceptPlayers(&c, creator.ID, creator.FirebaseID, game.Code, ids)
+	if err != nil {
+		t.Errorf("Error while accepting players: %s", err)
 	}
 
 	// Start the game.
@@ -84,5 +90,5 @@ func TestActions(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error while getting all the players: %s", err)
 	}
-	t.Log(players)
+	fmt.Println(players)
 }
